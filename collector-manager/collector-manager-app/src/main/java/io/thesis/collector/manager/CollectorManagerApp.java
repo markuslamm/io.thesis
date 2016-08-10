@@ -5,8 +5,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
 /**
- * The main entry point of the collector-server application.
- * Registers itself withe Consul service discovery
+ * The main entry point of the collector-manager application.
+ * Registers itself with Consul service discovery on startup.
  */
 @SpringBootApplication
 @EnableDiscoveryClient

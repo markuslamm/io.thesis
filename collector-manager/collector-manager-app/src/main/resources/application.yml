@@ -18,6 +18,9 @@ spring:
       discovery:
         instanceId: ${spring.application.name}:${spring.application.instance_id:${random.value}}
         prefer-ip-address: true
+        register: false
+#        enabled: false //TODO check
+
 
 info:
   arch: ${os.arch}
