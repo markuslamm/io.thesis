@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <title>io.thesis.collector.server - client list</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link th:href="@{/webjars/bootstrap/3.3.6/css/bootstrap.min.css}"
+          href="http://cdn.jsdelivr.net/webjars/bootstrap/3.3.6/css/bootstrap.min.css"
+          rel="stylesheet" media="screen"/>
+</head>
+<body>
+<div class="container">
+    <h3>io.thesis.collector.server</h3>
+    <p th:text="'server time: ' + ${indexPage.serverTime} + ' | ' +
+    'hostname: ' + ${indexPage.serverHostName} + ' | ' +
+    'address: ' + ${indexPage.serverAddress}">time</p>
+    <hr/>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th>InstanceId</th>
+            <th>Address</th>
+            <th>Port</th>
+            <th>Url</th>
+            <th>&nbsp;</th>
+        </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</div>
+<script src="http://cdn.jsdelivr.net/webjars/jquery/2.2.4/jquery.min.js"
+        th:src="@{/webjars/jquery/2.2.4/jquery.min.js}"></script>
+<script src="http://cdn.jsdelivr.net/webjars/bootstrap/3.3.6/js/bootstrap.min.js"
+        th:src="@{/webjars/bootstrap/3.3.6/js/bootstrap.min.js}"></script>
+</body>
+</html>
