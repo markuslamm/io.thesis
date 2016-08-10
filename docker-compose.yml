@@ -11,14 +11,14 @@ services:
       - "8600:53"
     command: "-server -bootstrap-expect 1 -ui-dir /ui"
 
-  collector-manager:
-    container_name: collector-manager
-    image: io.thesis/collector-manager
-    ports:
-      - "9090:9090"
-    depends_on:
-      - consul
-    environment:
-      SERVER_PORT: 9090
-      SPRING_CLOUD_CONSUL_HOST: consul
-      SPRING_CLOUD_CONSUL_PORT: 8500
+#  collector-manager:
+#    container_name: collector-manager
+#    image: io.thesis/collector-manager
+#    ports:
+#      - "9090:9090"
+#    depends_on:
+#      - consul
+#    environment:
+#      SERVER_PORT: 9090
+#      SPRING_CLOUD_CONSUL_HOST: consul
+#      SPRING_CLOUD_CONSUL_PORT: 8500
