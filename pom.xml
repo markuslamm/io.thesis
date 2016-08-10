@@ -9,6 +9,10 @@
     <version>0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
+    <modules>
+        <module>collector-manager</module>
+    </modules>
+
     <developers>
         <developer>
             <id>markus.lamm</id>

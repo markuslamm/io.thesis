@@ -1,0 +1,25 @@
+server:
+  port: ${SERVER_PORT:9090}
+
+logging:
+  file: logs/collector-server.log
+  level:
+    io.thesis.collector: DEBUG
+    org.springframework.web: INFO
+    org.springframework.boot: INFO
+
+spring:
+  thymeleaf:
+    cache: false
+  cloud:
+    consul:
+      host: ${SPRING_CLOUD_CONSUL_HOST:localhost}
+      port: ${SPRING_CLOUD_CONSUL_PORT:8500}
+      discovery:
+        instanceId: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+        prefer-ip-address: true
+
+info:
+  arch: ${os.arch}
+  os: ${os.name}
+  version: ${os.version}
