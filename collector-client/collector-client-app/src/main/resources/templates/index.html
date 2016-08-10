@@ -10,10 +10,38 @@
 </head>
 <body>
 <div class="container">
-    <h3>io.thesis.collector.client</h3>
-    <p th:text="'client time: ' + ${indexPage.serverTime}">time</p>
-    <p th:text="'host: ' + ${indexPage.hostName} + ', address: ' + ${indexPage.hostAddress} ">host, address</p>
+    <h3>collector-client</h3>
     <hr/>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th>Client details</th>
+            <th>&nbsp;</th>
+        </tr>
+        </thead>
+        <tr>
+            <td>Client time</td>
+            <td th:text="${indexPage.serverTime}">1234</td>
+        </tr>
+        <tr>
+            <td>Host name</td>
+            <td th:text="${indexPage.hostName}">1234</td>
+        </tr>
+        <tr>
+            <td>Host address</td>
+            <td th:text="${indexPage.hostAddress}">1234</td>
+        </tr>
+        <tr>
+            <td>Source system</td>
+            <td th:text="${indexPage.sourceSystem}">1234</td>
+        </tr>
+        <tr>
+            <td>Consul instance id</td>
+            <td th:text="${indexPage.instanceId}">1234</td>
+        </tr>
+    </table>
+
+
 </div>
 <script src="http://cdn.jsdelivr.net/webjars/jquery/2.2.4/jquery.min.js"
         th:src="@{/webjars/jquery/2.2.4/jquery.min.js}"></script>

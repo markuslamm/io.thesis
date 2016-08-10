@@ -21,7 +21,7 @@ import static java.time.LocalDateTime.now;
 import static java.util.Objects.requireNonNull;
 
 /**
- * spring-mvc controller that handles view requests for {@code collector-server}.
+ * spring-mvc controller that handles view requests for the {@code collector-manager}.
  */
 @Controller
 public class IndexController {
@@ -48,7 +48,7 @@ public class IndexController {
         return clientService.getClientInstances()
                 .thenApply(collectorClients -> {
                     LOG.debug("Fetched registered client instances: {}", collectorClients);
-                    final Map<String, String> serverInfo = getServerInfo();
+                    final Map<String, String> serverInfo = getHostInfo();
                     model.addAttribute("indexPage", new IndexPage(now(), serverInfo.get("serverHostName"),
                             serverInfo.get("serverHostAddress"), collectorClients));
                     return "index";
@@ -61,7 +61,7 @@ public class IndexController {
      *
      * @return a map containing host address an name
      */
-    private static Map<String, String> getServerInfo() {
+    private static Map<String, String> getHostInfo() {
         try {
             final Map<String, String> result = Maps.newHashMap();
             result.put("serverHostAddress", InetAddress.getLocalHost().getHostAddress());
