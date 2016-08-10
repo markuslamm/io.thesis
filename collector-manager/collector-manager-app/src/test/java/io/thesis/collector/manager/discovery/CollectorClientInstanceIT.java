@@ -1,6 +1,5 @@
 package io.thesis.collector.manager.discovery;
 
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +20,7 @@ public class CollectorClientInstanceIT {
     @Test
     public void testGetClientInstances() {
         final List<CollectorClientInstance> serviceInstances = service.getClientInstances().join();
+        assertThat(serviceInstances).isNotNull();
         assertThat(serviceInstances).isInstanceOf(List.class);
     }
 }
