@@ -49,7 +49,7 @@ public class CollectorClientInstanceService {
      */
     public CompletableFuture<List<CollectorClientInstance>> getClientInstances() {
         return CompletableFuture.supplyAsync(() -> {
-            final List<CollectorClientInstance> clients = discoveryClient.getInstances("collector-server")
+            final List<CollectorClientInstance> clients = discoveryClient.getInstances(clientAppName)
                     .stream()
                     .map(serviceInstance ->
                             CollectorClientInstance.of(serviceInstance.getHost(), serviceInstance.getPort(),

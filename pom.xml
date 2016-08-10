@@ -11,6 +11,7 @@
 
     <modules>
         <module>collector-manager</module>
+        <module>collector-client</module>
     </modules>
 
     <developers>

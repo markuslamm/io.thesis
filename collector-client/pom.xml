@@ -3,6 +3,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    <packaging>pom</packaging>
 
     <parent>
         <groupId>io.thesis</groupId>
@@ -10,17 +11,17 @@
         <version>0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>collector-manager-parent</artifactId>
-    <packaging>pom</packaging>
+    <artifactId>collector-client-parent</artifactId>
 
     <modules>
-        <module>collector-manager-app</module>
+        <module>collector-client-app</module>
     </modules>
 
     <properties>
         <assertj.version>3.5.1</assertj.version>
         <spring-boot.version>1.4.0.RELEASE</spring-boot.version>
         <spring-cloud-consul.version>1.0.1.RELEASE</spring-cloud-consul.version>
+        <spring.kafka-version>1.0.0.RELEASE</spring.kafka-version>
         <guava.version>19.0</guava.version>
         <commons-lang3.version>3.4</commons-lang3.version>
         <webjars.jquery.version>2.2.4</webjars.jquery.version>
@@ -46,4 +47,5 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+
 </project>
