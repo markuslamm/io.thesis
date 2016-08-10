@@ -26,6 +26,15 @@
         </tr>
         </thead>
         <tbody>
+        <tr th:each="collectorClient : ${indexPage.clientInstanceList}">
+            <td th:text="${collectorClient.serviceId}">service id</td>
+            <td><a th:text="${collectorClient.address}"
+                   th:href="@{'/' + ${collectorClient.address} + '/' + ${collectorClient.port}}"
+                   href="client-details.html">12.34.56.78</a></td>
+            <td th:text="${collectorClient.port}">port</td>
+            <td th:text="${collectorClient.uri}">uri</td>
+            <td><a th:text="status" th:href="@{${collectorClient.uri} + '/health'}" href="#"></a></td>
+        </tr>
         </tbody>
     </table>
 </div>

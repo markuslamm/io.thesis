@@ -2,9 +2,11 @@ package io.thesis.collector.manager.ui;
 
 import com.google.common.collect.Maps;
 import io.thesis.collector.manager.CollectorManagerException;
+import io.thesis.collector.manager.discovery.CollectorClientInstanceService;
 import io.thesis.collector.manager.ui.pages.IndexPage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +18,7 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 import static java.time.LocalDateTime.now;
+import static java.util.Objects.requireNonNull;
 
 /**
  * spring-mvc controller that handles view requests for {@code collector-server}.
@@ -24,6 +27,13 @@ import static java.time.LocalDateTime.now;
 public class IndexController {
 
     private static final Logger LOG = LoggerFactory.getLogger(IndexController.class);
+
+    private final CollectorClientInstanceService clientService;
+
+    @Autowired
+    public IndexController(final CollectorClientInstanceService clientService) {
+        this.clientService = requireNonNull(clientService);
+    }
 
     /**
      * Handles requests for  '/'.
@@ -35,12 +45,15 @@ public class IndexController {
      */
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public CompletableFuture<String> indexPage(final Model model) {
-        return CompletableFuture.supplyAsync(() -> {
-            final Map<String, String> serverInfo = getServerInfo();
-            model.addAttribute("indexPage", new IndexPage(now(), serverInfo.get("serverHostName"),
-                    serverInfo.get("serverHostAddress")));
-            return "index";
-        });
+        return clientService.getClientInstances()
+                .thenApply(collectorClients -> {
+                    LOG.debug("Fetched registered client instances: {}", collectorClients);
+                    final Map<String, String> serverInfo = getServerInfo();
+                    model.addAttribute("indexPage", new IndexPage(now(), serverInfo.get("serverHostName"),
+                            serverInfo.get("serverHostAddress"), collectorClients));
+                    return "index";
+
+                });
     }
 
     /**
