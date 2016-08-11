@@ -69,9 +69,8 @@ public class CollectorClientInstanceService {
                 .thenCombine(collectorClientInstanceCP, (metadataResult, clientInstance) ->
                         CollectorClientInstance.of(clientInstance.getAddress(), clientInstance.getPort(),
                                 clientInstance.getServiceId(), clientInstance.getHttps(), clientInstance.getUri(),
-                                metadataResult.getSystem(), metadataResult.getHostname(),
-                                metadataResult.getRegistry(), metadataResult.getIsRunning(),
-                                metadataResult.getInstanceId()));
+                                metadataResult.getHostname(), metadataResult.getRegistry(),
+                                metadataResult.getIsRunning(), metadataResult.getInstanceId()));
         LOG.debug("Immediately return from getClientDetails({}, {})", address, port);
         return responseCP;
     }

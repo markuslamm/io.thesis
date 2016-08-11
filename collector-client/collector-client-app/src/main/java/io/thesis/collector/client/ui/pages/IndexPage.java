@@ -16,16 +16,13 @@ public final class IndexPage {
     private final LocalDateTime serverTime;
     private final String hostName;
     private final String hostAddress;
-    private final String sourceSystem;
     private final String instanceId;
 
 
-    public IndexPage(final LocalDateTime serverTime, final String hostName, final String hostAddress, final String sourceSystem,
-                     final String instanceId) {
+    public IndexPage(final LocalDateTime serverTime, final String hostName, final String hostAddress, final String instanceId) {
         this.serverTime = requireNonNull(serverTime);
         this.hostName = requireNonNull(hostName);
         this.hostAddress = requireNonNull(hostAddress);
-        this.sourceSystem = requireNonNull(sourceSystem);
         this.instanceId = requireNonNull(instanceId);
     }
 
@@ -39,10 +36,6 @@ public final class IndexPage {
 
     public String getHostAddress() {
         return Optional.ofNullable(hostAddress).orElse(UNKNOWN_KEY);
-    }
-
-    public String getSourceSystem() {
-        return sourceSystem;
     }
 
     public String getInstanceId() {

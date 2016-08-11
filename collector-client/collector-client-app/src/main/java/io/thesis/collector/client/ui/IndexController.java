@@ -27,12 +27,9 @@ public class IndexController {
 
     private static final Logger LOG = LoggerFactory.getLogger(IndexController.class);
 
-    private final String sourceSystem;
     private final String instanceId;
 
-    public IndexController(@Value("${info.system}") final String sourceSystem,
-                           @Value("${spring.cloud.consul.discovery.instanceId}") final String instanceId) {
-        this.sourceSystem = Objects.requireNonNull(sourceSystem);
+    public IndexController(@Value("${spring.cloud.consul.discovery.instanceId}") final String instanceId) {
         this.instanceId = Objects.requireNonNull(instanceId);
     }
 
@@ -48,7 +45,7 @@ public class IndexController {
         final CompletableFuture<String> responseCP = CompletableFuture.supplyAsync(() -> {
             final Map<String, String> serverInfo = getHostInfo();
             model.addAttribute("indexPage", new IndexPage(now(), serverInfo.get("serverHostName"),
-                    serverInfo.get("serverHostAddress"), sourceSystem, instanceId));
+                    serverInfo.get("serverHostAddress"), instanceId));
             return "index";
         });
         LOG.debug("Immediately return from indexPage()");

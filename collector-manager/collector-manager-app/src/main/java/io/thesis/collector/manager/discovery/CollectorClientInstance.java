@@ -18,21 +18,19 @@ public final class CollectorClientInstance {
     private final String serviceId;
     private final Boolean https;
     private final URI uri;
-    private final String system;
     private final String hostname;
     private final List<String> collectorRegistry;
     private final Boolean isRunning;
     private final String instanceId;
 
     private CollectorClientInstance(final String address, final Integer port, final String serviceId,
-                                    final Boolean https, final URI uri, final String system, final String hostname,
+                                    final Boolean https, final URI uri, final String hostname,
                                     final List<String> collectorRegistry, final Boolean isRunning, final String instanceId) {
         this.address = address;
         this.port = port;
         this.serviceId = serviceId;
         this.https = https;
         this.uri = uri;
-        this.system = system;
         this.hostname = hostname;
         this.collectorRegistry = collectorRegistry;
         this.isRunning = isRunning;
@@ -40,16 +38,16 @@ public final class CollectorClientInstance {
     }
 
     public static CollectorClientInstance of(final String address, final Integer port, final String serviceId,
-                                             final Boolean https, final URI uri, final String system, final String hostname,
+                                             final Boolean https, final URI uri, final String hostname,
                                              final List<String> collectorRegistry, final Boolean isRunning,
                                              final String instanceId) {
-        return new CollectorClientInstance(address, port, serviceId, https, uri, system, hostname, collectorRegistry, isRunning,
+        return new CollectorClientInstance(address, port, serviceId, https, uri, hostname, collectorRegistry, isRunning,
                 instanceId);
     }
 
     public static CollectorClientInstance of(final String address, final Integer port, final String serviceId,
                                              final Boolean https, final URI uri) {
-        return new CollectorClientInstance(address, port, serviceId, https, uri, null, null, Lists.newArrayList(), null, null);
+        return new CollectorClientInstance(address, port, serviceId, https, uri, null, Lists.newArrayList(), null, null);
     }
 
     public String getAddress() {
@@ -70,10 +68,6 @@ public final class CollectorClientInstance {
 
     public URI getUri() {
         return uri;
-    }
-
-    public String getSystem() {
-        return system;
     }
 
     public String getHostname() {

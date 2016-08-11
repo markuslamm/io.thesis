@@ -32,7 +32,6 @@ public class ClientMetadataControllerIT {
         assertThat(metadata).isNotNull();
         assertThat(metadata.getHostname()).isNotNull();
         assertThat(metadata.getInstanceId()).isNotNull();
-        assertThat(metadata.getSystem()).isNotNull();
         assertThat(metadata.getRegistry()).isNotNull();
         assertThat(metadata.getRegistry()).isEmpty();
         assertThat(metadata.getIsRunning()).isNotNull();

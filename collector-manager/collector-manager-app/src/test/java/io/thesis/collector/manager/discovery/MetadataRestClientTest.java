@@ -30,7 +30,7 @@ public class MetadataRestClientTest {
     @Test
     @Ignore //TODO returns no response in RestTemplate mock. Why?
     public void testGetMetadata() {
-        final CollectorMetadataResult metadataResult = new CollectorMetadataResult("instanceId", "hostname", "system",
+        final CollectorMetadataResult metadataResult = new CollectorMetadataResult("instanceId", "hostname",
                 Lists.newArrayList(), Boolean.FALSE);
         final ResponseEntity<CollectorMetadataResult> responseEntity = new ResponseEntity<>(metadataResult, HttpStatus.OK);
         given(mockRestTemplate.exchange("http://1.2.3.4:1234/client/metadata", HttpMethod.GET, HttpEntity.EMPTY,
@@ -46,8 +46,6 @@ public class MetadataRestClientTest {
         assertThat(metadata.getHostname()).isEqualTo("hostname");
         assertThat(metadata.getInstanceId()).isNotNull();
         assertThat(metadata.getInstanceId()).isEqualTo("instanceId");
-        assertThat(metadata.getSystem()).isNotNull();
-        assertThat(metadata.getSystem()).isEqualTo("system");
         assertThat(metadata.getIsRunning()).isFalse();
     }
 }

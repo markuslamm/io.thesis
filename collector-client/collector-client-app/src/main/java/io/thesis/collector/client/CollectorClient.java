@@ -23,16 +23,13 @@ public class CollectorClient {
 
     private final CollectorRegistry collectorRegistry;
     private final String instanceId;
-    private final String system;
     private final Integer clientPort;
 
     private volatile boolean isRunning = false;
 
-    public CollectorClient(final CollectorRegistry collectorRegistry, final String instanceId,
-                           final String system, final Integer clientPort) {
+    public CollectorClient(final CollectorRegistry collectorRegistry, final String instanceId,final Integer clientPort) {
         this.collectorRegistry = requireNonNull(collectorRegistry);
         this.instanceId = requireNonNull(instanceId);
-        this.system = requireNonNull(system);
         this.clientPort = requireNonNull(clientPort);
     }
 
@@ -44,7 +41,7 @@ public class CollectorClient {
     public CompletableFuture<CollectorMetadata> getMetadata() {
         LOG.debug("Entering getMetadata()");
         final CompletableFuture<CollectorMetadata> metadataMapCF = CompletableFuture.supplyAsync(() -> {
-            final CollectorMetadata metadata = new CollectorMetadata(instanceId, getHostName(), system,
+            final CollectorMetadata metadata = new CollectorMetadata(instanceId, getHostName(),
                     registryAsStrings(), isRunning);
             LOG.debug("Fetched metadata: {}", metadata);
             return metadata;

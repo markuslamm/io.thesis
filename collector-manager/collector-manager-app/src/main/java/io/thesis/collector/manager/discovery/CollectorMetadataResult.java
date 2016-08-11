@@ -17,25 +17,22 @@ public class CollectorMetadataResult  {
 
     private final String instanceId;
     private final String hostname;
-    private final String system;
     private final List<String> registry;
     private final Boolean isRunning;
 
     @JsonCreator
     public CollectorMetadataResult(@JsonProperty("instanceId") final String instanceId,
                                    @JsonProperty("hostname") final String hostname,
-                                   @JsonProperty("system") final String system,
                                    @JsonProperty("registry") final List<String> registry,
                                    @JsonProperty("isRunning") final Boolean isRunning) {
         this.instanceId = instanceId;
         this.hostname = hostname;
-        this.system = system;
         this.registry = registry;
         this.isRunning = isRunning;
     }
 
     public CollectorMetadataResult() {
-        this(UNKNOWN_KEY, UNKNOWN_KEY, UNKNOWN_KEY, Lists.newArrayList(), null);
+        this(UNKNOWN_KEY, UNKNOWN_KEY, Lists.newArrayList(), null);
     }
 
     public String getInstanceId() {
@@ -44,10 +41,6 @@ public class CollectorMetadataResult  {
 
     public String getHostname() {
         return hostname;
-    }
-
-    public String getSystem() {
-        return system;
     }
 
     public List<String> getRegistry() {

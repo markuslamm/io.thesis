@@ -39,7 +39,7 @@ public class CollectorClientConfig {
     @Bean
     CollectorClient collectorClient(final CollectorRegistry collectorRegistry) {
         return new CollectorClient(collectorRegistry, env.getProperty("spring.cloud.consul.discovery.instanceId", "unknown"),
-                env.getProperty("info.system", "unknown"), env.getProperty("server.port", Integer.class));
+                env.getProperty("server.port", Integer.class));
     }
 
     @Bean
