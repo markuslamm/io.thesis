@@ -1,3 +1,3 @@
 ### thesis-commons
 
-Common JSON utilities used by different project modules.
+Common artifacts used by different project modules.

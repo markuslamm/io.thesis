@@ -1,0 +1,4 @@
+collector:
+  flink:
+    host: localhost
+    port: 8081
