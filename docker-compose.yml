@@ -22,3 +22,20 @@ services:
 #      SERVER_PORT: 9090
 #      SPRING_CLOUD_CONSUL_HOST: consul
 #      SPRING_CLOUD_CONSUL_PORT: 8500
+
+  flink-jobmanager:
+    image: flink
+    container_name: flink-jobmanager
+    ports:
+      - "8081:8081"   # webui
+    command: jobmanager
+    volumes:
+      - /usr/local/flink/conf
+      - ./infrastructure/logs/flink-jobmanager:/usr/local/flink/log
+
+  flink-taskmanager:
+    image: flink
+    container_name: flink-taskmanager
+    command: taskmanager
+    volumes_from:
+      - flink-jobmanager

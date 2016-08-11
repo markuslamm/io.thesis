@@ -71,7 +71,7 @@ public class CollectorClientInstanceService {
                                 clientInstance.getServiceId(), clientInstance.getHttps(), clientInstance.getUri(),
                                 metadataResult.getHostname(), metadataResult.getRegistry(),
                                 metadataResult.getIsRunning(), metadataResult.getInstanceId()));
-        LOG.debug("Immediately return from getClientDetails({}, {})", address, port);
+        LOG.debug("Immediately return from getClientDetails({}, {})", address, port); //TODO
         return responseCP;
     }
 }
