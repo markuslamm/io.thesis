@@ -7,6 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -19,8 +20,12 @@ public class CollectorClientInstanceIT {
 
     @Test
     public void testGetClientInstances() {
-        final List<CollectorClientInstance> serviceInstances = service.getClientInstances().join();
-        assertThat(serviceInstances).isNotNull();
-        assertThat(serviceInstances).isInstanceOf(List.class);
+        final CompletableFuture<List<CollectorClientInstance>> serviceInstancesCP = service.getClientInstances();
+        assertThat(serviceInstancesCP).isNotNull();
+
+        serviceInstancesCP.thenAccept(clientInstances -> {
+            assertThat(clientInstances).isNotNull();
+            assertThat(clientInstances).isInstanceOf(List.class);
+        });
     }
 }

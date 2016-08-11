@@ -7,6 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -19,14 +20,17 @@ public class CollectorClientIT {
 
     @Test
     public void testGetMetadata() {
-        final Map<String, Object> result = collectorClient.getMetadata().join();
-        assertThat(result).isNotNull();
-        assertThat(result).isInstanceOf(Map.class);
-        assertThat(result.get("hostname")).isNotNull();
-        assertThat(result.get("instanceId")).isNotNull();
-        assertThat(result.get("sourceSystem")).isNotNull();
-        assertThat(result.get("registry")).isNotNull();
-        assertThat(result.get("isRunning")).isNotNull();
+        final CompletableFuture<Map<String, Object>> metadataCP = collectorClient.getMetadata();
+        assertThat(metadataCP).isNotNull();
+
+        metadataCP.thenAccept(metadata -> {
+            assertThat(metadata).isInstanceOf(Map.class);
+            assertThat(metadata.get("hostname")).isNotNull();
+            assertThat(metadata.get("instanceId")).isNotNull();
+            assertThat(metadata.get("sourceSystem")).isNotNull();
+            assertThat(metadata.get("registry")).isNotNull();
+            assertThat(metadata.get("isRunning")).isNotNull();
+        });
     }
 
 }

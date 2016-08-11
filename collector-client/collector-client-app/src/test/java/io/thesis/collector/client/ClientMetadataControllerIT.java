@@ -17,7 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpMethod.GET;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ClientMetadataControllerIT {
 
     @Autowired
@@ -26,11 +26,12 @@ public class ClientMetadataControllerIT {
     @Test
     public void testGetMetadata() {
         final ResponseEntity<CompletableFuture<CollectorMetadata>> result = restTemplate.exchange("/client/metadata", GET,
-                HttpEntity.EMPTY, new ParameterizedTypeReference<CompletableFuture<CollectorMetadata>>() {});
+                HttpEntity.EMPTY, new ParameterizedTypeReference<CompletableFuture<CollectorMetadata>>() {
+                });
         assertThat(result).isNotNull();
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
         final CompletableFuture<CollectorMetadata> metadataCP = result.getBody();
-
+        assertThat(metadataCP).isNotNull();
         metadataCP.thenAccept(metadata -> {
             assertThat(metadata).isNotNull();
             assertThat(metadata.getCollectorRegistry()).isNotNull();
