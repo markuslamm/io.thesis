@@ -38,6 +38,9 @@ RUN set -x && \
 ENV FLINK_HOME /usr/local/flink
 ENV PATH $PATH:$FLINK_HOME/bin
 
+#Define JMX port for collector access
+ENV FLINK_JMX_PORT 9999
+
 # Configure container
 ADD docker-entrypoint.sh $FLINK_HOME/bin/
 ENTRYPOINT ["docker-entrypoint.sh"]

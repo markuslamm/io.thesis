@@ -28,6 +28,7 @@ services:
     container_name: flink-jobmanager
     ports:
       - "8081:8081"   # webui
+      - "9999:9999"   # jmx
     command: jobmanager
     volumes:
       - /usr/local/flink/conf
@@ -36,6 +37,8 @@ services:
   flink-taskmanager:
     image: flink
     container_name: flink-taskmanager
+    ports:
+      - "9998:9999"   # jmx
     command: taskmanager
     volumes_from:
       - flink-jobmanager

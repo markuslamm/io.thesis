@@ -3,6 +3,8 @@
 echo "cleanup containers..."
 docker rm consul
 docker rm collector-manager
+docker rm flink-jobmanager
+docker rm flink-taskmanager
 
 echo "building sources..."
 mvn install -DskipITs
