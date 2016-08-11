@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <title>io.thesis.collector.server - client details</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link href="http://cdn.jsdelivr.net/webjars/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" media="screen"/>
+</head>
+<body>
+<div class="container">
+    <h3>io.thesis.collector.server</h3>
+    <p th:text="'server time: ' + ${clientDetailsPage.serverTime} + ' | ' +
+    'hostname: ' + ${clientDetailsPage.serverHostName} + ' | ' +
+    'address: ' + ${clientDetailsPage.serverAddress}">time</p>
+    <hr/>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th><a href="#" th:href="@{/}">Back to list</a></th>
+            <th>&nbsp;</th>
+        </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th>client details</th>
+            <th>&nbsp;</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>instanceId</td>
+            <td th:text="${clientDetailsPage.instanceId}">1234</td>
+        </tr>
+        <tr>
+            <td th:text="${#lists.size(clientDetailsPage.registry)} + ' registered collectors: '">2
+                registered collectors
+            </td>
+            <td th:text="${clientDetailsPage.registry}">jmx, dstat</td>
+        </tr>
+
+        <tr>
+            <td>is running</td>
+            <td><span class="label label-primary" id="label_stopped">stopped</span>
+                <span class="label label-success" id="label_running">running</span>
+            </td>
+        </tr>
+        <tr>
+            <td>hostname</td>
+            <td th:text="${clientDetailsPage.hostname}">1234</td>
+        </tr>
+        <tr>
+            <td>address</td>
+            <td th:text="${clientDetailsPage.address}">1234</td>
+        </tr>
+        <tr>
+            <td>port</td>
+            <td th:text="${clientDetailsPage.port}">1234</td>
+        </tr>
+        <tr>
+            <td>https</td>
+            <td th:text="${clientDetailsPage.https}">1234</td>
+        </tr>
+        <tr>
+            <td>uri</td>
+            <td th:text="${clientDetailsPage.url}">1234</td>
+        </tr>
+        </tbody>
+    </table>
+    <hr/>
+    <p>
+        <button type="button" class="btn btn-primary" id="startCollect">Start client</button>
+        <button type="button" class="btn btn-primary" id="stopCollect">Stop client</button>
+    </p>
+</div>
+<script src="http://cdn.jsdelivr.net/webjars/jquery/2.2.4/jquery.min.js"
+        th:src="@{/webjars/jquery/2.2.4/jquery.min.js}"></script>
+<script src="http://cdn.jsdelivr.net/webjars/bootstrap/3.3.6/js/bootstrap.min.js"
+        th:src="@{/webjars/bootstrap/3.3.6/js/bootstrap.min.js}"></script>
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+
+    $(document).ready(function () {
+
+        if ([[${clientDetailsPage.isRunning}]]) {
+            setRunning();
+        } else {
+            setStopped();
+        }
+
+        function setRunning() {
+            $('#startCollect').prop("disabled", true);
+            $('#stopCollect').prop("disabled", false);
+            $('#label_stopped').hide();
+            $('#label_running').show();
+        }
+
+        function setStopped() {
+            $('#startCollect').prop("disabled", false);
+            $('#stopCollect').prop("disabled", true);
+            $('#label_stopped').show();
+            $('#label_running').hide();
+        }
+
+
+        $('#startCollect').on('click', function (e) {
+            $.ajax({
+                type: "POST",
+                data: JSON.stringify({"action": "start"}),
+                contentType: "application/json",
+                url: [[${clientDetailsPage.url}]] + "/client/schedule"
+            }).then(function (data) {
+                setRunning();
+                alert(JSON.stringify(data));
+            });
+        });
+
+        $('#stopCollect').on('click', function (e) {
+            $.ajax({
+                type: "POST",
+                data: JSON.stringify({"action": "stop"}),
+                contentType: "application/json",
+                url: [[${clientDetailsPage.url}]] + "/client/schedule"
+            }).then(function (data) {
+                setStopped();
+                alert(JSON.stringify(data));
+            });
+        });
+
+    });
+    /*]]>*/
+</script>
+</body>
+</html>

@@ -35,7 +35,8 @@ public class CollectorClientInstanceService {
      * @return all 'collector-client' instances
      */
     public CompletableFuture<List<CollectorClientInstance>> getClientInstances() {
-        return CompletableFuture.supplyAsync(() -> {
+        LOG.debug("Entering getClientInstances()");
+        final CompletableFuture<List<CollectorClientInstance>> instancesCP = CompletableFuture.supplyAsync(() -> {
             final List<CollectorClientInstance> clients = discoveryClient.getInstances(clientAppName)
                     .stream()
                     .map(serviceInstance ->
@@ -45,6 +46,8 @@ public class CollectorClientInstanceService {
             LOG.debug("Fetched all client instances: {}", clients);
             return clients;
         });
+        LOG.debug("Immediately return from getClientInstances()");
+        return instancesCP;
     }
 
     /**
@@ -55,18 +58,21 @@ public class CollectorClientInstanceService {
      * @return client instance with detailed information
      */
     public CompletableFuture<CollectorClientInstance> getClientDetails(final String address, final int port) {
+        LOG.debug("Entering getClientDetails({}, {})", address, port);
         final CompletableFuture<CollectorClientInstance> collectorClientInstanceCP = getClientInstances()
                 .thenApply(collectorClientInstances ->
                         collectorClientInstances.stream()
                                 .filter(serviceInstance -> serviceInstance.getAddress().equals(address))
                                 .filter(serviceInstance -> serviceInstance.getPort() == port).findFirst()
                                 .orElse(null)); //TODO
-        return metadataRestClient.getMetadata(address, port)
+        final CompletableFuture<CollectorClientInstance> responseCP = metadataRestClient.getMetadata(address, port)
                 .thenCombine(collectorClientInstanceCP, (metadataResult, clientInstance) ->
                         CollectorClientInstance.of(clientInstance.getAddress(), clientInstance.getPort(),
                                 clientInstance.getServiceId(), clientInstance.getHttps(), clientInstance.getUri(),
                                 metadataResult.getSystem(), metadataResult.getHostname(),
                                 metadataResult.getRegistry(), metadataResult.getIsRunning(),
                                 metadataResult.getInstanceId()));
+        LOG.debug("Immediately return from getClientDetails({}, {})", address, port);
+        return responseCP;
     }
 }

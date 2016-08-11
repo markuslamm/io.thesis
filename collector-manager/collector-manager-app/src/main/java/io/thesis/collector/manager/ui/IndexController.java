@@ -3,12 +3,14 @@ package io.thesis.collector.manager.ui;
 import com.google.common.collect.Maps;
 import io.thesis.collector.manager.CollectorManagerException;
 import io.thesis.collector.manager.discovery.CollectorClientInstanceService;
+import io.thesis.collector.manager.ui.pages.ClientDetailsPage;
 import io.thesis.collector.manager.ui.pages.IndexPage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -57,6 +59,28 @@ public class IndexController {
                 });
         LOG.debug("Immediately return from indexPage()");
         return responseCP;
+    }
+
+    /**
+     * Handles requests for client details.
+     *
+     * @param model the model container
+     * @param host query parameter
+     * @param port  query parameter
+     * @return the name of the view to display
+     */
+    @RequestMapping(value = "/{host:.+}/{port}", method = RequestMethod.GET)
+    public CompletableFuture<String> detailsPage(final Model model, @PathVariable final String host,
+                                                 @PathVariable final Integer port) {
+        LOG.debug("Entering detailsPage() for host={}, port={}", host, port);
+        return clientService.getClientDetails(host, port)
+                .thenApply(collectorClient -> {
+                    LOG.debug("Fetched client for host '{}' and port '{}': {}", host, port, collectorClient);
+                    final Map<String, String> serverInfo = getHostInfo();
+                    model.addAttribute("clientDetailsPage", new ClientDetailsPage(now(), serverInfo.get("serverHostName"),
+                            serverInfo.get("serverHostAddress"), collectorClient));
+                    return "client-details";
+                });
     }
 
     /**

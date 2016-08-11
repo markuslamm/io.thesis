@@ -5,7 +5,6 @@ import org.junit.Test;
 import org.springframework.cloud.client.DefaultServiceInstance;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
 import java.util.List;
@@ -19,13 +18,13 @@ public class CollectorClientInstanceServiceTest {
 
     private CollectorClientInstanceService service;
     private DiscoveryClient mockDiscoveryClient;
-    private RestTemplate mockRestTemplate;
+    private MetadataRestClient mockMetadataRestClient;
 
     @Before
     public void setUp() {
         mockDiscoveryClient = mock(DiscoveryClient.class);
-        mockRestTemplate = mock(RestTemplate.class);
-        service = new CollectorClientInstanceService(mockDiscoveryClient, mockRestTemplate, "collector-client");
+        mockMetadataRestClient = mock(MetadataRestClient.class);
+        service = new CollectorClientInstanceService(mockDiscoveryClient, mockMetadataRestClient, "collector-client");
     }
 
     @Test
@@ -42,5 +41,10 @@ public class CollectorClientInstanceServiceTest {
             assertThat(clientInstances).isNotEmpty();
             assertThat(clientInstances.size()).isEqualTo(2);
         });
+    }
+
+    @Test
+    public void testGetClientDetails() {
+        //TODO
     }
 }
