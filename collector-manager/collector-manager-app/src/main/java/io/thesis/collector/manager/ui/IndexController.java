@@ -45,7 +45,8 @@ public class IndexController {
      */
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public CompletableFuture<String> indexPage(final Model model) {
-        return clientService.getClientInstances()
+        LOG.debug("Entering indexPage()");
+        final CompletableFuture<String> responseCP = clientService.getClientInstances()
                 .thenApply(collectorClients -> {
                     LOG.debug("Fetched registered client instances: {}", collectorClients);
                     final Map<String, String> serverInfo = getHostInfo();
@@ -54,6 +55,8 @@ public class IndexController {
                     return "index";
 
                 });
+        LOG.debug("Immediately return from indexPage()");
+        return responseCP;
     }
 
     /**

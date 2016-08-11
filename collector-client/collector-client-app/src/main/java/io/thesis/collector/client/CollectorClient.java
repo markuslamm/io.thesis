@@ -3,9 +3,6 @@ package io.thesis.collector.client;
 import io.thesis.collector.commons.CollectorType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -20,7 +17,6 @@ import static java.util.Objects.requireNonNull;
  * It manages registered collectors in a {@code CollectorRegistry} and the scheduling of user-triggered
  * data collection.
  */
-@Component
 public class CollectorClient {
 
     private static final Logger LOG = LoggerFactory.getLogger(CollectorClient.class);
@@ -32,11 +28,8 @@ public class CollectorClient {
 
     private volatile boolean isRunning = false;
 
-    @Autowired
-    public CollectorClient(final CollectorRegistry collectorRegistry,
-                           @Value("${spring.cloud.consul.discovery.instanceId}") final String instanceId,
-                           @Value("${info.system}") final String system,
-                           @Value("${server.port}") final Integer clientPort) {
+    public CollectorClient(final CollectorRegistry collectorRegistry, final String instanceId,
+                           final String system, final Integer clientPort) {
         this.collectorRegistry = requireNonNull(collectorRegistry);
         this.instanceId = requireNonNull(instanceId);
         this.system = requireNonNull(system);

@@ -3,6 +3,7 @@ package io.thesis.collector.client.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import io.thesis.collector.client.CollectorClient;
 import io.thesis.collector.client.CollectorRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +34,12 @@ public class CollectorClientConfig {
     CollectorRegistry collectorRegistry() {
         final CollectorRegistry registry = new CollectorRegistry();
         return registry;
+    }
+
+    @Bean
+    CollectorClient collectorClient(final CollectorRegistry collectorRegistry) {
+        return new CollectorClient(collectorRegistry, env.getProperty("spring.cloud.consul.discovery.instanceId", "unknown"),
+                env.getProperty("info.system", "unknown"), env.getProperty("server.port", Integer.class));
     }
 
     @Bean

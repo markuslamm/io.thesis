@@ -26,4 +26,11 @@ public class CollectorClientInstanceIT {
         assertThat(clientInstances).isNotNull();
         assertThat(clientInstances).isInstanceOf(List.class);
     }
+
+    @Test
+    public void testGetClientDetails() {
+        //TODO
+    }
+
+
 }
