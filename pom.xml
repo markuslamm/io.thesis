@@ -10,9 +10,10 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>collector-manager</module>
-        <module>collector-client</module>
+        <module>thesis-commons</module>
         <module>collectors</module>
+        <module>collector-client</module>
+        <module>collector-manager</module>
     </modules>
 
     <developers>
