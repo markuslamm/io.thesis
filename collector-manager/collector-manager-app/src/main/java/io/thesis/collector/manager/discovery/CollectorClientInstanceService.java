@@ -5,8 +5,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -96,7 +94,7 @@ public class CollectorClientInstanceService {
 //            final URI fullUrl = getFullUrl(COLLECTOR_CLIENT_METADATA_PATH, host, port);
 //            try {
 //                final ResponseEntity<CollectorMetadataResult> apiResponse =
-//                        restTemplate.exchange(fullUrl, HttpMethod.GET, emptyRequestEntity(), CollectorMetadataResult.class);
+//                        restTemplate.exchange(fullUrl, HttpMethod.GET, HttpEntity.EMPTY, CollectorMetadataResult.class);
 //                if (!apiResponse.getStatusCode().is2xxSuccessful()) {
 //                    LOG.warn("API call failed, url={}, status={}", fullUrl, apiResponse.getStatusCode());
 //                    throw RestClientException.of(fullUrl.toString(), apiResponse.getStatusCode());
@@ -123,14 +121,4 @@ public class CollectorClientInstanceService {
                 .fromHttpUrl(format("http://%s:%d%s", host, port, apiPath))
                 .build().toUri();
     }
-
-    /**
-     * Creates empty request entity, needed by {@code RestTemplate}
-     *
-     * @return empty HTTP entity
-     */
-    private HttpEntity<?> emptyRequestEntity() {
-        return new HttpEntity<>(new HttpHeaders());
-    }
-
 }
