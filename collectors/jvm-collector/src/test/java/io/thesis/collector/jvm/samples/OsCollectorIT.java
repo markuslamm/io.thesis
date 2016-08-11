@@ -10,22 +10,23 @@ import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class ClassloadingCollectorIT extends AbstractJmxIT {
+public class OsCollectorIT extends AbstractJmxIT {
 
-    private ClassloadingSampleCollector classloadingSampleCollector;
+    private OsSampleCollector osSampleCollector;
 
     @Before
     public void setUp() throws IOException {
-        classloadingSampleCollector = new ClassloadingSampleCollector(mBeanServerConnection());
+        osSampleCollector = new OsSampleCollector(mBeanServerConnection());
     }
 
     @Test
     public void testCollectSample() {
-        final Map<String, Object> result = classloadingSampleCollector.collectSample().join();
+        final Map<String, Object> result = osSampleCollector.collectSample().join();
+
         System.err.println(JsonUtils.toJson(result));
         assertThat(result).isNotNull();
         assertThat(result).isNotEmpty();
-        assertThat(result.get(ClassloadingSampleCollector.SAMPLE_KEY)).isNotNull();
-        assertThat(result.get(ClassloadingSampleCollector.SAMPLE_KEY) instanceof Map).isTrue();
+        assertThat(result.get(OsSampleCollector.SAMPLE_KEY)).isNotNull();
+        assertThat(result.get(OsSampleCollector.SAMPLE_KEY) instanceof Map).isTrue();
     }
 }

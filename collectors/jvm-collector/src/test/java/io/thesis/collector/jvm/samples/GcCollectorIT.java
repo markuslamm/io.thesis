@@ -6,26 +6,27 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class ClassloadingCollectorIT extends AbstractJmxIT {
+public class GcCollectorIT extends AbstractJmxIT {
 
-    private ClassloadingSampleCollector classloadingSampleCollector;
+    private GcSampleCollector gcSampleCollector;
 
     @Before
     public void setUp() throws IOException {
-        classloadingSampleCollector = new ClassloadingSampleCollector(mBeanServerConnection());
+        gcSampleCollector = new GcSampleCollector(mBeanServerConnection());
     }
 
     @Test
     public void testCollectSample() {
-        final Map<String, Object> result = classloadingSampleCollector.collectSample().join();
+        final Map<String, Object> result = gcSampleCollector.collectSample().join();
         System.err.println(JsonUtils.toJson(result));
         assertThat(result).isNotNull();
         assertThat(result).isNotEmpty();
-        assertThat(result.get(ClassloadingSampleCollector.SAMPLE_KEY)).isNotNull();
-        assertThat(result.get(ClassloadingSampleCollector.SAMPLE_KEY) instanceof Map).isTrue();
+        assertThat(result.get(GcSampleCollector.SAMPLE_KEY)).isNotNull();
+        assertThat(result.get(GcSampleCollector.SAMPLE_KEY) instanceof List).isTrue();
     }
 }
