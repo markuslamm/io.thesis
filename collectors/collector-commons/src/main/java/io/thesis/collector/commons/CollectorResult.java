@@ -25,10 +25,10 @@ public class CollectorResult {
                            final String clientHost, final Integer clientPort, final String instanceId) {
         this.collectorType = requireNonNull(collectorType);
         this.data = requireNonNull(data);
-        this.clientTimestamp = requireNonNull(clientTimestamp);
-        this.clientHost = requireNonNull(clientHost);
-        this.clientPort = requireNonNull(clientPort);
-        this.instanceId = requireNonNull(instanceId);
+        this.clientTimestamp = clientTimestamp;
+        this.clientHost = clientHost;
+        this.clientPort = clientPort;
+        this.instanceId = instanceId;
     }
 
     public CollectorResult(final String collectorType, final Map<String, Object> data) {
