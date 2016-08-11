@@ -25,8 +25,7 @@ public class CollectorClientInstanceServiceTest {
     public void setUp() {
         mockDiscoveryClient = mock(DiscoveryClient.class);
         mockRestTemplate = mock(RestTemplate.class);
-        service = new CollectorClientInstanceService(mockDiscoveryClient, mockRestTemplate, "/client/metadata",
-                "collector-client");
+        service = new CollectorClientInstanceService(mockDiscoveryClient, mockRestTemplate, "collector-client");
     }
 
     @Test
@@ -34,9 +33,10 @@ public class CollectorClientInstanceServiceTest {
         final List<ServiceInstance> serviceInstancesResult = Arrays.asList(
                 new DefaultServiceInstance("serviceId", "1.2.3.4", 1234, false),
                 new DefaultServiceInstance("serviceId", "1.2.3.5", 1235, false));
-        given(this.mockDiscoveryClient.getInstances("collector-client")).willReturn(serviceInstancesResult);
+        given(mockDiscoveryClient.getInstances("collector-client")).willReturn(serviceInstancesResult);
         final CompletableFuture<List<CollectorClientInstance>> serviceInstancesCP = service.getClientInstances();
         assertThat(serviceInstancesCP).isNotNull();
+
         serviceInstancesCP.thenAccept(clientInstances -> {
             assertThat(clientInstances).isNotNull();
             assertThat(clientInstances).isNotEmpty();

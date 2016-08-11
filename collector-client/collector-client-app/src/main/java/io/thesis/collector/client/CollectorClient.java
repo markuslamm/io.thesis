@@ -1,18 +1,15 @@
 package io.thesis.collector.client;
 
-import com.google.common.collect.Maps;
 import io.thesis.collector.commons.CollectorType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
@@ -28,15 +25,9 @@ public class CollectorClient {
 
     private static final Logger LOG = LoggerFactory.getLogger(CollectorClient.class);
 
-    private static final String HOSTNAME_KEY = "hostname";
-    private static final String INSTANCE_ID_KEY = "instanceId";
-    private static final String SOURCE_SYSTEM_KEY = "sourceSystem";
-    private static final String REGISTRY_KEY = "registry";
-    private static final String IS_RUNNING = "isRunning";
-
     private final CollectorRegistry collectorRegistry;
     private final String instanceId;
-    private final String sourceSystem;
+    private final String system;
     private final Integer clientPort;
 
     private volatile boolean isRunning = false;
@@ -44,11 +35,11 @@ public class CollectorClient {
     @Autowired
     public CollectorClient(final CollectorRegistry collectorRegistry,
                            @Value("${spring.cloud.consul.discovery.instanceId}") final String instanceId,
-                           @Value("${info.system}") final String sourceSystem,
+                           @Value("${info.system}") final String system,
                            @Value("${server.port}") final Integer clientPort) {
         this.collectorRegistry = requireNonNull(collectorRegistry);
         this.instanceId = requireNonNull(instanceId);
-        this.sourceSystem = requireNonNull(sourceSystem);
+        this.system = requireNonNull(system);
         this.clientPort = requireNonNull(clientPort);
     }
 
@@ -57,16 +48,11 @@ public class CollectorClient {
      *
      * @return a future with a map of metadata for the client.
      */
-    @Async
-    public CompletableFuture<Map<String, Object>> getMetadata() {
+    public CompletableFuture<CollectorMetadata> getMetadata() {
         LOG.debug("Entering getMetadata()");
-        final CompletableFuture<Map<String, Object>> metadataMapCF = CompletableFuture.supplyAsync(() -> {
-            final Map<String, Object> metadata = Maps.newHashMap();
-            metadata.put(HOSTNAME_KEY, getHostName());
-            metadata.put(INSTANCE_ID_KEY, instanceId);
-            metadata.put(SOURCE_SYSTEM_KEY, sourceSystem);
-            metadata.put(REGISTRY_KEY, registryAsStrings());
-            metadata.put(IS_RUNNING, isRunning);
+        final CompletableFuture<CollectorMetadata> metadataMapCF = CompletableFuture.supplyAsync(() -> {
+            final CollectorMetadata metadata = new CollectorMetadata(instanceId, getHostName(), system,
+                    registryAsStrings(), isRunning);
             LOG.debug("Fetched metadata: {}", metadata);
             return metadata;
         });

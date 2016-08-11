@@ -21,7 +21,7 @@ public class IndexControllerIT {
     private TestRestTemplate restTemplate;
 
     @Test
-    public void exampleTest() {
+    public void testIndexPage() {
         final ResponseEntity<String> result = restTemplate.exchange("/", GET, HttpEntity.EMPTY, String.class);
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
     }

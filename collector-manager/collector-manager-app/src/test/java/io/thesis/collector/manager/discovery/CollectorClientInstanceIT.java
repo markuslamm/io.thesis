@@ -22,10 +22,8 @@ public class CollectorClientInstanceIT {
     public void testGetClientInstances() {
         final CompletableFuture<List<CollectorClientInstance>> serviceInstancesCP = service.getClientInstances();
         assertThat(serviceInstancesCP).isNotNull();
-
-        serviceInstancesCP.thenAccept(clientInstances -> {
-            assertThat(clientInstances).isNotNull();
-            assertThat(clientInstances).isInstanceOf(List.class);
-        });
+        final List<CollectorClientInstance> clientInstances = serviceInstancesCP.join();
+        assertThat(clientInstances).isNotNull();
+        assertThat(clientInstances).isInstanceOf(List.class);
     }
 }

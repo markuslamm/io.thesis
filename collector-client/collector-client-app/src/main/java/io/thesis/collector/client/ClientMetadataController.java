@@ -10,14 +10,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 import static java.util.Objects.requireNonNull;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 /**
- * spring-mvc controller that provides an endpoint for fetching metadata of the collector-client.
+ * Provides an endpoint for fetching metadata of the collector-client.
  * <p>
  * Used by collector-manager to display metadata in the server UI.
  */
@@ -41,11 +40,14 @@ public class ClientMetadataController {
      */
     @Async
     @RequestMapping(method = RequestMethod.GET)
-    public CompletableFuture<ResponseEntity<Map<String, Object>>> getMetadata() {
-        return collectorClient.getMetadata()
+    public CompletableFuture<ResponseEntity<CollectorMetadata>> getMetadata() {
+        LOG.debug("Entering getMetadata()");
+        final CompletableFuture<ResponseEntity<CollectorMetadata>> responseCP = collectorClient.getMetadata()
                 .thenApply(metadataMap -> {
                     LOG.debug("Fetched client metadata: {}", metadataMap);
                     return new ResponseEntity<>(metadataMap, HttpStatus.OK);
                 });
+        LOG.debug("Immediately return from getMetadata()");
+        return responseCP;
     }
 }

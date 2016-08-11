@@ -11,8 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.concurrent.CompletableFuture;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpMethod.GET;
 
@@ -25,20 +23,18 @@ public class ClientMetadataControllerIT {
 
     @Test
     public void testGetMetadata() {
-        final ResponseEntity<CompletableFuture<CollectorMetadata>> result = restTemplate.exchange("/client/metadata", GET,
-                HttpEntity.EMPTY, new ParameterizedTypeReference<CompletableFuture<CollectorMetadata>>() {
+        final ResponseEntity<CollectorMetadata> result = restTemplate.exchange("/client/metadata", GET,
+                HttpEntity.EMPTY, new ParameterizedTypeReference<CollectorMetadata>() {
                 });
         assertThat(result).isNotNull();
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
-        final CompletableFuture<CollectorMetadata> metadataCP = result.getBody();
-        assertThat(metadataCP).isNotNull();
-        metadataCP.thenAccept(metadata -> {
-            assertThat(metadata).isNotNull();
-            assertThat(metadata.getCollectorRegistry()).isNotNull();
-            assertThat(metadata.getInstanceId()).isNotNull();
-            assertThat(metadata.getSystem()).isNotNull();
-            assertThat(metadata.getHostname()).isNotNull();
-            assertThat(metadata.getIsRunning()).isNotNull();
-        });
+        final CollectorMetadata metadata = result.getBody();
+        assertThat(metadata).isNotNull();
+        assertThat(metadata.getHostname()).isNotNull();
+        assertThat(metadata.getInstanceId()).isNotNull();
+        assertThat(metadata.getSystem()).isNotNull();
+        assertThat(metadata.getRegistry()).isNotNull();
+        assertThat(metadata.getRegistry()).isEmpty();
+        assertThat(metadata.getIsRunning()).isNotNull();
     }
 }
