@@ -2,7 +2,6 @@ package io.thesis.collector.jvm;//package io.thesis.collector.jvm;
 
 import com.google.common.collect.Maps;
 import io.thesis.collector.commons.AbstractCollector;
-import io.thesis.collector.commons.CollectorResult;
 import io.thesis.collector.commons.CollectorType;
 import io.thesis.collector.commons.SampleCollector;
 import io.thesis.collector.commons.jmx.JmxCollectorException;
@@ -17,9 +16,9 @@ import static java.lang.String.format;
  * Collects default JVM data via the JMX interface. Uses an internal registry of {@code SampleCollector}s
  * and aggregates their results.
  */
-final class JvmCollector extends AbstractCollector {
+public final class JvmCollector extends AbstractCollector {
 
-    JvmCollector(final MBeanServerConnection mBeanServerConnection) {
+    public JvmCollector(final MBeanServerConnection mBeanServerConnection) {
         super(jvmSampleRegistry(mBeanServerConnection));
     }
 

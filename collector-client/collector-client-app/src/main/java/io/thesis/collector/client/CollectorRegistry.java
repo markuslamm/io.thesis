@@ -8,8 +8,7 @@ import java.util.Collection;
 import java.util.Map;
 
 /**
- * Registry component that holds instances of all registered {@code Collector}
- * implementations.
+ * Registry component that holds instances of all registered {@code Collector} implementations.
  */
 public final class CollectorRegistry {
 

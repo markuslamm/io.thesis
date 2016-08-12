@@ -1,3 +1,9 @@
+collector:
+  jmx:
+    url: service:jmx:rmi:///jndi/rmi://localhost:9999/jmxrmi
+  client:
+    default-interval-in-ms: 5000
+
 server:
   port: ${CLIENT_PORT:9091}
 
@@ -8,6 +14,12 @@ logging:
     org.springframework.boot: INFO
     org.springframework.web: INFO
     org.springframework.kafka: INFO
+
+kafka:
+  broker:
+    address: localhost:9092
+  outbound-topic: collector-outbound-topic
+  outbound-key: collector-outbound-key
 
 spring:
   thymeleaf:
