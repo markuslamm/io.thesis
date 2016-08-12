@@ -21,14 +21,6 @@ public abstract class AbstractCollector implements Collector {
         this.sampleRegistry = requireNonNull(sampleRegistry);
     }
 
-    protected Map<String, SampleCollector> getSampleRegistry() {
-        return sampleRegistry;
-    }
-
-    protected abstract void checkRegistry();
-
-    protected abstract CollectorResult createResult(final Map<String, Object> dataMap);
-
     @Override
     public CompletableFuture<CollectorResult> collect() {
         LOG.debug("Entering AbstractCollector collect()");
@@ -56,4 +48,12 @@ public abstract class AbstractCollector implements Collector {
         LOG.debug("Immediately return from AbstractCollector collect()");
         return collectorResultCF;
     }
+
+    protected Map<String, SampleCollector> getSampleRegistry() {
+        return sampleRegistry;
+    }
+
+    protected abstract void checkRegistry();
+
+    protected abstract CollectorResult createResult(final Map<String, Object> dataMap);
 }
