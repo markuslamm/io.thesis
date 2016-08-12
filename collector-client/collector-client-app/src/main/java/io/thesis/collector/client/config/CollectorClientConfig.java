@@ -4,9 +4,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.thesis.collector.client.CollectorClient;
+import io.thesis.collector.client.CollectorClientException;
 import io.thesis.collector.client.CollectorRegistry;
 import io.thesis.collector.client.outbound.KafkaOutboundWriter;
 import io.thesis.collector.client.outbound.OutboundWriter;
+import io.thesis.collector.flink.FlinkRestCollector;
+import io.thesis.collector.jvm.JvmCollector;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -17,6 +22,9 @@ import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -24,6 +32,8 @@ import static java.util.Objects.requireNonNull;
 
 @Configuration
 public class CollectorClientConfig {
+
+    private static final Logger LOG = LoggerFactory.getLogger(CollectorClientConfig.class);
 
     private final Environment env;
     private final ApplicationContext context;
@@ -37,6 +47,24 @@ public class CollectorClientConfig {
     @Bean
     CollectorRegistry collectorRegistry() {
         final CollectorRegistry registry = new CollectorRegistry();
+
+        final List<String> activeProfiles = Arrays.asList(env.getActiveProfiles());
+        if (activeProfiles.contains("jvm-jmx")) {
+            final JvmCollector defaultJvmCollector =
+                    Optional.ofNullable(context.getBean(JvmCollector.class))
+                            .orElseThrow(() ->
+                                    new CollectorClientException("JvmCollector must not be null on profile 'jvm-jmx'"));
+            registry.register(defaultJvmCollector);
+            LOG.info("Added JvmCollector to registry");
+        }
+        if(activeProfiles.contains("flink-rest")) {
+            final FlinkRestCollector flinkRestCollector =
+                    Optional.ofNullable(context.getBean(FlinkRestCollector.class))
+                            .orElseThrow(() ->
+                                    new CollectorClientException("FlinkRestCollector must not be null on profile 'flink-rest'"));
+            registry.register(flinkRestCollector);
+            LOG.info("Added FlinkRestCollector to registry");
+        }
         return registry;
     }
 
