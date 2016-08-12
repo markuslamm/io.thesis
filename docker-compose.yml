@@ -23,6 +23,29 @@ services:
 #      SPRING_CLOUD_CONSUL_HOST: consul
 #      SPRING_CLOUD_CONSUL_PORT: 8500
 
+  zookeeper:
+    container_name: zookeeper
+    image: wurstmeister/zookeeper
+    ports:
+      - "2181:2181"
+
+  kafka:
+    container_name: kafka
+    image: wurstmeister/kafka
+    ports:
+      - "9092:9092"
+      - "9997:9999"   # jmx
+    environment:
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_HOST_NAME: 192.168.2.105
+      KAFKA_CREATE_TOPICS: "collector-outbound-topic:1:1,flink-outbound-topic:1:1"
+      JMX_PORT: 9999
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      - zookeeper
+      - consul
+
   flink-jobmanager:
     image: flink
     container_name: flink-jobmanager
