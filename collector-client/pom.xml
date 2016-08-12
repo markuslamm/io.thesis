@@ -14,6 +14,7 @@
     <artifactId>collector-client-parent</artifactId>
 
     <modules>
+        <module>collector-client-outbound</module>
         <module>collector-client-app</module>
     </modules>
 
