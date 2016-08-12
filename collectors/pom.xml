@@ -28,6 +28,7 @@
         <module>jvm-jmx-collector</module>
         <module>flink-rest-collector</module>
         <module>flink-jmx-collector</module>
+        <module>dstat-collector</module>
     </modules>
 
 </project>
