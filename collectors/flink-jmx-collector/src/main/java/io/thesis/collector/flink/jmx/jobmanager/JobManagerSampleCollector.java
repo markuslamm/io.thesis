@@ -227,5 +227,4 @@ public class JobManagerSampleCollector extends AbstractJmxSampleCollector {
                 .distinct()
                 .collect(Collectors.toSet());
     }
-
 }
