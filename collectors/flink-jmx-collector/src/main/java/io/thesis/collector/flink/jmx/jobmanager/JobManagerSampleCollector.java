@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 import static java.lang.String.format;
 import static java.util.Objects.requireNonNull;
 
-public class JobManagerSampleCollector extends AbstractJmxSampleCollector {
+public final class JobManagerSampleCollector extends AbstractJmxSampleCollector {
 
     public static final String SAMPLE_KEY = "jobmanager";
 

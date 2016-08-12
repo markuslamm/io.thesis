@@ -13,11 +13,11 @@ import java.util.stream.Collectors;
 
 import static java.util.Objects.requireNonNull;
 
-class TaskManagerSampleCollector extends AbstractJmxSampleCollector {
+public final class TaskManagerSampleCollector extends AbstractJmxSampleCollector {
 
     static final String SAMPLE_KEY = "taskmanager";
 
-    TaskManagerSampleCollector(final MBeanServerConnection mBeanServerConnection) {
+    public TaskManagerSampleCollector(final MBeanServerConnection mBeanServerConnection) {
         super(requireNonNull(mBeanServerConnection));
     }
 

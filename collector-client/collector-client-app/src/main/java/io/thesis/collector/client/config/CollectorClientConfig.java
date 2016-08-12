@@ -9,6 +9,7 @@ import io.thesis.collector.client.CollectorRegistry;
 import io.thesis.collector.client.outbound.KafkaOutboundWriter;
 import io.thesis.collector.client.outbound.OutboundWriter;
 import io.thesis.collector.flink.FlinkRestCollector;
+import io.thesis.collector.flink.jmx.FlinkJmxCollector;
 import io.thesis.collector.jvm.JvmCollector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,6 +65,14 @@ public class CollectorClientConfig {
                                     new CollectorClientException("FlinkRestCollector must not be null on profile 'flink-rest'"));
             registry.register(flinkRestCollector);
             LOG.info("Added FlinkRestCollector to registry");
+        }
+        if(activeProfiles.contains("flink-jmx")) {
+            final FlinkJmxCollector flinkJmxCollector =
+                    Optional.ofNullable(context.getBean(FlinkJmxCollector.class))
+                            .orElseThrow(() ->
+                                    new CollectorClientException("FlinkJmxCollector must not be null on profile 'flink-jmx'"));
+            registry.register(flinkJmxCollector);
+            LOG.info("Added FlinkJmxCollector to registry");
         }
         return registry;
     }

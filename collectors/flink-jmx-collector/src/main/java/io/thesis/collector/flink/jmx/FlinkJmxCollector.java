@@ -15,9 +15,9 @@ import static java.lang.String.format;
  * Collects data for Apache Flink's new JMX JobManager metrics available since version 1.1.0.
  * Uses an internal registry of {@code SampleCollector}s and aggregates their results.
  */
-class FlinkJmxCollector extends AbstractCollector {
+public final class FlinkJmxCollector extends AbstractCollector {
 
-    FlinkJmxCollector(final MBeanServerConnection mBeanServerConnection) {
+    public FlinkJmxCollector(final MBeanServerConnection mBeanServerConnection) {
         super(flinkSampleRegistry(mBeanServerConnection));
     }
 
