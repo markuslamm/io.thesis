@@ -1,4 +1,4 @@
-package io.thesis.collector.dstat.data;
+package io.thesis.collector.dstat.samples;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;

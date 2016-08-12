@@ -4,7 +4,7 @@ import com.google.common.collect.Maps;
 import io.thesis.collector.commons.Collector;
 import io.thesis.collector.commons.CollectorResult;
 import io.thesis.collector.commons.CollectorType;
-import io.thesis.collector.dstat.data.CpuSampleCollector;
+import io.thesis.collector.dstat.samples.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -98,6 +98,12 @@ public final class DstatCollector implements Collector {
     private static Map<String, AbstractDstatSampleCollector> defaultSampleRegistry() {
         final Map<String, AbstractDstatSampleCollector> registry = Maps.newHashMap();
         registry.put(CpuSampleCollector.SAMPLE_KEY, new CpuSampleCollector());
+        registry.put(DiskSampleCollector.SAMPLE_KEY, new DiskSampleCollector());
+        registry.put(IoSampleCollector.SAMPLE_KEY, new IoSampleCollector());
+        registry.put(MemorySampleCollector.SAMPLE_KEY, new MemorySampleCollector());
+        registry.put(NetSampleCollector.SAMPLE_KEY, new NetSampleCollector());
+        registry.put(ProcessSampleCollector.SAMPLE_KEY, new ProcessSampleCollector());
+        registry.put(SystemSampleCollector.SAMPLE_KEY, new SystemSampleCollector());
         return registry;
     }
 }

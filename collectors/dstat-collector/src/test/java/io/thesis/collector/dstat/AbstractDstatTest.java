@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-abstract class AbstractDstatTest {
+public abstract class AbstractDstatTest {
 
     private static final String DSTAT_DATA = "dstat.data";
 

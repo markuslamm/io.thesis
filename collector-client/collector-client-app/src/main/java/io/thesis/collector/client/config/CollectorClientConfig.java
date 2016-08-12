@@ -8,6 +8,7 @@ import io.thesis.collector.client.CollectorClientException;
 import io.thesis.collector.client.CollectorRegistry;
 import io.thesis.collector.client.outbound.KafkaOutboundWriter;
 import io.thesis.collector.client.outbound.OutboundWriter;
+import io.thesis.collector.dstat.DstatCollector;
 import io.thesis.collector.flink.FlinkRestCollector;
 import io.thesis.collector.flink.jmx.FlinkJmxCollector;
 import io.thesis.collector.jvm.JvmCollector;
@@ -73,6 +74,13 @@ public class CollectorClientConfig {
                                     new CollectorClientException("FlinkJmxCollector must not be null on profile 'flink-jmx'"));
             registry.register(flinkJmxCollector);
             LOG.info("Added FlinkJmxCollector to registry");
+        }
+        if(activeProfiles.contains("dstat")) {
+            final DstatCollector dstatCollector =
+                    Optional.ofNullable(context.getBean(DstatCollector.class))
+                            .orElseThrow(() -> new CollectorClientException("DstatCollector must not be null on profile 'dstat'"));
+            registry.register(dstatCollector);
+            LOG.info("Added DstatCollector to registry");
         }
         return registry;
     }
