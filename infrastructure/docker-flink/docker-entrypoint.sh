@@ -23,6 +23,10 @@ if [ "$1" = "jobmanager" ]; then
     sed -i -e "s/jobmanager.rpc.address: localhost/jobmanager.rpc.address: `hostname -f`/g" $FLINK_HOME/conf/flink-conf.yaml
     sed -i -e "s/taskmanager.numberOfTaskSlots: 1/taskmanager.numberOfTaskSlots: `grep -c ^processor /proc/cpuinfo`/g" $FLINK_HOME/conf/flink-conf.yaml
     echo "env.java.opts: \"-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=$FLINK_JMX_PORT -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false \"" >> $FLINK_HOME/conf/flink-conf.yaml
+
+    echo "metrics.reporters: collector_jmx_reporter" >> $FLINK_HOME/conf/flink-conf.yaml
+    echo "metrics.reporter.collector_jmx_reporter.class: org.apache.flink.metrics.jmx.JMXReporter" >> $FLINK_HOME/conf/flink-conf.yaml
+    echo "metrics.reporter.collector_jmx_reporter: 9999" >> $FLINK_HOME/conf/flink-conf.yaml
     echo "config file: " && grep '^[^\n#]' $FLINK_HOME/conf/flink-conf.yaml
     $FLINK_HOME/bin/jobmanager.sh start cluster
 elif [ "$1" = "taskmanager" ]; then
