@@ -7,6 +7,7 @@ import static java.util.Objects.requireNonNull;
  */
 public enum CollectorType {
 
+    JVM_JMX("jvm-jmx"),
     DSTAT("dstat"),
     FLINK("flink-1.1.0"),
     KAFKA("kafka-0.9.0.1");
@@ -24,6 +25,9 @@ public enum CollectorType {
     public static CollectorType of(final String text) {
         final CollectorType result;
         switch (text) {
+            case "jvm-jmx":
+                result = JVM_JMX;
+                break;
             case "dstat":
                 result = DSTAT;
                 break;
