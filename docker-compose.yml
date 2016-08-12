@@ -65,3 +65,19 @@ services:
     command: taskmanager
     volumes_from:
       - flink-jobmanager
+
+  elk:
+    container_name: elk
+    image: sebp/elk
+    ports:
+      - "5601:5601"
+      - "9200:9200"
+      - "5044:5044"
+      - "5000:5000"
+    volumes:
+      - ./infrastructure/logs/elk/elasticsearch:/var/log/elasticsearch
+      - ./infrastructure/logs/elk/logstash:/var/log/logstash
+      - ./infrastructure/logs/elk/kibana:/var/log/kibana
+    depends_on:
+      - zookeeper
+      - kafka
