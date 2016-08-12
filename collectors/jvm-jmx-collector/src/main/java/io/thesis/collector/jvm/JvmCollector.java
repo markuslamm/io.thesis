@@ -17,10 +17,9 @@ import static java.lang.String.format;
  * Collects default JVM data via the JMX interface. Uses an internal registry of {@code SampleCollector}s
  * and aggregates their results.
  */
-public final class JvmCollector extends AbstractCollector {
+final class JvmCollector extends AbstractCollector {
 
-
-    public JvmCollector(final MBeanServerConnection mBeanServerConnection) {
+    JvmCollector(final MBeanServerConnection mBeanServerConnection) {
         super(jvmSampleRegistry(mBeanServerConnection));
     }
 
@@ -32,13 +31,8 @@ public final class JvmCollector extends AbstractCollector {
     @Override
     protected void checkRegistry() {
         if (getSampleRegistry().isEmpty()) {
-            throw new JmxCollectorException(format("No registered %s collectors", CollectorType.JVM_JMX));
+            throw new JmxCollectorException(format("No registered %s sample collectors", CollectorType.JVM_JMX));
         }
-    }
-
-    @Override
-    protected CollectorResult createResult(final Map<String, Object> dataMap) {
-        return new CollectorResult(CollectorType.JVM_JMX.fullText(), dataMap);
     }
 
     private static Map<String, SampleCollector> jvmSampleRegistry(final MBeanServerConnection mBeanServerConnection) {

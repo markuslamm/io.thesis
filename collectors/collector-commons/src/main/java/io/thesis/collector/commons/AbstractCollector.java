@@ -40,7 +40,8 @@ public abstract class AbstractCollector implements Collector {
                     .thenApply(sampleResults -> {
                         final Map<String, Object> dataMap = Maps.newLinkedHashMap();
                         sampleResults.forEach(dataMap::putAll);
-                        final CollectorResult collectorResult = createResult(dataMap);
+                        final CollectorResult collectorResult = new CollectorResult(getCollectorType().name().toLowerCase(),
+                                dataMap);
                         LOG.debug("Finished AbstractCollector collect()");
                         return collectorResult;
                     }).join();
@@ -54,6 +55,4 @@ public abstract class AbstractCollector implements Collector {
     }
 
     protected abstract void checkRegistry();
-
-    protected abstract CollectorResult createResult(final Map<String, Object> dataMap);
 }

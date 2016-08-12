@@ -27,6 +27,7 @@
         <module>collector-commons</module>
         <module>jvm-jmx-collector</module>
         <module>flink-rest-collector</module>
+        <module>flink-jmx-collector</module>
     </modules>
 
 </project>

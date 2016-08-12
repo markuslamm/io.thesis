@@ -13,7 +13,7 @@ import java.util.concurrent.CompletableFuture;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class FlinkCollectorIT {
+public class FlinkRestCollectorIT {
 
     private FlinkRestCollector collector;
 
@@ -35,7 +35,7 @@ public class FlinkCollectorIT {
         assertThat(result.getCollectorType()).isNotNull();
         assertThat(result.getData().isEmpty()).isFalse();
         assertThat(result.getData()).isNotNull();
-        assertThat(result.getCollectorType()).isEqualTo(CollectorType.FLINK.fullText());
+        assertThat(result.getCollectorType()).isEqualTo(CollectorType.FLINK_REST.name().toLowerCase());
         assertThat(result.getData().get("cluster")).isNotNull();
         assertThat(result.getData().get("jobs")).isNotNull();
         System.err.println(JsonUtils.toJson(result));

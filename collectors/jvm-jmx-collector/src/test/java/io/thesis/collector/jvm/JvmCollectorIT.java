@@ -29,7 +29,7 @@ public class JvmCollectorIT extends AbstractJmxIT {
         assertThat(result.getCollectorType()).isNotNull();
         assertThat(result.getData().isEmpty()).isFalse();
         assertThat(result.getData()).isNotNull();
-        assertThat(result.getCollectorType()).isEqualTo(CollectorType.JVM_JMX.fullText());
+        assertThat(result.getCollectorType()).isEqualTo(CollectorType.JVM_JMX.name().toLowerCase());
         System.err.println(JsonUtils.toJson(result));
         assertThat(result.getData().get("classloading")).isNotNull();
         assertThat(result.getData().get("nio-buffer-pools")).isNotNull();

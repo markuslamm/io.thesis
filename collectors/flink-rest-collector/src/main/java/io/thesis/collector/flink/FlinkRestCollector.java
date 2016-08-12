@@ -14,7 +14,7 @@ import java.util.Map;
 import static java.lang.String.format;
 
 /**
- * Collects data provided by Apache Flink's HTTP monitoring API and JMX interface. Uses an internal registry of
+ * Collects data provided by Apache Flink's HTTP monitoring API. Uses an internal registry of
  * {@code SampleCollector}s and aggregates their results.
  */
 public final class FlinkRestCollector extends AbstractCollector {
@@ -25,20 +25,15 @@ public final class FlinkRestCollector extends AbstractCollector {
 
     @Override
     public CollectorType getCollectorType() {
-        return CollectorType.FLINK;
+        return CollectorType.FLINK_REST;
     }
 
 
     @Override
     protected void checkRegistry() {
         if (getSampleRegistry().isEmpty()) {
-            throw new FlinkCollectorException(format("No registered %s collectors", CollectorType.FLINK));
+            throw new FlinkRestCollectorException(format("No registered %s collectors", CollectorType.FLINK_REST));
         }
-    }
-
-    @Override
-    protected CollectorResult createResult(final Map<String, Object> dataMap) {
-        return new CollectorResult(CollectorType.FLINK.fullText(), dataMap);
     }
 
     private static Map<String, SampleCollector> flinkRestSampleRegistry(final FlinkRestClient flinkRestClient) {

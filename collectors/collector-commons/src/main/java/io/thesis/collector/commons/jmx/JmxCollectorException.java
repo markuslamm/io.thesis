@@ -5,7 +5,7 @@ import io.thesis.collector.commons.CollectorException;
 /**
  * Encapsulates exceptions that may occur while collecting JMX data.
  */
-public final class JmxCollectorException extends CollectorException {
+public class JmxCollectorException extends CollectorException {
 
     private static final long serialVersionUID = 512431282101179439L;
 
