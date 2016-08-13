@@ -39,6 +39,16 @@ public final class JsonUtils {
         }
     }
 
+//    public static <T> T readObjectFromJsonNode(final JsonNode jsonNode, final Class<T> clazz) {
+//        try {
+//            return MAPPER.convertValue(jsonNode, clazz);
+//
+//        } catch (IllegalArgumentException e) {
+//            throw new JsonException(format("Unable to read JSON object '%s' from JsonNode",
+//                    clazz.getSimpleName()), e);
+//        }
+//    }
+
     public static <T> T readObject(final Class<T> clazz, final String input) {
         try {
             return MAPPER.readValue(input, clazz);
