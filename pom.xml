@@ -14,6 +14,7 @@
         <module>collectors</module>
         <module>collector-client</module>
         <module>collector-manager</module>
+        <module>collector-data-processor</module>
     </modules>
 
     <developers>

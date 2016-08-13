@@ -1,7 +1,7 @@
 #!/bin/sh
 
 echo "cleanup containers..."
-docker rm consul collector-manager flink-jobmanager flink-taskmanager kafka elk 1>/dev/null 2>&1
+docker rm -f $(docker ps -a -q)
 
 echo "building sources..."
 mvn install -DskipITs
