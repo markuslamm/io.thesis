@@ -50,7 +50,7 @@ class CollectorWorker implements Runnable {
                                 clientPort, instanceId);
                         final String jsonData = JsonUtils.toJson(result);
                         System.err.println(jsonData);
-                        outboundWriter.write(jsonData);
+                        outboundWriter.write(collector.getCollectorType().name().toLowerCase(), jsonData);
                     } catch (UnknownHostException ex) {
                         throw new CollectorClientException(ex.getMessage());
                     }

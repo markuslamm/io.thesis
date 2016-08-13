@@ -19,10 +19,14 @@ public class CollectorDataProcessor {
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         final Properties properties = new Properties();
         properties.setProperty("bootstrap.servers", KAFKA_HOST);
+
         final DataStream<String> kafkaInStream = env.addSource(new FlinkKafkaConsumer09<>(INBOUND_TOPIC,
                 new SimpleStringSchema(), properties));
 
         /* this is the place to transform the collected data */
+
+        kafkaInStream.print();
+
 
         kafkaInStream.addSink(new FlinkKafkaProducer09<>(KAFKA_HOST, OUTBOUND_TOPIC, new SimpleStringSchema()));
         env.execute();

@@ -1,9 +1,15 @@
 package io.thesis.collector.client.outbound;
 
 /**
- * Base interface for components the write collected data into a sink.
+ * Base interface for components that write collected data into a sink.
  */
 public interface OutboundWriter {
 
-    void write(String jsonData);
+    /**
+     * Writes JSON data.
+     *
+     * @param key the key the data is associated with
+     * @param jsonData raw JSON data
+     */
+    void write(String key, String jsonData);
 }

@@ -1,10 +1,10 @@
 #!/bin/sh
 
-echo "cleanup containers..."
-docker rm -f $(docker ps -a -q)
-
 echo "building sources..."
 mvn install -DskipITs
+
+echo "cleanup containers..."
+docker rm -f $(docker ps -a -q)
 
 echo "building collector-manager-app..."
 docker build -t io.thesis/collector-manager collector-manager

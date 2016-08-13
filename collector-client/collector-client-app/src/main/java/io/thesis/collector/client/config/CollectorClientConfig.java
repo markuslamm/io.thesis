@@ -118,8 +118,7 @@ public class CollectorClientConfig {
 
     @Bean
     OutboundWriter outboundWriter(final KafkaTemplate<String, String> kafkaTemplate) {
-        return new KafkaOutboundWriter(kafkaTemplate, env.getProperty("kafka.outbound-topic"),
-                env.getProperty("kafka.outbound-key"));
+        return new KafkaOutboundWriter(kafkaTemplate, env.getProperty("kafka.outbound-topic"));
     }
 
     private static class DaemonThreadFactory implements ThreadFactory {

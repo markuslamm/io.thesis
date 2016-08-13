@@ -2,7 +2,6 @@ package io.thesis.collector.client.outbound;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.util.concurrent.ListenableFuture;
@@ -20,14 +19,10 @@ public class KafkaOutboundWriter implements OutboundWriter {
 
     private final KafkaTemplate<String, String> kafkaTemplate;
     private final String kafkaOutboundTopic;
-    private final String kafkaOutboundKey;
 
-    public KafkaOutboundWriter(final KafkaTemplate<String, String> kafkaTemplate,
-                               @Value("${kafka.outbound-topic}") final String kafkaOutboundTopic,
-                               @Value("${kafka.outbound-key}") final String kafkaOutboundKey) {
+    public KafkaOutboundWriter(final KafkaTemplate<String, String> kafkaTemplate, final String kafkaOutboundTopic) {
         this.kafkaTemplate = requireNonNull(kafkaTemplate);
         this.kafkaOutboundTopic = requireNonNull(kafkaOutboundTopic);
-        this.kafkaOutboundKey = requireNonNull(kafkaOutboundKey);
     }
 
     /**
@@ -36,15 +31,15 @@ public class KafkaOutboundWriter implements OutboundWriter {
      * @param jsonData collected data JSON formatted
      */
     @Override
-    public void write(final String jsonData) {
+    public void write(final String key, final String jsonData) {
         LOG.debug("Trying to send data to Kafka");
-        final ListenableFuture<SendResult<String, String>> sendResultFuture = kafkaTemplate.send(kafkaOutboundTopic,
-                kafkaOutboundKey, jsonData);
+        final ListenableFuture<SendResult<String, String>> sendResultFuture =
+                kafkaTemplate.send(kafkaOutboundTopic, key, jsonData);
         sendResultFuture.addCallback(new ListenableFutureCallback<SendResult<String, String>>() {
             @Override
             public void onSuccess(final SendResult<String, String> response) {
                 //just for info
-                LOG.debug("Successfully send data to Kafka");
+                LOG.debug("Successfully send data to Kafka, topic={}, key={}", kafkaOutboundTopic, key);
             }
 
             @Override
