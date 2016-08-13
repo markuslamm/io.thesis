@@ -44,6 +44,10 @@ services:
     volumes:
       - /usr/local/flink/conf
       - ./infrastructure/logs/flink-jobmanager:/usr/local/flink/log
+    depends_on:
+      - consul
+      - kafka
+      - elk
 
   flink-taskmanager:
     image: flink
@@ -53,31 +57,36 @@ services:
     command: taskmanager
     volumes_from:
       - flink-jobmanager
+    depends_on:
+      - flink-jobmanager
+      - consul
+      - kafka
+      - elk
 
-#  elk:
-#    container_name: elk
-#    image: sebp/elk
-#    ports:
-#      - "5601:5601"
-#      - "9200:9200"
-#      - "5044:5044"
-#      - "5000:5000"
-#    volumes:
-#      - ./infrastructure/logs/elk/elasticsearch:/var/log/elasticsearch
-#      - ./infrastructure/logs/elk/logstash:/var/log/logstash
-#      - ./infrastructure/logs/elk/kibana:/var/log/kibana
-#    depends_on:
-#      - zookeeper
-#      - kafka
+  elk:
+    container_name: elk
+    image: sebp/elk
+    ports:
+      - "5601:5601"
+      - "9200:9200"
+      - "5044:5044"
+      - "5000:5000"
+    volumes:
+      - ./infrastructure/logs/elk/elasticsearch:/var/log/elasticsearch
+      - ./infrastructure/logs/elk/logstash:/var/log/logstash
+      - ./infrastructure/logs/elk/kibana:/var/log/kibana
+    depends_on:
+      - zookeeper
+      - kafka
 
-#  collector-manager:
-#    container_name: collector-manager
-#    image: io.thesis/collector-manager
-#    ports:
-#      - "9090:9090"
-#    depends_on:
-#      - consul
-#    environment:
-#      SERVER_PORT: 9090
-#      SPRING_CLOUD_CONSUL_HOST: consul
-#      SPRING_CLOUD_CONSUL_PORT: 8500
+  collector-manager:
+    container_name: collector-manager
+    image: io.thesis/collector-manager
+    ports:
+      - "9090:9090"
+    depends_on:
+      - consul
+    environment:
+      SERVER_PORT: 9090
+      SPRING_CLOUD_CONSUL_HOST: consul
+      SPRING_CLOUD_CONSUL_PORT: 8500
