@@ -1,4 +1,4 @@
-# Dockerfile for ELK stack
+    # Dockerfile for ELK stack
 # Elasticsearch 2.3.4, Logstash 2.3.4, Kibana 4.5.3
 
 # Build with:

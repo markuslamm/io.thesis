@@ -13,6 +13,8 @@ import java.util.*;
  * This is just av very simple Flink job, which receives all messages from collector-clients,
  * filters messages of collector type 'flink_jmx', extracts containing JVM data and writes the
  * flattened map into Elasticsearch.
+ *
+ * TODO: data handling is a mess
  */
 public class CollectorDataProcessor {
 
