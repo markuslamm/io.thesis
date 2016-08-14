@@ -28,12 +28,15 @@ if [ "$1" = "jobmanager" ]; then
     echo "metrics.reporter.collector_jmx_reporter.class: org.apache.flink.metrics.jmx.JMXReporter" >> $FLINK_HOME/conf/flink-conf.yaml
     echo "metrics.reporter.collector_jmx_reporter: 9999" >> $FLINK_HOME/conf/flink-conf.yaml
     echo "config file: " && grep '^[^\n#]' $FLINK_HOME/conf/flink-conf.yaml
-    $FLINK_HOME/bin/jobmanager.sh start cluster
+    $FLINK_HOME/bin/jobmanager.sh start cluster &
 elif [ "$1" = "taskmanager" ]; then
     echo "Starting Task Manager"
     echo "config file: " && grep '^[^\n#]' $FLINK_HOME/conf/flink-conf.yaml
-    $FLINK_HOME/bin/taskmanager.sh start
+    $FLINK_HOME/bin/taskmanager.sh start &
 else
     $@
 fi
+
+echo "Start collector client on Apache Flink..."
+java -Djava.security.egd=file:/dev/./urandom -jar /usr/local/collector/collector-client-app.jar
 

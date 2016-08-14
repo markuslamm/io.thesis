@@ -38,7 +38,10 @@ RUN set -x && \
 ENV FLINK_HOME /usr/local/flink
 ENV PATH $PATH:$FLINK_HOME/bin
 
-#Define JMX port for collector access
+# add collector-client and port
+ADD collector-client-app.jar /usr/local/collector/collector-client-app.jar
+
+# define JMX port for collector access
 ENV FLINK_JMX_PORT 9999
 
 # Configure container

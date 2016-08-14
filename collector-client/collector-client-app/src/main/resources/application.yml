@@ -19,7 +19,6 @@ kafka:
   broker:
     address: localhost:9092
   outbound-topic: collector-outbound-topic
-#  outbound-key: collector-outbound-key
 
 spring:
   thymeleaf:

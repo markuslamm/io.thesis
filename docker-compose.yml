@@ -40,6 +40,7 @@ services:
     ports:
       - "8081:8081"   # webui
       - "9999:9999"   # jmx
+      - "9099:9091"
     command: jobmanager
     volumes:
       - /usr/local/flink/conf
@@ -48,12 +49,19 @@ services:
       - consul
       - kafka
       - elk
+    environment:
+      SPRING_PROFILES_ACTIVE: flink-jmx
+      SPRING_CLOUD_CONSUL_HOST: consul
+      SPRING_CLOUD_CONSUL_PORT: 8500
+      CLIENT_PORT: 9091
+      KAFKA_BROKER_ADDRESS: kafka:9092
 
   flink-taskmanager:
     image: flink
     container_name: flink-taskmanager
     ports:
       - "9998:9999"   # jmx
+      - "9098:9091"   # collector-client
     command: taskmanager
     volumes_from:
       - flink-jobmanager
@@ -62,6 +70,12 @@ services:
       - consul
       - kafka
       - elk
+    environment:
+      SPRING_PROFILES_ACTIVE: jvm-jmx
+      SPRING_CLOUD_CONSUL_HOST: consul
+      SPRING_CLOUD_CONSUL_PORT: 8500
+      CLIENT_PORT: 9091
+      KAFKA_BROKER_ADDRESS: kafka:9092
 
   elk:
     container_name: elk

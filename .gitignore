@@ -3,3 +3,4 @@ target
 *.log
 *.iml
 logs
+collector-client-app.jar

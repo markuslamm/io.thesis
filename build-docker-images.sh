@@ -22,6 +22,7 @@ echo "building docker-elk..."
 docker build -t sebp/elk infrastructure/docker-elk
 
 echo "building docker-flink..."
+cp collector-client/collector-client-app/target/collector-client-app.jar infrastructure/docker-flink/collector-client-app.jar
 cd infrastructure/docker-flink
 ./build.sh
 
