@@ -14,3 +14,17 @@ The main objective is to create a fast and scalable software-architecture for co
 * [System architecture](md/system-architecture.md)
 * [Class diagrams](md/class-diagrams.md)
 * [Run application stack](md/run-application.md)
+
+Components:
+
+* [collector-client](collector-client/README.md)
+* [collector-manager](collector-manager/README.md)
+* [collector-data-p rocessor](collector-data-processor/README.md)
+
+The following Collector implementations are available:
+
+* [jvm-collector](collectors/jvm-jmx-collector/README.md)
+* [dstat-collector](collectors/dstat-collector/README.md)
+* [flink-jmx-collector](collectors/flink-jmx-collector/README.md)
+* [flink-rest-collector](collectors/flink-rest-collector/README.md)
+* [kafka-broker-jmx-collector](collectors/kafka-broker-jmx-collector/README.md)
