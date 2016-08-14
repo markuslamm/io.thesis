@@ -12,6 +12,7 @@ import io.thesis.collector.dstat.DstatCollector;
 import io.thesis.collector.flink.FlinkRestCollector;
 import io.thesis.collector.flink.jmx.FlinkJmxCollector;
 import io.thesis.collector.jvm.JvmCollector;
+import io.thesis.collector.kafka.jmx.broker.KafkaBrokerJmxCollector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,6 +82,13 @@ public class CollectorClientConfig {
                             .orElseThrow(() -> new CollectorClientException("DstatCollector must not be null on profile 'dstat'"));
             registry.register(dstatCollector);
             LOG.info("Added DstatCollector to registry");
+        }
+        if(activeProfiles.contains("kafka-broker-jmx")) {
+            final KafkaBrokerJmxCollector kafkaBrokerJmxCollector =
+                    Optional.ofNullable(context.getBean(KafkaBrokerJmxCollector.class))
+                            .orElseThrow(() -> new CollectorClientException("DstatCollector must not be null on profile 'dstat'"));
+            registry.register(kafkaBrokerJmxCollector);
+            LOG.info("Added KafkaBrokerJmxCollector to registry");
         }
         return registry;
     }

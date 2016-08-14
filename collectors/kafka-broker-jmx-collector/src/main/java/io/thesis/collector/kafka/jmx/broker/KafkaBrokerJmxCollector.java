@@ -9,8 +9,6 @@ import io.thesis.collector.kafka.jmx.broker.samples.KafkaControllerSampleCollect
 import io.thesis.collector.kafka.jmx.broker.samples.KafkaCoordinatorSampleCollector;
 import io.thesis.collector.kafka.jmx.broker.samples.KafkaNetworkSampleCollector;
 import io.thesis.collector.kafka.jmx.broker.samples.KafkaServerSampleCollector;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.management.MBeanServerConnection;
 import java.util.Map;
@@ -22,8 +20,6 @@ import static java.lang.String.format;
  * of {@code SampleCollector}s and aggregates their results.
  */
 public class KafkaBrokerJmxCollector extends AbstractCollector {
-
-    private static final Logger LOG = LoggerFactory.getLogger(KafkaBrokerJmxCollector.class);
 
     public KafkaBrokerJmxCollector(final MBeanServerConnection mBeanServerConnection) {
         super(kafkaBrokerSampleRegistry(mBeanServerConnection));

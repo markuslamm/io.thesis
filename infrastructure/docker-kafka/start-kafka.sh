@@ -54,13 +54,14 @@ term_handler() {
   exit
 }
 
-
 # Capture kill requests to stop properly
 trap "term_handler" SIGHUP SIGINT SIGTERM
-create-topics.sh & 
+create-topics.sh &
 $KAFKA_HOME/bin/kafka-server-start.sh $KAFKA_HOME/config/server.properties &
 KAFKA_PID=$!
 
-wait
+echo "Start collector client for Apache Kafka..."
+java -Djava.security.egd=file:/dev/./urandom -jar /usr/local/collector/collector-client-app.jar
 
+wait
 

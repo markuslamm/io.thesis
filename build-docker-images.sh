@@ -1,7 +1,7 @@
 #!/bin/sh
 
 echo "building sources..."
-mvn install -DskipITs
+mvn install -DskipTests -DskipITs
 
 echo "cleanup containers..."
 docker rm -f $(docker ps -a -q)
@@ -16,6 +16,7 @@ echo "building docker-zookeeper..."
 docker build -t wurstmeister/zookeeper infrastructure/docker-zookeeper
 
 echo "building docker-kafka..."
+cp collector-client/collector-client-app/target/collector-client-app.jar infrastructure/docker-kafka/collector-client-app.jar
 docker build -t wurstmeister/kafka infrastructure/docker-kafka
 
 echo "building docker-elk..."

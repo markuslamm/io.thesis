@@ -7,7 +7,7 @@ collector:
       port: ${FLINK_REST_PORT:8081}
 ---
 spring:
-  profiles: jvm-jmx,flink-jmx
+  profiles: jvm-jmx,flink-jmx,kafka-broker-jmx
 collector:
   jmx:
     url: service:jmx:rmi:///jndi/rmi://localhost:9999/jmxrmi

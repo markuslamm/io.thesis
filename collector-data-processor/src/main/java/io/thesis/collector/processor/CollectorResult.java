@@ -12,7 +12,7 @@ import static java.util.Objects.requireNonNull;
 
 public class CollectorResult {
 
-    private final LocalDateTime clientTimestamp;
+    private final Object clientTimestamp;
     private final String clientHost;
     private final Integer clientPort;
     private final String instanceId;
@@ -22,10 +22,10 @@ public class CollectorResult {
     @JsonCreator
     public CollectorResult(@JsonProperty("collectorType") final String collectorType,
                            @JsonProperty("data") final Map<String, Object> data,
-                           @JsonProperty("clientTimestamp") final LocalDateTime clientTimestamp,
-                           @JsonProperty("clientHost") final String clientHost,
-                           @JsonProperty("clientPort") final Integer clientPort,
-                           @JsonProperty("instanceId") final String instanceId) {
+                           @JsonProperty("client-timestamp") final Object clientTimestamp,
+                           @JsonProperty("client-host") final String clientHost,
+                           @JsonProperty("client-port") final Integer clientPort,
+                           @JsonProperty("instance-id") final String instanceId) {
         this.collectorType = requireNonNull(collectorType);
         this.data = requireNonNull(data);
         this.clientTimestamp = clientTimestamp;
@@ -34,7 +34,7 @@ public class CollectorResult {
         this.instanceId = instanceId;
     }
 
-    public LocalDateTime getClientTimestamp() {
+    public Object getClientTimestamp() {
         return clientTimestamp;
     }
 

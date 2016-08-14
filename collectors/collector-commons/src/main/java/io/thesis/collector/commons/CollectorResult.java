@@ -1,5 +1,6 @@
 package io.thesis.collector.commons;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -14,11 +15,21 @@ import static java.util.Objects.requireNonNull;
  */
 public class CollectorResult {
 
+    @JsonProperty("client-timestamp")
     private final LocalDateTime clientTimestamp;
+
+    @JsonProperty("client-host")
     private final String clientHost;
+
+    @JsonProperty("client-port")
     private final Integer clientPort;
+
+    @JsonProperty("instance-id")
     private final String instanceId;
+
+    @JsonProperty("collector-type")
     private final String collectorType;
+
     private final Map<String, Object> data;
 
     public CollectorResult(final String collectorType, final Map<String, Object> data, final LocalDateTime clientTimestamp,

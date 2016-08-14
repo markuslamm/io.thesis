@@ -14,7 +14,7 @@ import java.io.IOException;
 
 import static java.util.Objects.requireNonNull;
 
-@Profile({ "jvm-jmx", "flink-jmx"})
+@Profile({ "jvm-jmx", "flink-jmx", "kafka-broker-jmx"})
 @Configuration
 public class MBeanConnectionConfig {
 
