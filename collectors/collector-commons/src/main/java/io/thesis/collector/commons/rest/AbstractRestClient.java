@@ -51,12 +51,12 @@ public abstract class AbstractRestClient {
             apiResponse = restTemplate().exchange(getFullUrl(uri), HttpMethod.GET, emptyRequestEntity(), responseType);
             if (!apiResponse.getStatusCode().is2xxSuccessful()) {
                 LOG.warn("API call failed, url={}, status={}", uri.toString(), apiResponse.getStatusCode());
-                throw RestClientException.of(uri.toString(), apiResponse.getStatusCode());
+                throw RestCollectorException.of(uri.toString(), apiResponse.getStatusCode());
             }
         } catch (HttpClientErrorException | HttpServerErrorException ex) {
             LOG.warn("API call failed, url={}, status={}, exception={}, message={}", uri.toString(), ex.getStatusCode(),
                     ex.getClass().getSimpleName(), ex.getMessage());
-            throw RestClientException.of(uri.toString(), ex.getStatusCode());
+            throw RestCollectorException.of(uri.toString(), ex.getStatusCode());
         }
         return apiResponse;
     }
