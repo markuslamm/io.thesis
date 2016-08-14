@@ -1,8 +1,6 @@
 package io.thesis.collector.flink.jmx.jobmanager;
 
 import io.thesis.collector.flink.jmx.AbstractJmxIT;
-import io.thesis.collector.flink.jmx.jobmanager.JobManagerSampleCollector;
-import io.thesis.commons.json.JsonUtils;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -26,7 +24,6 @@ public class JobManagerSampleCollectorIT extends AbstractJmxIT {
     @Test
     public void testCollectSample() {
         final Map<String, Object> result = jobManagerSampleCollector.collectSample().join();
-        System.err.println(JsonUtils.toJson(result));
         assertThat(result).isNotNull();
         assertThat(result).isNotEmpty();
         assertThat(result.get(JobManagerSampleCollector.SAMPLE_KEY)).isNotNull();

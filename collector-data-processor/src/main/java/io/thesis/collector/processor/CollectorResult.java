@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import java.time.LocalDateTime;
 import java.util.Map;
 
 import static java.util.Objects.requireNonNull;
@@ -20,7 +19,7 @@ public class CollectorResult {
     private final Map<String, Object> data;
 
     @JsonCreator
-    public CollectorResult(@JsonProperty("collectorType") final String collectorType,
+    public CollectorResult(@JsonProperty("collector-type") final String collectorType,
                            @JsonProperty("data") final Map<String, Object> data,
                            @JsonProperty("client-timestamp") final Object clientTimestamp,
                            @JsonProperty("client-host") final String clientHost,

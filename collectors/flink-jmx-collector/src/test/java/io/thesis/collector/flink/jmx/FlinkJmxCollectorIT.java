@@ -2,7 +2,6 @@ package io.thesis.collector.flink.jmx;
 
 import io.thesis.collector.commons.CollectorResult;
 import io.thesis.collector.commons.CollectorType;
-import io.thesis.commons.json.JsonUtils;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -24,7 +23,6 @@ public class FlinkJmxCollectorIT extends AbstractJmxIT {
     @Test
     public void testCollect() {
         final CollectorResult result = flinkJmxCollector.collect().join();
-        System.err.println(JsonUtils.toJson(result));
         assertThat(result).isNotNull();
         assertThat(result.getClientTimestamp()).isNull();
         assertThat(result.getClientHost()).isNull();

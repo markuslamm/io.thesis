@@ -3,7 +3,445 @@
 Collects Apache Kafka server data via JMX and exports the result:
 ```json
 {
-//TODO
+    "client-timestamp": "2016-08-14T16:28:41.55",
+    "client-host": "172.19.0.5",
+    "client-port": 9091,
+    "instance-id": "collector-client:2aaab984e6b0facee4c4c0a209ecadda",
+    "collector-type": "kafka_broker_jmx",
+    "data": {
+        "kafka-server": {
+            "brokerTopicMetrics": {
+                "bytesInPerSec": {
+                    "Count": 16951,
+                    "EventType": "bytes",
+                    "RateUnit": "SECONDS",
+                    "MeanRate": 25.369407069044808,
+                    "OneMinuteRate": 260.6334984314235,
+                    "FifteenMinuteRate": 18.732137992757657,
+                    "FiveMinuteRate": 55.58928117964598,
+                    "topics": [
+                        {
+                            "Count": 16951,
+                            "EventType": "bytes",
+                            "RateUnit": "SECONDS",
+                            "MeanRate": 27.28382749183684,
+                            "OneMinuteRate": 260.6334984314235,
+                            "FifteenMinuteRate": 18.732137992757657,
+                            "FiveMinuteRate": 55.58928117964598,
+                            "name": "collector-outbound-topic"
+                        },
+                        {
+                            "Count": 0,
+                            "EventType": "bytes",
+                            "RateUnit": "SECONDS",
+                            "MeanRate": 0.0,
+                            "OneMinuteRate": 0.0,
+                            "FifteenMinuteRate": 0.0,
+                            "FiveMinuteRate": 0.0,
+                            "name": "flink-outbound-topic"
+                        }
+                    ]
+                },
+                "bytesOutPerSec": {
+                    "Count": 16951,
+                    "EventType": "bytes",
+                    "RateUnit": "SECONDS",
+                    "MeanRate": 25.36694530874891,
+                    "OneMinuteRate": 260.6334984314235,
+                    "FifteenMinuteRate": 18.732137992757657,
+                    "FiveMinuteRate": 55.58928117964598,
+                    "topics": [
+                        {
+                            "Count": 16951,
+                            "EventType": "bytes",
+                            "RateUnit": "SECONDS",
+                            "MeanRate": 27.281011584495452,
+                            "OneMinuteRate": 260.6334984314235,
+                            "FifteenMinuteRate": 18.732137992757657,
+                            "FiveMinuteRate": 55.58928117964598,
+                            "name": "collector-outbound-topic"
+                        },
+                        {
+                            "Count": 0,
+                            "EventType": "bytes",
+                            "RateUnit": "SECONDS",
+                            "MeanRate": 0.0,
+                            "OneMinuteRate": 0.0,
+                            "FifteenMinuteRate": 0.0,
+                            "FiveMinuteRate": 0.0,
+                            "name": "flink-outbound-topic"
+                        }
+                    ]
+                },
+                "bytesRejectedPerSec": {
+                    "Count": 0,
+                    "EventType": "bytes",
+                    "RateUnit": "SECONDS",
+                    "MeanRate": 0.0,
+                    "OneMinuteRate": 0.0,
+                    "FifteenMinuteRate": 0.0,
+                    "FiveMinuteRate": 0.0,
+                    "topics": [
+                        {
+                            "Count": 0,
+                            "EventType": "bytes",
+                            "RateUnit": "SECONDS",
+                            "MeanRate": 0.0,
+                            "OneMinuteRate": 0.0,
+                            "FifteenMinuteRate": 0.0,
+                            "FiveMinuteRate": 0.0,
+                            "name": "flink-outbound-topic"
+                        },
+                        {
+                            "Count": 0,
+                            "EventType": "bytes",
+                            "RateUnit": "SECONDS",
+                            "MeanRate": 0.0,
+                            "OneMinuteRate": 0.0,
+                            "FifteenMinuteRate": 0.0,
+                            "FiveMinuteRate": 0.0,
+                            "name": "collector-outbound-topic"
+                        }
+                    ]
+                },
+                "failedFetchRequestsPerSec": {
+                    "Count": 0,
+                    "EventType": "requests",
+                    "RateUnit": "SECONDS",
+                    "MeanRate": 0.0,
+                    "OneMinuteRate": 0.0,
+                    "FifteenMinuteRate": 0.0,
+                    "FiveMinuteRate": 0.0,
+                    "topics": [
+                        {
+                            "Count": 0,
+                            "EventType": "bytes",
+                            "RateUnit": "SECONDS",
+                            "MeanRate": 0.0,
+                            "OneMinuteRate": 0.0,
+                            "FifteenMinuteRate": 0.0,
+                            "FiveMinuteRate": 0.0,
+                            "name": "flink-outbound-topic"
+                        },
+                        {
+                            "Count": 0,
+                            "EventType": "bytes",
+                            "RateUnit": "SECONDS",
+                            "MeanRate": 0.0,
+                            "OneMinuteRate": 0.0,
+                            "FifteenMinuteRate": 0.0,
+                            "FiveMinuteRate": 0.0,
+                            "name": "collector-outbound-topic"
+                        }
+                    ]
+                },
+                "failedProduceRequestsPerSec": {
+                    "Count": 0,
+                    "EventType": "requests",
+                    "RateUnit": "SECONDS",
+                    "MeanRate": 0.0,
+                    "OneMinuteRate": 0.0,
+                    "FifteenMinuteRate": 0.0,
+                    "FiveMinuteRate": 0.0,
+                    "topics": [
+                        {
+                            "Count": 0,
+                            "EventType": "requests",
+                            "RateUnit": "SECONDS",
+                            "MeanRate": 0.0,
+                            "OneMinuteRate": 0.0,
+                            "FifteenMinuteRate": 0.0,
+                            "FiveMinuteRate": 0.0,
+                            "name": "collector-outbound-topic"
+                        },
+                        {
+                            "Count": 0,
+                            "EventType": "requests",
+                            "RateUnit": "SECONDS",
+                            "MeanRate": 0.0,
+                            "OneMinuteRate": 0.0,
+                            "FifteenMinuteRate": 0.0,
+                            "FiveMinuteRate": 0.0,
+                            "name": "flink-outbound-topic"
+                        }
+                    ]
+                },
+                "messagesInPerSec": {
+                    "Count": 2,
+                    "EventType": "messages",
+                    "RateUnit": "SECONDS",
+                    "MeanRate": 0.0029925140280305127,
+                    "OneMinuteRate": 0.030703655021877174,
+                    "FifteenMinuteRate": 0.002209922141215539,
+                    "FiveMinuteRate": 0.0065567799035988195,
+                    "topics": [
+                        {
+                            "Count": 0,
+                            "EventType": "messages",
+                            "RateUnit": "SECONDS",
+                            "MeanRate": 0.0,
+                            "OneMinuteRate": 0.0,
+                            "FifteenMinuteRate": 0.0,
+                            "FiveMinuteRate": 0.0,
+                            "name": "flink-outbound-topic"
+                        },
+                        {
+                            "Count": 2,
+                            "EventType": "messages",
+                            "RateUnit": "SECONDS",
+                            "MeanRate": 0.0032182730878313375,
+                            "OneMinuteRate": 0.030703655021877174,
+                            "FifteenMinuteRate": 0.002209922141215539,
+                            "FiveMinuteRate": 0.0065567799035988195,
+                            "name": "collector-outbound-topic"
+                        }
+                    ]
+                },
+                "totalFetchRequestsPerSec": {
+                    "Count": 24292,
+                    "EventType": "requests",
+                    "RateUnit": "SECONDS",
+                    "MeanRate": 36.34616274869321,
+                    "OneMinuteRate": 39.27673557294095,
+                    "FifteenMinuteRate": 19.439366619136898,
+                    "FiveMinuteRate": 34.19955401360659,
+                    "topics": [
+                        {
+                            "Count": 12147,
+                            "EventType": "requests",
+                            "RateUnit": "SECONDS",
+                            "MeanRate": 19.54577900083512,
+                            "OneMinuteRate": 19.63794430387713,
+                            "FifteenMinuteRate": 19.080184109049945,
+                            "FiveMinuteRate": 19.47086683866925,
+                            "name": "collector-outbound-topic"
+                        },
+                        {
+                            "Count": 12145,
+                            "EventType": "requests",
+                            "RateUnit": "SECONDS",
+                            "MeanRate": 19.542252500103302,
+                            "OneMinuteRate": 19.598566200788337,
+                            "FifteenMinuteRate": 19.077556517418746,
+                            "FiveMinuteRate": 19.4620344681173,
+                            "name": "flink-outbound-topic"
+                        }
+                    ]
+                },
+                "totalProduceRequestsPerSec": {
+                    "Count": 2,
+                    "EventType": "requests",
+                    "RateUnit": "SECONDS",
+                    "MeanRate": 0.002992328188823526,
+                    "OneMinuteRate": 0.030703655021877174,
+                    "FifteenMinuteRate": 0.002209922141215539,
+                    "FiveMinuteRate": 0.0065567799035988195,
+                    "topics": [
+                        {
+                            "Count": 2,
+                            "EventType": "requests",
+                            "RateUnit": "SECONDS",
+                            "MeanRate": 0.003218074696445613,
+                            "OneMinuteRate": 0.030703655021877174,
+                            "FifteenMinuteRate": 0.002209922141215539,
+                            "FiveMinuteRate": 0.0065567799035988195,
+                            "name": "collector-outbound-topic"
+                        },
+                        {
+                            "Count": 0,
+                            "EventType": "requests",
+                            "RateUnit": "SECONDS",
+                            "MeanRate": 0.0,
+                            "OneMinuteRate": 0.0,
+                            "FifteenMinuteRate": 0.0,
+                            "FiveMinuteRate": 0.0,
+                            "name": "flink-outbound-topic"
+                        }
+                    ]
+                }
+            },
+            "requestHandlerPool": {
+                "requestHandlerAvgIdlePercent": {
+                    "Count": 667881028707,
+                    "EventType": "percent",
+                    "RateUnit": "NANOSECONDS",
+                    "MeanRate": 0.9987382227669485,
+                    "OneMinuteRate": 0.9997469928732187,
+                    "FifteenMinuteRate": 0.9839447799388884,
+                    "FiveMinuteRate": 0.995812368722192
+                }
+            },
+            "replicaManager": {
+                "isrExpandsPerSec": {
+                    "Count": 0,
+                    "EventType": "expands",
+                    "RateUnit": "SECONDS",
+                    "MeanRate": 0.0,
+                    "OneMinuteRate": 0.0,
+                    "FifteenMinuteRate": 0.0,
+                    "FiveMinuteRate": 0.0
+                },
+                "isrShrinksPerSec": {
+                    "Count": 0,
+                    "EventType": "shrinks",
+                    "RateUnit": "SECONDS",
+                    "MeanRate": 0.0,
+                    "OneMinuteRate": 0.0,
+                    "FifteenMinuteRate": 0.0,
+                    "FiveMinuteRate": 0.0
+                },
+                "leaderCount": {
+                    "Value": 2
+                },
+                "partitionCount": {
+                    "Value": 2
+                },
+                "underReplicatedPartitions": {
+                    "Value": 0
+                }
+            },
+            "controllerChannelMetrics": [
+                {
+                    "connection-creation-rate": 0.0,
+                    "response-rate": 0.0,
+                    "select-rate": 0.0,
+                    "connection-count": 1.0,
+                    "network-io-rate": 0.0,
+                    "io-ratio": 0.0,
+                    "io-wait-time-ns-avg": 0.0,
+                    "io-wait-ratio": 0.0,
+                    "outgoing-byte-rate": 0.0,
+                    "request-size-max": "-Infinity",
+                    "io-time-ns-avg": 0.0,
+                    "request-rate": 0.0,
+                    "incoming-byte-rate": 0.0,
+                    "connection-close-rate": 0.0,
+                    "request-size-avg": 0.0,
+                    "brokerId": "1001"
+                }
+            ],
+            "socketServerMetrics": [
+                {
+                    "connection-creation-rate": 0.0,
+                    "response-rate": 0.025236593059936908,
+                    "select-rate": 3.4250952125348264,
+                    "connection-count": 1.0,
+                    "network-io-rate": 0.050473186119873815,
+                    "io-ratio": 6.138389776357827E-5,
+                    "io-wait-time-ns-avg": 2.9221004620149255E8,
+                    "io-wait-ratio": 1.0007704899810868,
+                    "outgoing-byte-rate": 2.4478877504668652,
+                    "request-size-max": 97.0,
+                    "io-time-ns-avg": 17922.723880597016,
+                    "request-rate": 0.02524105204704932,
+                    "incoming-byte-rate": 1.2622437645158033,
+                    "connection-close-rate": 0.0,
+                    "request-size-avg": 97.0,
+                    "networkProcessor": "2"
+                },
+                {
+                    "connection-creation-rate": 0.0,
+                    "response-rate": 9.845814544237244,
+                    "select-rate": 29.55552741547423,
+                    "connection-count": 1.0,
+                    "network-io-rate": 19.690853598503498,
+                    "io-ratio": 0.0038661764378149772,
+                    "io-wait-time-ns-avg": 3.3689236071122535E7,
+                    "io-wait-ratio": 0.9956274943020664,
+                    "outgoing-byte-rate": 924.4688601413748,
+                    "request-size-max": 8852.0,
+                    "io-time-ns-avg": 130817.23136246786,
+                    "request-rate": 9.844845239032843,
+                    "incoming-byte-rate": 787.5876191226274,
+                    "connection-close-rate": 0.0,
+                    "request-size-avg": 93.902,
+                    "networkProcessor": "1"
+                },
+                {
+                    "connection-creation-rate": 0.0,
+                    "response-rate": 9.858568226449528,
+                    "select-rate": 29.60652468488738,
+                    "connection-count": 2.0,
+                    "network-io-rate": 19.715963186290068,
+                    "io-ratio": 0.0034966404284691686,
+                    "io-wait-time-ns-avg": 3.361773028411054E7,
+                    "io-wait-ratio": 0.9951769433253234,
+                    "outgoing-byte-rate": 552.1618405394685,
+                    "request-size-max": 60.0,
+                    "io-time-ns-avg": 118112.76943005182,
+                    "request-rate": 9.857004026100237,
+                    "incoming-byte-rate": 1085.025783419278,
+                    "connection-close-rate": 0.018556662769767484,
+                    "request-size-avg": 56.01609657947686,
+                    "networkProcessor": "0"
+                }
+            ]
+        },
+        "kafka-controller": {
+            "leaderElectionRateAndTimeMs": {
+                "LatencyUnit": "MILLISECONDS",
+                "EventType": "calls",
+                "RateUnit": "SECONDS",
+                "MeanRate": 0.0014967846387680186,
+                "OneMinuteRate": 3.340340158049153E-6,
+                "FifteenMinuteRate": 0.09606106021795963,
+                "FiveMinuteRate": 0.022160631672466794,
+                "Count": 1,
+                "Max": 1018.289724,
+                "50thPercentile": 1018.289724,
+                "StdDev": 0.0,
+                "75thPercentile": 1018.289724,
+                "95thPercentile": 1018.289724,
+                "Mean": 1018.289724,
+                "Min": 1018.289724,
+                "98thPercentile": 1018.289724,
+                "99thPercentile": 1018.289724,
+                "999thPercentile": 1018.289724
+            },
+            "uncleanLeaderElectionsPerSec": {
+                "Count": 0,
+                "EventType": "elections",
+                "RateUnit": "SECONDS",
+                "MeanRate": 0.0,
+                "OneMinuteRate": 0.0,
+                "FifteenMinuteRate": 0.0,
+                "FiveMinuteRate": 0.0
+            },
+            "activeControllerCount": {
+                "Value": 1
+            },
+            "offlinePartitionsCount": {
+                "Value": 0
+            },
+            "preferredReplicaImbalanceCount": {
+                "Value": 0
+            }
+        },
+        "kafka-coordinator": {
+            "numGroups": {
+                "Value": 0
+            },
+            "numOffsets": {
+                "Value": 0
+            }
+        },
+        "kafka-network": {
+            "idlePercent": [
+                {
+                    "Value": 0.9941797191022803,
+                    "networkProcessor": "0"
+                },
+                {
+                    "Value": 0.9941968001783894,
+                    "networkProcessor": "1"
+                },
+                {
+                    "Value": 1.0063260393472115,
+                    "networkProcessor": "2"
+                }
+            ]
+        }
+    }
 }
 ```
 

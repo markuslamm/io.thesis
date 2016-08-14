@@ -1,7 +1,6 @@
 package io.thesis.collector.kafka.jmx.broker.samples;
 
 import io.thesis.collector.kafka.jmx.broker.AbstractJmxIT;
-import io.thesis.commons.json.JsonUtils;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -24,7 +23,6 @@ public class KafkaNetworkSampleCollectorIT extends AbstractJmxIT {
     @Test
     public void testCollectSample() {
         final Map<String, Object> result = sampleCollector.collectSample().join();
-        System.err.println(JsonUtils.toJson(result));
         assertThat(result).isNotNull();
         assertThat(result).isNotEmpty();
         assertThat(result.get(KafkaNetworkSampleCollector.SAMPLE_KEY)).isNotNull();

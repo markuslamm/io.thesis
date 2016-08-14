@@ -1,7 +1,6 @@
 package io.thesis.collector.jvm.samples;
 
 import io.thesis.collector.jvm.AbstractJmxIT;
-import io.thesis.commons.json.JsonUtils;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -23,7 +22,6 @@ public class BufferPoolCollectorIT extends AbstractJmxIT {
     @Test
     public void testCollectSample() {
         final Map<String, Object> result = bufferPoolSampleCollector.collectSample().join();
-        System.err.println(JsonUtils.toJson(result));
         assertThat(result).isNotNull();
         assertThat(result).isNotEmpty();
         assertThat(result.get(BufferPoolSampleCollector.SAMPLE_KEY)).isNotNull();

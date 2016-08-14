@@ -2,7 +2,6 @@ package io.thesis.collector.jvm;
 
 import io.thesis.collector.commons.CollectorResult;
 import io.thesis.collector.commons.CollectorType;
-import io.thesis.commons.json.JsonUtils;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -30,7 +29,6 @@ public class JvmCollectorIT extends AbstractJmxIT {
         assertThat(result.getData().isEmpty()).isFalse();
         assertThat(result.getData()).isNotNull();
         assertThat(result.getCollectorType()).isEqualTo(CollectorType.JVM_JMX.name().toLowerCase());
-        System.err.println(JsonUtils.toJson(result));
         assertThat(result.getData().get("classloading")).isNotNull();
         assertThat(result.getData().get("nio-buffer-pools")).isNotNull();
         assertThat(result.getData().get("garbage-collectors")).isNotNull();

@@ -3,7 +3,6 @@ package io.thesis.collector.flink.rest;
 import io.thesis.collector.commons.CollectorResult;
 import io.thesis.collector.commons.CollectorType;
 import io.thesis.collector.flink.FlinkRestCollector;
-import io.thesis.commons.json.JsonUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.web.client.RestTemplate;
@@ -38,6 +37,5 @@ public class FlinkRestCollectorIT {
         assertThat(result.getCollectorType()).isEqualTo(CollectorType.FLINK_REST.name().toLowerCase());
         assertThat(result.getData().get("cluster")).isNotNull();
         assertThat(result.getData().get("jobs")).isNotNull();
-        System.err.println(JsonUtils.toJson(result));
     }
 }
