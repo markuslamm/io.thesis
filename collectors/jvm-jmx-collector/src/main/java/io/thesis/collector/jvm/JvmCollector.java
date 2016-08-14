@@ -1,4 +1,4 @@
-package io.thesis.collector.jvm;//package io.thesis.collector.jvm;
+package io.thesis.collector.jvm;
 
 import com.google.common.collect.Maps;
 import io.thesis.collector.commons.AbstractCollector;

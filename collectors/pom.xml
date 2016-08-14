@@ -29,6 +29,7 @@
         <module>flink-rest-collector</module>
         <module>flink-jmx-collector</module>
         <module>dstat-collector</module>
+        <module>kafka-broker-jmx-collector</module>
     </modules>
 
 </project>

@@ -1,15 +1,11 @@
 package io.thesis.collector.flink.jmx.taskmanager;
 
 import io.thesis.collector.flink.jmx.AbstractJmxIT;
-import io.thesis.commons.json.JsonUtils;
+import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class TaskManagerSampleCollectorIT extends AbstractJmxIT {
 
@@ -24,12 +20,9 @@ public class TaskManagerSampleCollectorIT extends AbstractJmxIT {
 
     @Test
     public void testCollectSample() {
-        final Map<String, Object> result = taskManagerSampleCollector.collectSample().join();
-        System.err.println(JsonUtils.toJson(result));
-        assertThat(result).isNotNull();
-        assertThat(result).isNotEmpty();
-        assertThat(result.get(TaskManagerSampleCollector.SAMPLE_KEY)).isNotNull();
-        assertThat(result.get(TaskManagerSampleCollector.SAMPLE_KEY) instanceof List).isTrue();
+        Assertions.assertThatThrownBy(() -> {
+            taskManagerSampleCollector.collectSample();
+        }).isInstanceOf(UnsupportedOperationException.class);
     }
 
     @Override
