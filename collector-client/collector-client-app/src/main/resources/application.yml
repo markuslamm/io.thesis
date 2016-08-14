@@ -1,6 +1,18 @@
+spring:
+  profiles: flink-rest
+collector:
+  flink:
+    rest:
+      host: ${FLINK_REST_HOST:localhost}
+      port: ${FLINK_REST_PORT:8081}
+---
+spring:
+  profiles: jvm-jmx,flink-jmx
 collector:
   jmx:
     url: service:jmx:rmi:///jndi/rmi://localhost:9999/jmxrmi
+---
+collector:
   client:
     default-interval-in-ms: 5000
 

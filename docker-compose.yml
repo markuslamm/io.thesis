@@ -71,11 +71,13 @@ services:
       - kafka
       - elk
     environment:
-      SPRING_PROFILES_ACTIVE: jvm-jmx
+      SPRING_PROFILES_ACTIVE: flink-rest #,jvm-jmx
       SPRING_CLOUD_CONSUL_HOST: consul
       SPRING_CLOUD_CONSUL_PORT: 8500
       CLIENT_PORT: 9091
       KAFKA_BROKER_ADDRESS: kafka:9092
+      FLINK_REST_HOST: flink-jobmanager
+      FLINK_REST_PORT: 8081
 
   elk:
     container_name: elk

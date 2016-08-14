@@ -4,24 +4,23 @@ import io.thesis.collector.flink.FlinkRestCollector;
 import io.thesis.collector.flink.rest.FlinkRestClient;
 import io.thesis.collector.flink.rest.FlinkRestClientImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.core.env.Environment;
 import org.springframework.web.client.RestTemplate;
 
 import static java.util.Objects.requireNonNull;
 
 @Profile("flink-rest")
 @Configuration
-@EnableConfigurationProperties(FlinkRestCollectorProperties.class)
 public class FlinkRestCollectorConfig {
 
-    private final FlinkRestCollectorProperties flinkRestCollectorProperties;
+    private final Environment env;
 
     @Autowired
-    public FlinkRestCollectorConfig(final FlinkRestCollectorProperties flinkRestCollectorProperties) {
-        this.flinkRestCollectorProperties = requireNonNull(flinkRestCollectorProperties);
+    public FlinkRestCollectorConfig(final Environment env) {
+        this.env = requireNonNull(env);
     }
 
     @Bean
@@ -31,7 +30,8 @@ public class FlinkRestCollectorConfig {
 
     @Bean
     FlinkRestClient flinkRestClient(final RestTemplate restTemplate) {
-        return new FlinkRestClientImpl(restTemplate, flinkRestCollectorProperties.getHost(), flinkRestCollectorProperties.getPort());
+        return new FlinkRestClientImpl(restTemplate, env.getProperty("collector.flink.rest.host"),
+                env.getProperty("collector.flink.rest.port", Integer.class));
     }
 
     @Bean
