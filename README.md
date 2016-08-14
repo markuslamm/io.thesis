@@ -1,4 +1,4 @@
-## io.thesis [ ![Codeship Status for markuse1501/io.thesis](https://codeship.com/projects/a8c82f10-4137-0134-8757-025e659f623d/status?branch=master)](https://codeship.com/projects/167889)
+## io.thesis [![Build Status](https://travis-ci.org/markuslamm/io.thesis.png?branch=master)](https://travis-ci.org/markuslamm/io.thesis)
 
 The repository contains all artifacts of my bachelor's thesis
 
