@@ -1,6 +1,6 @@
 package io.thesis.collector.client.config;
 
-import io.thesis.collector.kafka.jmx.broker.KafkaBrokerJmxCollector;
+import io.thesis.collector.kafka.broker.jmx.KafkaBrokerJmxCollector;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;

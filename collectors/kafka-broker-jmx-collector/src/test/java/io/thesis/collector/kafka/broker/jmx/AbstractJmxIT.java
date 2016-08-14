@@ -1,4 +1,4 @@
-package io.thesis.collector.kafka.jmx.broker;
+package io.thesis.collector.kafka.broker.jmx;
 
 import javax.management.MBeanServerConnection;
 import javax.management.remote.JMXConnector;

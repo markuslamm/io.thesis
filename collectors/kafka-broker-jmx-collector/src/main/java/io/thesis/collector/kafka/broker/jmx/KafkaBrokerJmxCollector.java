@@ -1,14 +1,14 @@
-package io.thesis.collector.kafka.jmx.broker;
+package io.thesis.collector.kafka.broker.jmx;
 
 import com.google.common.collect.Maps;
 import io.thesis.collector.commons.AbstractCollector;
 import io.thesis.collector.commons.CollectorType;
 import io.thesis.collector.commons.SampleCollector;
 import io.thesis.collector.commons.jmx.JmxCollectorException;
-import io.thesis.collector.kafka.jmx.broker.samples.KafkaControllerSampleCollector;
-import io.thesis.collector.kafka.jmx.broker.samples.KafkaCoordinatorSampleCollector;
-import io.thesis.collector.kafka.jmx.broker.samples.KafkaNetworkSampleCollector;
-import io.thesis.collector.kafka.jmx.broker.samples.KafkaServerSampleCollector;
+import io.thesis.collector.kafka.broker.jmx.samples.KafkaControllerSampleCollector;
+import io.thesis.collector.kafka.broker.jmx.samples.KafkaCoordinatorSampleCollector;
+import io.thesis.collector.kafka.broker.jmx.samples.KafkaNetworkSampleCollector;
+import io.thesis.collector.kafka.broker.jmx.samples.KafkaServerSampleCollector;
 
 import javax.management.MBeanServerConnection;
 import java.util.Map;

@@ -1,4 +1,4 @@
-package io.thesis.collector.kafka.jmx.broker;
+package io.thesis.collector.kafka.broker.jmx;
 
 import io.thesis.collector.commons.CollectorResult;
 import io.thesis.collector.commons.CollectorType;

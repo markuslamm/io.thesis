@@ -1,6 +1,6 @@
-package io.thesis.collector.kafka.jmx.broker.samples;
+package io.thesis.collector.kafka.broker.jmx.samples;
 
-import io.thesis.collector.kafka.jmx.broker.AbstractJmxIT;
+import io.thesis.collector.kafka.broker.jmx.AbstractJmxIT;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -9,15 +9,15 @@ import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class KafkaNetworkSampleCollectorIT extends AbstractJmxIT {
+public class KafkaServerSampleCollectorIT extends AbstractJmxIT {
 
     private static final String JMX_URL = "service:jmx:rmi:///jndi/rmi://localhost:9997/jmxrmi";
 
-    private KafkaNetworkSampleCollector sampleCollector;
+    private KafkaServerSampleCollector sampleCollector;
 
     @Before
     public void setUp() throws IOException {
-        sampleCollector = new KafkaNetworkSampleCollector(mBeanServerConnection());
+        sampleCollector = new KafkaServerSampleCollector(mBeanServerConnection());
     }
 
     @Test
@@ -25,8 +25,8 @@ public class KafkaNetworkSampleCollectorIT extends AbstractJmxIT {
         final Map<String, Object> result = sampleCollector.collectSample().join();
         assertThat(result).isNotNull();
         assertThat(result).isNotEmpty();
-        assertThat(result.get(KafkaNetworkSampleCollector.SAMPLE_KEY)).isNotNull();
-        assertThat(result.get(KafkaNetworkSampleCollector.SAMPLE_KEY) instanceof Map).isTrue();
+        assertThat(result.get(KafkaServerSampleCollector.SAMPLE_KEY)).isNotNull();
+        assertThat(result.get(KafkaServerSampleCollector.SAMPLE_KEY) instanceof Map).isTrue();
     }
 
     @Override

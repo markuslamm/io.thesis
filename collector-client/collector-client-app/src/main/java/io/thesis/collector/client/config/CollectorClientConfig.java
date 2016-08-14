@@ -12,7 +12,7 @@ import io.thesis.collector.dstat.DstatCollector;
 import io.thesis.collector.flink.FlinkRestCollector;
 import io.thesis.collector.flink.jmx.FlinkJmxCollector;
 import io.thesis.collector.jvm.JvmCollector;
-import io.thesis.collector.kafka.jmx.broker.KafkaBrokerJmxCollector;
+import io.thesis.collector.kafka.broker.jmx.KafkaBrokerJmxCollector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

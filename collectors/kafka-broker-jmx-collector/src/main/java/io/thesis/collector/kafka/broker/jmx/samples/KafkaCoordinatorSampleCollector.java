@@ -1,4 +1,4 @@
-package io.thesis.collector.kafka.jmx.broker.samples;
+package io.thesis.collector.kafka.broker.jmx.samples;
 
 import com.google.common.collect.Maps;
 import io.thesis.collector.commons.jmx.AbstractJmxSampleCollector;

@@ -7,3 +7,10 @@ The repository contains all artifacts of my bachelor's thesis
 in Media Informatics at the Department VI of the Beuth University of Applied Sciences Berlin.
 
 The main objective is to create a fast and scalable software-architecture for collecting and storing system and application data on the example of Apache Flink.
+
+* [Prerequisites](md/prerequisites.md)
+* [Software environment](md/sw-environment.md)
+* [Required infrastructure components](md/external-docker-infrastructure.md)
+* [System architecture](md/system-architecture.md)
+* [Class diagrams](md/class-diagrams.md)
+* [Run application stack](md/run-application.md)
