@@ -2,7 +2,6 @@ package io.thesis.collector.manager.discovery;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +26,6 @@ public class MetadataRestClient {
     private final RestTemplate restTemplate;
     private final String metadataPath;
 
-    @Autowired
     public MetadataRestClient(final RestTemplate restTemplate, final String metadataPath) {
         this.restTemplate = requireNonNull(restTemplate);
         this.metadataPath = requireNonNull(metadataPath);
