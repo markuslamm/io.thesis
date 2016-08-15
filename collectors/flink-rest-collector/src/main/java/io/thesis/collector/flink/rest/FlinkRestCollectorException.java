@@ -1,4 +1,4 @@
-package io.thesis.collector.flink;
+package io.thesis.collector.flink.rest;
 
 import io.thesis.collector.commons.CollectorException;
 

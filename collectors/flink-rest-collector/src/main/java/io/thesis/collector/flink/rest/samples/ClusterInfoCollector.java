@@ -1,7 +1,7 @@
 package io.thesis.collector.flink.rest.samples;
 
 import com.google.common.collect.Maps;
-import io.thesis.collector.flink.rest.FlinkRestClient;
+import io.thesis.collector.flink.rest.client.FlinkRestClient;
 import io.thesis.collector.flink.rest.results.ConfigResult;
 import io.thesis.collector.flink.rest.results.OverviewResult;
 

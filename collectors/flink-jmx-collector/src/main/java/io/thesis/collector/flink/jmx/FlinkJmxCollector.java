@@ -4,7 +4,7 @@ import com.google.common.collect.Maps;
 import io.thesis.collector.commons.AbstractCollector;
 import io.thesis.collector.commons.CollectorType;
 import io.thesis.collector.commons.SampleCollector;
-import io.thesis.collector.flink.jmx.jobmanager.JobManagerSampleCollector;
+import io.thesis.collector.flink.jmx.samples.JobManagerSampleCollector;
 
 import javax.management.MBeanServerConnection;
 import java.util.Map;

@@ -2,7 +2,8 @@ package io.thesis.collector.flink.rest;
 
 import io.thesis.collector.commons.CollectorResult;
 import io.thesis.collector.commons.CollectorType;
-import io.thesis.collector.flink.FlinkRestCollector;
+import io.thesis.collector.flink.rest.client.FlinkRestClient;
+import io.thesis.collector.flink.rest.client.FlinkRestClientImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.web.client.RestTemplate;

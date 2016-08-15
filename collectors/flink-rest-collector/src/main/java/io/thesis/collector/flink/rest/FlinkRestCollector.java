@@ -1,11 +1,10 @@
-package io.thesis.collector.flink;
+package io.thesis.collector.flink.rest;
 
 import com.google.common.collect.Maps;
 import io.thesis.collector.commons.AbstractCollector;
-import io.thesis.collector.commons.CollectorResult;
 import io.thesis.collector.commons.CollectorType;
 import io.thesis.collector.commons.SampleCollector;
-import io.thesis.collector.flink.rest.FlinkRestClient;
+import io.thesis.collector.flink.rest.client.FlinkRestClient;
 import io.thesis.collector.flink.rest.samples.ClusterInfoCollector;
 import io.thesis.collector.flink.rest.samples.JobInfoCollector;
 

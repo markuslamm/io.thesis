@@ -1,7 +1,7 @@
 package io.thesis.collector.flink.rest.samples;
 
 import io.thesis.collector.commons.SampleCollector;
-import io.thesis.collector.flink.rest.FlinkRestClient;
+import io.thesis.collector.flink.rest.client.FlinkRestClient;
 
 import static java.util.Objects.requireNonNull;
 

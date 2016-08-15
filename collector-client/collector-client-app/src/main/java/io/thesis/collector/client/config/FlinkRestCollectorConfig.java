@@ -1,8 +1,8 @@
 package io.thesis.collector.client.config;
 
-import io.thesis.collector.flink.FlinkRestCollector;
-import io.thesis.collector.flink.rest.FlinkRestClient;
-import io.thesis.collector.flink.rest.FlinkRestClientImpl;
+import io.thesis.collector.flink.rest.FlinkRestCollector;
+import io.thesis.collector.flink.rest.client.FlinkRestClient;
+import io.thesis.collector.flink.rest.client.FlinkRestClientImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

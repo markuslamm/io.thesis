@@ -1,4 +1,4 @@
-package io.thesis.collector.flink.jmx.taskmanager;
+package io.thesis.collector.flink.jmx.samples;
 
 import io.thesis.collector.flink.jmx.AbstractJmxIT;
 import org.assertj.core.api.Assertions;

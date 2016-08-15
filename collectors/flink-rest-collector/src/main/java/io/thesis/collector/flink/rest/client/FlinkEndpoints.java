@@ -1,4 +1,4 @@
-package io.thesis.collector.flink.rest;
+package io.thesis.collector.flink.rest.client;
 
 /**
  * Constants of Apache Flink's HTTP endpoints the data will be collected from.

@@ -1,4 +1,4 @@
-package io.thesis.collector.flink.jmx.jobmanager;
+package io.thesis.collector.flink.jmx.samples;
 
 import com.google.common.collect.Maps;
 import io.thesis.collector.commons.jmx.AbstractJmxSampleCollector;

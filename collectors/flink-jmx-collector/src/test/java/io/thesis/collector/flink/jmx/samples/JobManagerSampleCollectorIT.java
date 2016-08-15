@@ -1,4 +1,4 @@
-package io.thesis.collector.flink.jmx.jobmanager;
+package io.thesis.collector.flink.jmx.samples;
 
 import io.thesis.collector.flink.jmx.AbstractJmxIT;
 import org.junit.Before;

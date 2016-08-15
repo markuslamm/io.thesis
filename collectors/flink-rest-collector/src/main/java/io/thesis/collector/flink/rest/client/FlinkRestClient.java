@@ -1,4 +1,4 @@
-package io.thesis.collector.flink.rest;
+package io.thesis.collector.flink.rest.client;
 
 import io.thesis.collector.flink.rest.results.*;
 
