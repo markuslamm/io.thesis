@@ -24,8 +24,8 @@ class CollectorWorker implements Runnable {
     private static final Logger LOG = LoggerFactory.getLogger(CollectorWorker.class);
 
     private final Collector collector;
-    private final Integer clientPort;
     private final OutboundWriter outboundWriter;
+    private final Integer clientPort;
     private final String instanceId;
 
     public CollectorWorker(final Collector collector, final Integer clientPort,
