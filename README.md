@@ -12,7 +12,10 @@ The main objective is to create a fast and scalable software-architecture for co
 * [Software environment](md/sw-environment.md)
 * [Required infrastructure components](md/external-docker-infrastructure.md)
 * [System architecture](md/system-architecture.md)
+* [Use-cases](md/usecase.md)
 * [Class diagrams](md/class-diagrams.md)
+* [Sequence diagrams](md/class-diagrams.md)
+
 * [Deployment](md/deployment.md)
 * [Run application stack](md/run-application.md)
 
@@ -21,11 +24,3 @@ Components:
 * [collector-client](collector-client/README.md)
 * [collector-manager](collector-manager/README.md)
 * [collector-data-p rocessor](collector-data-processor/README.md)
-
-The following Collector implementations are available:
-
-* [jvm-collector](collectors/jvm-jmx-collector/README.md)
-* [dstat-collector](collectors/dstat-collector/README.md)
-* [flink-jmx-collector](collectors/flink-jmx-collector/README.md)
-* [flink-rest-collector](collectors/flink-rest-collector/README.md)
-* [kafka-broker-jmx-collector](collectors/kafka-broker-jmx-collector/README.md)
