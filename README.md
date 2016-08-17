@@ -14,8 +14,7 @@ The main objective is to create a fast and scalable software-architecture for co
 * [System architecture](md/system-architecture.md)
 * [Use-cases](md/usecase.md)
 * [Class diagrams](md/class-diagrams.md)
-* [Sequence diagrams](md/class-diagrams.md)
-
+* [Sequence diagrams](md/sequences.md)
 * [Deployment](md/deployment.md)
 * [Run application stack](md/run-application.md)
 
