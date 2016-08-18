@@ -20,7 +20,7 @@
 \firstExaminer{Prof. Dr. Stefan Edlich}
 %%End Titles
 
-\makeindex[title=Stichwortverzeichnis, options=-s indexstyle.ist, intoc]
+\makeindex[title=Index, options=-s indexstyle.ist, intoc]
 \indexsetup{level=\chapter*,toclevel=chapter}
 
 \makeglossaries
@@ -48,7 +48,7 @@
 \input{chapter/06-evaluation} \clearpage
 \input{chapter/07-conclusion} \clearpage
 
-%\input{chapter/Beispiele} \clearpage
+\input{chapter/Beispiele} \clearpage
 
 \pagenumbering{Alph}
 \listoffigures \clearpage
@@ -58,14 +58,14 @@
 \printindex \clearpage
 
 \printglossary[title={Glossar}] \clearpage
-\printglossary[style=dottedlocations,type=\acronymtype,title={Abkürzungsverzeichnis}] \clearpage
+\printglossary[style=dottedlocations,type=\acronymtype,title={List of abbreviations}] \clearpage
 
-\printbibliography[heading=bibintoc, keyword={book}, title={Literaturverzeichnis}]\clearpage
-\printbibliography[heading=bibintoc, keyword={online}, title={Onlinequellen}]\clearpage
-\printbibliography[heading=bibintoc, keyword={image}, title={Bildquellen}]\clearpage
+\printbibliography[heading=bibintoc, keyword={book}, title={Bibliography}]\clearpage
+\printbibliography[heading=bibintoc, keyword={online}, title={Online resources}]\clearpage
+\printbibliography[heading=bibintoc, keyword={image}, title={Image resources}]\clearpage
 
 % Anhang
-\input{chapter/Anhang}
+\input{chapter/appendix}
 
 % Eigenständigkeitserklärung
 \input{chapter/Eigenstaendigkeitserklaerung}
