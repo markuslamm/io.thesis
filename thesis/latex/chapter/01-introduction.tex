@@ -1,18 +1,19 @@
 \chapter{Introduction}
 \section{Motivation}
-According to a survey in Germany, nine out of ten companies (89 percent) analyze internal data for operational decision-making processes using modern Big Data Analytics Architectures, where 48 percent of respondents see the greatest potential of Big Data [BITK14]. The analysis of continuous data streams is taking up a growing importance for companies and therefore constitutes an important factor for business success.
+According to a survey in Germany, nine out of ten companies (89 percent) analyze large volumes of data for operational decision-making
+processes using modern Big Data Analytics Architectures, where 48 percent of respondents see the greatest potential of Big Data
+\cite{BITK14}. The analysis of continuous data streams is taking up a growing importance for companies and therefore constitutes an
+important factor for business success.
 
-Collecting, storing and analyzing system and operational data of Big Data Architectures is therefore an essential tool in order to ensure successful operation. By analyzing the existing data, problems can be tracked and potential sources of error identified as early as possible.
+Collecting, storing and analyzing system and operational data of Big Data Architectures is therefore an essential tool in order
+to ensure successful operation. By analyzing execution and service data, problems can be tracked and potential sources of error
+identified as early as possible.
+
 \section{Objective}
 
-\section{Goals of this thesis}
+The main goal of the thesis is the design and implementation of a software system to ingest and  store system and operational
+data of Big Data Analytics Applications. It should be investigated which data is available for Apache Flink and Apache Kafka, what
+data is relevant and shall be collected, how to collect from source systems and how the data can be stored in a centralized persistence
+system.
 
-The main goal of the thesis is the design and implementation of a software system to ingest and  store system and operational data of big data analytics frameworks. It should be investigated which data is available for Apache Flink and Apache Kafka . With regard to a possible user interface and further analytic-processes in the future, the measuring data must be collected on the source systems, transported and stored at a central data storage system to be accessible for other components.
-Central questions of elaboration will be:
-
-\begin{itemize}
-\item What sources exist to gather data from Apache Kafka and Apache Flink?
-\item What data is relevant and shall be collected?
-\item How can the data be collected from existing sources?
-\item How can the data be stored in a centralized persistence system regarding to further analytics or display in a graphical user interface?
-\end{itemize}
+\section{Structure of thesis}
