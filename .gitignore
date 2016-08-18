@@ -4,3 +4,4 @@ target
 *.iml
 logs
 collector-client-app.jar
+/thesis/raw/
