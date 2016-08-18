@@ -1,6 +1,6 @@
 #!/bin/sh
 
-rm main.acn main.aux main.bcf main.glo main.idx main.ilg main.ind main.ist main.lof main.log main.lol main.lot main.out main.run.xml main.synctex.gz main.toc
+rm main.pdf main.bbl main.blg settings.aux main.acn main.aux main.bcf main.glo main.idx main.ilg main.ind main.ist main.lof main.log main.lol main.lot main.out main.run.xml main.synctex.gz main.toc
 
 lualatex -synctex=1 -interaction=nonstopmode main && \
 biber main && \
