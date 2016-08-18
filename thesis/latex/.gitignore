@@ -1,0 +1,35 @@
+*.aux
+*.glo
+*.idx
+*.log
+*.toc
+*.acn
+*.acr
+*.alg
+*.bbl
+*.blg
+*.dvi
+*.glg
+*.gls
+*.ilg
+*.ind
+*.lof
+*.lot
+*.maf
+*.mtc
+*.mtc1
+*.out
+*.synctex.gz
+*.bcf
+*.xml
+*.lol
+*.gz(busy)
+
+# makeindex style file created by the glossaries package
+*.ist
+# indexstyle includes the Header of the site
+!indexstyle.ist
+
+# latexmk files
+*.fls
+*.fdb_latexmk
