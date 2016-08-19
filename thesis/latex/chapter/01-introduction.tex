@@ -1,19 +1,49 @@
 \chapter{Introduction}
 \section{Motivation}
-According to a survey in Germany, nine out of ten companies (89 percent) analyze large volumes of data for operational decision-making
-processes using modern Big Data Analytics Architectures, where 48 percent of respondents see the greatest potential of Big Data
-\cite{Bitkom14}. The analysis of continuous data streams is taking up a growing importance for companies and therefore constitutes an
-important factor for business success.
+According to a survey in Germany, nine out of ten companies (89 percent) analyze large
+volumes of data for operational decision-making processes using modern Big Data Analytics
+Architectures, where 48 percent of the respondents see the greatest potential of Big Data
+\cite{Bitk14}. The analysis of continuous data streams is taking up a growing importance
+for companies and therefore constitutes an important factor for business success.
 
-Collecting, storing and analyzing system and operational data of Big Data Architectures is therefore an essential tool in order
-to ensure successful operation. By analyzing execution and service data, problems can be tracked and potential sources of error
-identified as early as possible.
+Collecting, storing and analyzing system and operational data of Big Data Architectures is
+therefore an essential tool in order to ensure successful operation. Even though logfiles are
+usefull for tracing problems in software systems, problems can be tracked and potential sources
+of error can be identified much earlier by collecting and analyzing execution and service data at
+runtime to describe the state of the system at a given point in time.
+
+Due to the distributed character of Big Data Applications, where a system is composed of several
+interacting components, the examination of log data is not an adequate choice to gain insight
+into the entire system \cite{VanL14}.
 
 \section{Objective}
 
-The main goal of the thesis is the design and implementation of a software system to ingest and  store system and operational
-data of Big Data Analytics Applications. It should be investigated which data is available for Apache Flink and Apache Kafka, what
-data is relevant and shall be collected, how to collect from source systems and how the data can be stored in a centralized persistence
-system.
+The main goal of the thesis is the design and implementation of a software system to ingest
+and  store system and operational data of Big Data Analytics Applications on the example of
+the streaming frameworks Apache Flink and Apache Kafka. It should be examined which data is
+available and can be collected at all, what data is relevant and how to collect from source
+systems. Furhermore, the collected data must be stored in a persistence system to become
+available for possible consumers like visualization applications, analytical processes or as
+a data source for applications from the context of Machine Learning for example.
 
 \section{Structure of thesis}
+
+After a short introduction to the topics and the main goals of the present thesis in this
+chapter, the Chapter 2 covers the theoretical foundations of Big Data Analytics
+Applications, discusses the concept of "stream-processing" and introduces Apache Flink
+and Apache Kafka as representatives of widely used stream-processing frameworks.
+
+Chapter 3 investigates which sources for collecting data exist for Apache Flink and Kafka
+and which data should be collected and stored in a persistence system regarding to its
+relevance and data quality.
+
+The requirements and the target definition of the software-system will be introduced
+in Chapter 4, Chapter 5 describes the software solution by giving a detailed conceptional
+overview of the software components and providing implementation details for selected items.
+
+In chapter 6 we'll see how to setup the technical environment for the usage of the
+prototype to verify the correct functionality related to the requirements defined in
+Chapter 4.
+
+The last Chapter 7 covers a conclusion and summary of the present work.
+

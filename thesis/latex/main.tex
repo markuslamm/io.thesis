@@ -57,10 +57,12 @@
 
 \printindex \clearpage
 
-\printglossary[title={Glossar}] \clearpage
-\printglossary[style=dottedlocations,type=\acronymtype,title={List of abbreviations}] \clearpage
+%\printglossary[title={Glossar}] \clearpage
+%\printglossary[style=dottedlocations,type=\acronymtype,title={List of abbreviations}] \clearpage
 
-\printbibliography[heading=bibintoc, keyword={book}, title={Bibliography}]\clearpage
+\printbibliography[heading=bibintoc, notkeyword={online}, notkeyword={image}]\clearpage
+%\printbibliography [heading=bibintoc, keyword={book}, title={Bibliography}]\clearpage
+%\printbibliography[heading=bibintoc, keyword={article}, title={Articles}]\clearpage
 \printbibliography[heading=bibintoc, keyword={online}, title={Online resources}]\clearpage
 \printbibliography[heading=bibintoc, keyword={image}, title={Image resources}]\clearpage
 
