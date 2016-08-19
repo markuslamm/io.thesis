@@ -1,9 +1,34 @@
 \chapter{Theoretical Foundations}
-\section{Big-Data-Analytics-Architectures}
+
+This chapter will discuss the main characteristics of Big Data Analytics Applications and
+introduces the concept of stream processing, which is one of the main characteristics of the
+popular streaming frameworks Apache Flink and Apache Kafka. The underlying concepts both of
+these systems and how they're used in context of Big Data Analytics will be explained at the
+end of this chapter.
+
+\section{Big Data Analytics Applications}
+
+Big Data Analytics describes the process of collecting, organizing and analyzing large volumes
+of data with the aim to discover patterns and other useful information extracted from a incoming
+data streams \cite{Marz15}. The process of analytics is typically performed using specialized software tools and
+applications for predictive analytics, data mining, text mining, forecasting and data optimization.
+
+The areas of applications may be extremely diverse and ranges from analysis of financial flows or
+traffic data, processing sensor data or environmental monitoring.
+
+Characteristics:
+\begin{description}
+    \item [Robustness and fault tolerance] TODO
+    \item [Low latency reads and updates] TODO
+    \item [Generalization] TODO
+    \item [Ad hoc queries] TODO
+\end{description}
+
 \section{Stream-Processing}
-Stream processing is the real-time processing of data continuously, concurrently, and in a record-by-record fashion.
-in which data is treated not as static tables or files, but as a continuous infinite stream of data integrated from both live and
-historical sources.
+According to \cite{Klepp16}, stream processing is the real-time processing of data continuously,
+concurrently, and in a record-by-record fashion in which data is treated not as static tables
+or files, but as a continuous infinite stream of data integrated from both live and historical
+sources.
 
 Benefits:
 \begin{itemize}
