@@ -1,0 +1,58 @@
+\chapter{Architecture}
+
+Welche Teilprobleme leiten sich aus der Zielstellung weiter ab?
+Was sind die Rahmenbedingungen für die Probleme und wie können wir diese lösen.
+
+Lösungsbeschreibung, warum so?
+
+Bauen Sie auf der Methodik aus der Einführung auf.
+Ein System bauen und dann beobachten (machen Sie wohl meistens)
+
+z.B. wenn Sie ein System bauen. Wie sieht Ihre Architektur aus? Was sind die Resultate des
+Entwurfs? Welche Alternativen gibt es zu Ihrem Entwurf? Warum haben Sie sich gerade für
+Ihre Lösung entschieden? Was sind deren Vor­ und Nachteile?
+
+Welche Prozesse unterstützt die Architektur?
+Datenquellen?
+Transformationen?
+Datenverarbeitung?
+
+\section{Collected data as time-series based stream}
+
+TODO see \cite{Klepp16}
+\section{Microservices and Service-Discovery}
+
+TODO
+\section{System components}
+
+TODO maybe split Infrastructure / Software components
+
+\subsection{CollectorClient}
+
+The CollectorClient tier is our entry point for bringing data into the system...
+
+\subsection{Service-Discovery}
+
+Registraction for CollectorClients
+
+\subsection{CollectorManager}
+
+Gives overview, uses Consul as service-discovery
+
+\subsection{Message-Broker}
+
+Transport, "Event-Log", see \cite{Kreps13}
+
+\subsection{Indexer}
+
+Receive messages from Kafka, roote data, create ES index, why, describe context BDAA
+
+\subsection{Persistence}
+
+ES as search index for time-series based data, easy vizualization with Kibana, why?
+
+\section{Summary}
+
+Maybe Spring alternatives, Lagom, VertX, Play?
+Maybe collector as agent instead of microservice, alternatives REST, maybe (Web-)Sockets
+
