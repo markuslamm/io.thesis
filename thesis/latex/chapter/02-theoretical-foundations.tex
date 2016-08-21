@@ -96,7 +96,7 @@ Data Analytics Applications.
 \end{figure}
 
 The following section will discus the topic stream processing, which is part of the
-"Compute infrastructure" layer shown in the figure above,
+"Compute infrastructure" layer shown in the figure above.
 
 \section{Stream Processing}
 
@@ -145,15 +145,99 @@ at any rate \cite{Nam15} and leads to the following characteristics:
 \end{itemize}
 
 After this short introduction to the basics of stream processing, the following sections
-cover the introduction of the streaming frameworks Apache Flink and Apache Kafka and explains
-the usage in the context of Big Data Analytics Applications.
+covers a short introduction of the streaming frameworks Apache Flink and Apache Kafka.
 \subsection{Apache Flink}
 
-Apache Flink a framework for distributed stream and batch data processing. \cite{Flink16}
+As described in the documentation \cite{Flink16}, \textit{"Apache Flink is an open source platform for
+distributed stream and batch data processing. Flink’s core is a streaming dataflow engine that
+provides data distribution, communication, and fault tolerance for distributed computations over
+data streams. Flink also builds batch processing on top of the streaming engine, overlaying native
+iteration support, managed memory, and program optimization."}
+
+The main components of Flink applications are formed by streams and transformations, in which
+streams define intermediate results whereas transformations represent operations computed on one
+or more input streams with one or more resulting streams.
+
+The following code from \cite{Flink16} shows a basic Flink application, a working example of streaming
+window word count application, that counts the words coming from a web socket in 5 second windows:
+
+
+\begin{lstlisting}[caption={Basic Apache Flink streaming application}, captionpos=b, label={lst:basicflink}]
+public static void main(String[] args) throws Exception {
+        StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+        DataStream<Tuple2<String, Integer>> dataStream = env
+                .socketTextStream("localhost", 9999)    (1)
+                .flatMap(new Splitter())                (2)
+                .keyBy(0)                               (2)
+                .timeWindow(Time.seconds(5))            (2)
+                .sum(1);                                (2)
+
+        dataStream.print();                             (3)
+        env.execute("Window WordCount");
+    }
+
+    public static class Splitter implements FlatMapFunction<String, Tuple2<String, Integer>> {
+        @Override
+        public void flatMap(String sentence, Collector<Tuple2<String, Integer>> out) throws Exception {
+            for (String word: sentence.split(" ")) {
+                out.collect(new Tuple2<String, Integer>(word, 1));
+            }
+        }
+    }
+\end{lstlisting}
+
+On execution, Flink applications are mapped to streaming dataflows, consisting of streams
+and transformation operators (3) where each dataflow starts with one or more sources (1)
+the data is received from and ends in one or more sinks(3) the resulting stream is written
+to.
+
+The following overview summarises the most important streaming features of Apache Flink:
+
+\begin{description}
+    \item [Event time and out of order streams]
+    Due to the distributed character of Big Data Analytics Applications, data doesn't arrive
+    necessarily in the order that they are produced. Since version 0.10, Flink provides the
+    concept of "event time", the processing of events by the time they happened in the real
+    world to support "out of order" streams what enables consistently processing of events
+    according to their timestamps.
+
+    \item [Windows]
+    Flink uses a concept called windows to divide a data stream that can be potentially infinite
+    into finite slices based on the timestamps of elements or other criteria. This division
+    is required when working with infinite streams of data and performing transformations that
+    aggregate elements
+
+    \item [Consistency, fault tolerance, and high availability]
+    Flink guarantees consistent state updates and data movement in the presence of failures
+    between selected sources and sinks. Such failures include machine hardware failures, network
+    failures, transient program failures, etc. It supports worker and master failover,
+    eliminating any single point of failure by providing  a checkpointing mechanism that recovers
+    streaming jobs after failures.
+
+    \item [Connectors and integration points]
+    Flink integrates with a wide variety of open source systems for data input and output (Kafka,
+    Elasticsearch and others) which makes technical decisions regarding the infrastructure quite flexible.
+\end{description}
 
 \subsection{Apache Kafka}
 
-Apache Kafka is publish-subscribe messaging rethought as a distributed commit log. \cite{Kafka16}
+Apache Kafka is publish-subscribe messaging rethought as a distributed commit log. \cite{Kafka16}.
+It is written in Scala and was initially developed at LinkedIn.
+
+This excerpt from the paper \cite{Neha11} the team at LinkedIn published about Kafka describes the
+basic principles:
+
+\textit{A stream of messages of a particular type is defined by a topic. A producer can publish
+messages to a topic. The published messages are then stored at a set of servers called brokers.
+A consumer can subscribe to one or more topics from the brokers, and consume the subscribed
+messages by pulling data from the brokers. (…) To subscribe to a topic, a consumer first creates
+one or more message streams for the topic. The messages published to that topic will be evenly
+distributed into these sub-streams. (…)  Unlike traditional iterators, the message stream iterator
+never terminates. If there are currently no more messages to consume, the iterator blocks until
+new messages are published to the topic.}
+
+TODO: Role of Kafka as broker to ingest data
+
 
 %\subsection{Related work}
 %
