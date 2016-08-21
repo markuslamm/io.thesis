@@ -3,60 +3,56 @@
 \section{Motivation}
 According to a survey in Germany, nine out of ten companies (89 percent) analyze large
 volumes of data from a variety of diffent sources for operational decision-making processes
-using modern Big Data Analytics Applications, where 48 percent of the respondents see the
-greatest potential of Big Data \cite{Bitk14}. The analysis of continuous data streams is
-taking up a growing importance for companies and therefore constitutes an important factor
-for business success.
+using modern Big Data Analytics Applications, where 48 percent of the respondents see
+the greatest potential of Big Data \cite{Bitk14}. The analysis of continuous data streams is
+taking up a growing importance for companies and therefore constitutes an important
+factor for business success.
 
 Collecting, storing and analyzing system and operational data of Big Data Applications is
-therefore an essential tool in order to ensure successful operation. Even though logfiles are
-usefull for tracing problems in software systems, problems can be tracked and potential sources
-of error can be identified much earlier by collecting and storing execution and service data at
-runtime to describe the state of the system at a given point in time.
+therefore an essential tool in order to ensure successful operation and to prevent failures.
+Even though logfiles are usefull for tracing problems in software systems, problems can
+be tracked and potential sources of error can be identified much earlier by collecting and
+storing execution and service data at runtime to describe the state of the system at a
+given point in time.
 
-Due to the distributed character of Big Data Applications, where a system is composed of several
-interacting components, the examination of log data is not an adequate choice to gain insight
-into an entire system \cite{VanL14}.
+Due to the distributed character of Big Data Applications, where a system is composed
+of several interacting components, the examination of log data is not an adequate choice
+to gain insight into an entire system \cite{VanL14}.
 
-TODO: Was ist der Markt?
+%TODO: Was ist der Markt?
 
 \section{Objective}
 
 The main goal of the thesis is the design and implementation of a software system to ingest
-and  store system and operational data of Big Data Analytics Applications on the example of
-the streaming frameworks Apache Flink and Apache Kafka. It should be examined which data is
-available and can be collected at all, what data is relevant and how to collect from source
-systems. Furhermore, the collected data must be stored in a persistence system to become
-available for possible consumers like visualization applications, analytical processes or as
-a data source for applications from the context of Machine Learning for example.
+and  store system and operational data of Big Data Analytics Applications on the example
+of the streaming frameworks Apache Flink and Apache Kafka. It will be examined which
+data is available and can be collected at all, what data is relevant and how to collect
+from source systems. Furhermore, the collected data must be stored in a persistence system
+to become available for possible consumers like visualization applications, analytical processes
+or as a data source for applications from the context of Machine Learning for example.
 
-TODO:
-Eher Forschung oder eher Anwendung?
-Was machen Sie nicht?  Und warum haben Sie sich entschieden das nicht zu machen.
-
+In preparation for this thesis my supervisor Prof. Dr. Stefan Edlich once said \textit{"Sie sammeln
+alles, was nicht bei drei auf dem Baum ist"}. According to this statement the collection and
+storage of as much data as possible is the main focus of this work and excludes processing,
+visualization or analysis of the collected data.
 
 \section{Structure of thesis}
 
 After a short introduction to the topics and the main goals of the present thesis in this
-chapter, the Chapter 2 covers the theoretical foundations of Big Data Analytics
-Applications, discusses the concept of "stream-processing" and introduces Apache Flink
-and Apache Kafka as representatives of widely used stream-processing frameworks.
+chapter, the Chapter 2 covers basic concepts of Big Data Analytics Applications, discusses
+the concept of stream processing and introduces Apache Flink and Apache Kafka as
+representatives of widely used stream-processing frameworks.
 
-Chapter 3 investigates which sources for collecting data exist for Apache Flink and Kafka
-and which data should be collected and stored in a persistence system regarding to its
-relevance and data quality.
+Chapter 3 investigates which sources for collecting data exist for Apache Flink and Apache
+Kafka and which data should be collected and stored in a persistence system regarding
+to its relevance and data quality.
 
-The requirements and the target definition of the software-system will be introduced
-in Chapter 4, Chapter 5 describes the software solution by giving a detailed conceptional
-overview of the software components and providing implementation details for selected items.
+The requirements and the target definition of the software system will be introduced in
+Chapter 4, Chapter 5 describes the software solution by giving a detailed conceptional
+overview of the software components whilst Chapter 6 will explain implementation details
+for selected items.
 
-In chapter 6 we'll see how to setup the technical environment for the usage of the
-prototype to verify the correct functionality related to the requirements defined in
-Chapter 4.
+In chapter 7 we'll see how to setup the technical environment for the usage of the prototype
+to verify the correct functionality related to the requirements defined in Chapter 4.
 
-The last Chapter 7 covers a conclusion and summary of the present work.
-
-\section{Summary}
-
-TODO
-
+The last Chapter 8 covers a conclusion and summary of the present work.
