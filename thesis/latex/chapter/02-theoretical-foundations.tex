@@ -18,6 +18,13 @@ In the past decade the amount of data being created is a subject of immense grow
 accelerating.\cite{Marz15}. People create content like blog posts, tweets, social network interactions,
 photos, servers continuously log messages, scientists create detailed measurements, permanently.
 
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\textwidth]{../images/04-sources-of-bigdata.png}
+	\caption{Sources of Big Data{\cite{Bitk12}}}
+	\label{sources-of-bigdata}
+\end{figure}
+
 Through advances in communications technology, people and things are becoming increasingly interconnected.
 Generally referred to as machine-to-machine (M2M), interconnectivity is responsible for double-digit year
 over year (YoY) data growth rates. Finally, because small integrated components are now affordable, it
@@ -30,18 +37,15 @@ It comes in its raw and unstructured, semistructured or structured form, which m
 traditional relational system impractical or impossible. In \cite{Bitk12} is described, that around
 85 percent of the data comes in an unstructured form, but containing valuable information.
 
-Big Data is defined by three characteristics:\cite{Marz15}
-
+According to \cite{Marz15} \cite{Ziko12}, Big Data is defined by three characteristics:
 \begin{description}
     \item [Volume] The amount of data present is growing because of growing amount of producers,
     e.g. environmental data, financial data, medical data, surveillance data.
     \item [Variety] Data varies in its form, it comes in different formats from different sources.
     \item [Velocity] Data needs to be evaluated and analyzed quickly, which leads to new challenges
-    like analysis of large data sets with answers in seconds range, data processing in realtime
-    and data generation and transmission at highspeed.
+    like analysis of large data sets with answers in seconds range, data processing in realtime,
+    data generation and transmission at highspeed.
 \end{description}
-
-
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.7\textwidth]{../images/03-three-vs-of-bigdata.png}
@@ -49,38 +53,43 @@ Big Data is defined by three characteristics:\cite{Marz15}
 	\label{three-vs-of-bigdata}
 \end{figure}
 
-A possible definition for Big Data could be derived as follows:
+A possible definition for Big Data could be derived as follows: \textit{Big Data refers to the use of
+large amounts of data from multiple sources with a high processing speed for generating valuable information
+based on the underlying data.}
 
-\textbf{"Big Data refers to the use of large amounts of data from multiple sources with a high processing
-speed for generating valuable information based on the underlying data."}
+\cite{Bitk12} adds another characteristic as a fourth point called "Analytics", which will be explained in the
+next section.
 
 \section{Big Data Analytics Applications}
 
+Another definition comes from the the science historian George Dyson, who was cited by Tim O'Reilly in \cite{Dys13}:
+\textit{Big data is what happened when the cost of storing information became less than the cost of making the
+decision to throw it away.} It follows that the storage and extraction of valuable information from the immense amount of
+existing data has become the most important part of Big Data Analytics Applications.
+
 Big Data Analytics describes the process of collecting, organizing and analyzing large volumes
-of data with the aim to discover patterns and other useful information extracted from incoming
+of data with the aim to discover patterns, relationships and other useful information extracted from incoming
 data streams \cite{Marz15}. The process of analytics is typically performed using specialized software tools and
 applications for predictive analytics, data mining, text mining, forecasting and data optimization.
 
-% Im Vordergrund stehen die Geschwindigkeit der Analyse (Realtime, Near-Realtime) und gleichzeitig die
-%einfache Anwendbarkeit, ein ausschlaggebender Faktor beim Einsatz von analytischen Methoden in vielen
-%Unternehmensbereichen.
+The analytical methods raise data quality for unstructured data on a level that allows more quantitative and
+qualitative analysis. With this structure it becomes posssible to extract the data that is relevant by iteratively
+refined queries.
 
-The areas of applications may be extremely diverse and ranges from analysis of financial flows or traffic data, processing
-sensor data or environmental monitoring.
+The areas of applications may be extremely diverse and ranges from analysis of financial flows or traffic data,
+processing sensor data or environmental monitoring as explained in the previous chapter.
 
-%Analytics umfasst die Methoden zur möglichst automatisierten Erkennung und Nutzung von
-%Mustern, Zusammenhängen und Bedeutungen. Zum Einsatz kommen u.a. statistische Verfahren,
-%Vorhersagemodelle, Optimierungsalgorithmen, Data Mining, Text- und Bildanalytik. Bishe-
-%rige Datenanalyse-Verfahren werden dadurch erheblich erweitert.
+The illustration below summarises the six-dimensional taxonomy \cite{Bitk14, Csa14} of Big Data Analytics Applications,
+which will be discussed in the following:
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\textwidth]{../images/05-big-data-taxonomy.jpg}
+	\caption{Taxonomy of Big Data Analytics Applications \cite{Bitk14, Csa14}}
+	\label{taxonomy-bigdata-applications}
+\end{figure}
 
-%Characteristics of Big Data Analytics Applications:
-%
-%\begin{description}
-%    \item [Robustness and fault tolerance] TODO
-%    \item [Low latency reads and updates] TODO
-%    \item [Generalization] TODO
-%    \item [Ad hoc queries] TODO
-%\end{description}
+
+
 
 \section{Stream Processing}
 According to \cite{Klepp16}, stream processing is the real-time processing of data continuously,
@@ -89,6 +98,31 @@ or files, but as a continuous infinite stream of data integrated from both live 
 sources.
 
 Check \cite{Marz15} S.225 ff.
+
+
+%If an application demands “immediate” response to each event as it occurs, some form of stream processing is needed,
+%which essentially processesthe data as it comes in. The general approach is to have a little bit of code that processes
+%each ofthe events separately. In order to speed up the processing, the stream may be subdivided, and the computation
+%distributed across clusters.
+%Apache Stormis a popular framework for event processing that was developed at Twitter and promulgated by Twitter
+%and other companies that required this paradigm of real-time processing. Other examples are Amazon’s Kinesis, or the
+%streaming capabilities of MapR. These frameworks take care of the scaling onto multiple cluster nodes and come with
+%varying degrees of support for resilience and fault tolerance, for example, through checkpointing, to make sure the
+%system can recover from failure.
+
+%These stream processing frameworks primarily address only parallelization of the computational load; an additional
+%storage layer is needed to store the results in order to be able to query them. While the “current state” of the
+%computation is contained in the stream processing framework, there is usually no clean way to access or query this
+%information, particularly from external modules. Depending on the amount of data that is being processed, this might
+%further entail the need for a large, high-performance storage backend.
+%Apache Spark (discussed in more detail below), simplistically speaking, takes a hybrid approach. Events are collected in a
+%buffer and then processed at fixed intervals (say every few seconds) in a batch fashion. Since Spark holds the data in
+%memory, it can in principle process the batches fast enough to keep up with the incoming data stream.
+%In summary, low latency processing generally entails some form of stream processing, with associated infrastructure for
+%computation and storage. It is important to note that if the application requirements are extreme (for example, if submillisecond
+%latencies are needed),then traditional software stacks may not be good enough for the task. Specialized
+%software stacks or components may be have to be custom built for the application.
+
 
 %Das Streaming-Verarbeitungs-Prinzip steht für die kontinuierliche Verarbeitung von
 %Eingangsdaten oder -signalen bei gleichzeitiger kontinuierlicher Bereitstellung von
@@ -101,8 +135,11 @@ Benefits of stream processing:
 \begin{itemize}
 	\item Accessibility: live data can be used while still in motion, before being stored.
 	\item Completeness: historical data can be streamed and integrated with live data for more context.
-	\item High throughput: high-velocity, high-volume data can be processed with minimal latency.
+	\item High throughput: high-velocity and high-volume data can be processed with minimal latency.
 \end{itemize}
+
+After discussing the basic concepts of stream processing, the next section introduces to Apache Flink and
+Apache Kafka, two representants of streaming frameworks..
 
 \subsection{Apache Flink}
 
