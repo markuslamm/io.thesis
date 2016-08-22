@@ -1,0 +1,82 @@
+\chapter{Requirements Analysis and Specification}
+
+After a short introduction to the basic concepts of Big Data, Big Data Analytics Applications
+and Apache Flink and Apache Kafka as examples for streaming frameworks, this chapter
+examines what different kind of data are available  for both of the systems and should be
+transported to a central storage system. According to the results of the data analysis, the
+functional and non-functional requirements of the software system which is forming the core of
+the present thesis will be defined.
+
+\section{Data Analysis}
+
+live and historical sources
+
+"COLLECT EVERYTHING!
+
+%What to Transport? Logs vs. Metrics see http://blog.mmlac.com/log-transport-with-apache-kafka/
+%The first consideration should be if it is possible and/or necessary to transport all logs to a central location. If there are many servers or a lot of log data, this might be very resource intensive and aggregating or filtering the data might be necessary. The extremes of this are either transporting every single log vs. only transporting aggregated metrics. The following paragraphs try to help you decide on the right balance for your use case.
+%
+%Advantages of transporting all logs:
+%
+%Metrics can be added, modified and deleted in one central location
+%Historical data on new metrics can be computed from the stored logs
+%Possibility to peek into live data-stream
+%Allows building complex debugging and monitoring tools
+%Central location for all logs. Invaluable for debugging, root-cause analysis and correlation of incidents
+%Advantages of transporting only metrics:
+%
+%Transporting (aggregated) metrics requires far less bandwidth
+%Smaller storage requirements
+%Scales far better
+%Better than nothing
+%Overall transporting all logs has many advantages and should be preferred over aggregated metrics if possible. Especially managing metric definitions in one place and the ability to compute historic data for new metrics is very valuable. Also does transporting all logs allow for thorough (computationally expensive) data analysis on historic data to i.e. train machine learning models, predict behavior or give enhanced insights into who your users are and what they do.
+%
+%There is no strict rule to follow and it is perfectly ok to mix and match. An example would be to just transport logs that contain examinable data and aggregate performance metrics, like average response time or jobs processed per minute, on the server.
+%
+%This post will focus on the transport of raw log data. The posts “Server Monitoring with Sensu” and “Metrics with Graphite” will introduce better suited technologies to work with pure metrics.
+
+\subsection{System data}
+
+Observation of cpu-, disk- and memory-utilization, why.
+Dstat system util introduction
+
+\subsection{Application data}
+
+Apache Flink provides application data via Monitoring REST API, describe REST
+Since version 1.1.0 new Metrics data via JMX
+
+\subsubsection{Representational State Transfer (REST)}
+
+Analyze Flinks REST data
+
+\subsubsection{{Java Management Extensions (JMX)}}
+
+General JMX explanation, data access MBeansServerConnection
+
+\section{Data Quality}
+
+Define DQ, evaluate quality for data above
+
+\section{Functional Requirements}
+
+Describe "big picture" functionality see \cite{VanL14}, follows distributed character of Big Data Analytics
+Applications, provide "on demand" data collection, as much data as possible, realtime?, three main components,
+break down for:
+
+\subsection{Collection}
+
+collect data in clustered environments
+
+\subsection{Transport}
+
+Scalability with message broker
+
+\subsection{Persistence}
+
+Accessibility for AI, UI applications
+
+\section{Non-Functional Requirements}
+
+
+
+\section{Summary}

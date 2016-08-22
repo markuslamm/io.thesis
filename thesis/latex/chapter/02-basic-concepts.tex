@@ -1,4 +1,4 @@
-\chapter{Theoretical Foundations}
+\chapter{Basic Concepts}
 
 After a short introduction to the terminology of Big Data, this chapter will discuss
 the main characteristics of Big Data Analytics Applications and introduces the concept of
@@ -14,6 +14,11 @@ pre-existing data is somehow small, which is not true, or that the only challeng
 sheer size of data, which is just one one them among others. In reality, the term Big Data
 applies to information that can’t be processed or analyzed using traditional processes or
 tools.
+
+Another definition comes from the the science historian George Dyson, who was cited by
+Tim O'Reilly in \cite{Dys13}:
+\textit{Big data is what happened when the cost of storing information became less than the
+cost of making the decision to throw it away.}
 
 In the past decade the amount of data being created is a subject of immense growth.
 More than 30,000 gigabytes of data are generated every second, and the rate of data
@@ -62,15 +67,7 @@ A possible definition for Big Data could be derived as follows: \textit{Big Data
 of large amounts of data from multiple sources with a high processing speed for generating
 valuable information based on the underlying data.}
 
-\cite{Bitk12} proposes another characteristic as a fourth point called "Analytics", which will
-be explained in the next section.
-
 \section{Big Data Analytics Applications}
-
-%Another definition comes from the the science historian George Dyson, who was cited by Tim O'Reilly in \cite{Dys13}:
-%\textit{Big data is what happened when the cost of storing information became less than the cost of making the
-%decision to throw it away.} It follows that the storage and extraction of valuable information from the immense amount of
-%existing data has become the most important part of Big Data Analytics Applications.
 
 Big Data Analytics describes the process of collecting, organizing and analyzing large
 volumes of data with the aim to discover patterns, relationships and other useful informa-
@@ -100,17 +97,15 @@ The following section will discus the topic stream processing, which is part of 
 
 \section{Stream Processing}
 
-Computing paradigms on big data currently differ at the first level of abstraction on
-whether the processing will be done in batch mode, or in real-time/near real-time on
-streaming data. This section is focussed on processing continous data streams in real-
-time/near real-time and introduces Apache Flink and Apache Kafka as representants of
-streaming frameworks.
+Computing paradigms on big data currently differ on whether the processing will be done
+in batch mode, or in real-time/near real-time on streaming data. This section is focussed
+on processing continous data streams in real-time/near real-time and introduces Apache Flink
+and Apache Kafka as representants of streaming frameworks.
 
 According to \cite{Klepp16}, stream processing is the real-time processing of data continuously,
 concurrently, and in a record-by-record fashion in which data is treated not as static tables
 or files, but as a continuous infinite stream of data integrated from both live and historical
-sources. It is needed, if “immediate” response to each event as it occurs is demanded by
-the application. Various data streams could have own features. For example, a stream
+sources. Various data streams could have own features. For example, a stream
 from the financial market describes the whole data. In the same time, a stream for sensors
 depends on sampling (e.g. get new data every 5 minutes).
 
@@ -126,10 +121,10 @@ Benefits of stream processing:
 	\item Accessibility: live data can be used while still in motion, before being stored.
 	\item Completeness: historical data can be streamed and integrated with live data for
 	more context.
-	\item High throughput: high-velocity and high-volume data can be processed with minimal latency.
+	\item High throughput: large volumes of data can be processed in high-velocity minimal latency.
 \end{itemize}
 
-In a formal way, a data stream is described as an ordered pair (S, T) where:
+To introduce a more formal expression, a data stream is described as an ordered pair (S, T) where:
 \begin{itemize}
 	\item S is a sequence of tuples.
 	\item T is a sequence of positive real time intervals.
@@ -140,7 +135,7 @@ is potentially unbounded, which means that data streams may be continuously gene
 at any rate \cite{Nam15} and leads to the following characteristics:
 \begin{itemize}
 	\item the data arives continous
-	\item the arrival of data is disorderen
+	\item the arrival of data is disordered
 	\item the size of the stream is potentially unbounded
 \end{itemize}
 
@@ -158,21 +153,21 @@ The main components of Flink applications are formed by streams and transformati
 streams define intermediate results whereas transformations represent operations computed on one
 or more input streams with one or more resulting streams.
 
-The following code from \cite{Flink16} shows a basic Flink application, a working example of streaming
-window word count application, that counts the words coming from a web socket in 5 second windows:
-
+To illustrate the main components of a Flink application, the following code from \cite{Flink16} shows
+a working example of a streaming application, that counts the words coming from a web socket in 5
+second windows:
 
 \begin{lstlisting}[caption={Basic Apache Flink streaming application}, captionpos=b, label={lst:basicflink}]
 public static void main(String[] args) throws Exception {
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         DataStream<Tuple2<String, Integer>> dataStream = env
-                .socketTextStream("localhost", 9999)    (1)
-                .flatMap(new Splitter())                (2)
-                .keyBy(0)                               (2)
-                .timeWindow(Time.seconds(5))            (2)
-                .sum(1);                                (2)
+                .socketTextStream("localhost", 9999)        *(1)
+                .flatMap(new Splitter())                    *(2)
+                .keyBy(0)                                   *(2)
+                .timeWindow(Time.seconds(5))                *(2)
+                .sum(1);                                    *(2)
 
-        dataStream.print();                             (3)
+        dataStream.print();                                 *(3)
         env.execute("Window WordCount");
     }
 
@@ -188,7 +183,7 @@ public static void main(String[] args) throws Exception {
 
 On execution, Flink applications are mapped to streaming dataflows, consisting of streams
 and transformation operators (3) where each dataflow starts with one or more sources (1)
-the data is received from and ends in one or more sinks(3) the resulting stream is written
+the data is received from and the resulting stream will be written in one or more sinks (3).
 to.
 
 The following overview summarises the most important streaming features of Apache Flink:
@@ -221,8 +216,11 @@ The following overview summarises the most important streaming features of Apach
 
 \subsection{Apache Kafka}
 
-Apache Kafka is publish-subscribe messaging rethought as a distributed commit log. \cite{Kafka16}.
-It is written in Scala and was initially developed at LinkedIn.
+Apache Kafka is publish-subscribe queuing service rethought as a distributed commit log \cite{Kafka16},
+supporting stream processing with millions of messages per second, durability of messages through disk
+storage and replication accross multiple machines in clustered environments. It is written in Scala, was
+initially developed at LinkedIn and follows the distributed character of Big Data Analytics Applications
+by it's inherent design.
 
 This excerpt from the paper \cite{Neha11} the team at LinkedIn published about Kafka describes the
 basic principles:
@@ -236,27 +234,32 @@ distributed into these sub-streams. (…)  Unlike traditional iterators, the mes
 never terminates. If there are currently no more messages to consume, the iterator blocks until
 new messages are published to the topic.}
 
-TODO: Role of Kafka as broker to ingest data
+A common use case for Apache Kafka in the context of stream processing is the buffering of messages
+between stream producing systems by providing a queue for incoming and outgoing data. According
+to the explanation of the concept of data sources and sinks in the section above, Apache Kafka
+is heavily used as an input source, as well as output sink for the Apache Flink processing dataflow.
 
+The design of Apache Kafka has the following characteristics:
 
-%\subsection{Related work}
-%
-%\subsubsection{Prometheus}
-%
-%\subsubsection{Datadog}
-%
-%\subsubsection{New Relic}
-%
-%\subsubsection{collectd}
+\begin{description}
+    \item [Persistent messages]
+    To avoid any kind of data loss, Apache Kafka provides constant-time performance even with very
+    large volumes of stored messages, which is in order of Terrabytes.
 
-%collectd is a daemon which collects system performance statistics periodically and
-%provides mechanisms to store the values in a variety of ways, for example in RRD files.
-%
-%\subsubsection{collectd}
-%
-%StatsD is originally a simple daemon developed and  released by Etsy  to aggregate and summarize application metrics.
-%With StatsD, applications are to be instrumented by developers using language-specific client libraries. These libraries
-%will then communicate with the StatsD daemon using its dead-simple protocol, and the daemon will then generate aggregate
-%metrics and relay them to virtually any graphing or monitoring backend.
+    \item [High throughput]
+    Even on commodity hardware, Apache Kafka supports millions of messages per second.
+
+    \item [Distributed by design]:
+    Enables Messages partitioning over Kafka servers and distributing consumption over a cluster of
+    message consuming machines
+
+    \item{Multiple client support}
+    Integration of clients from different platforms, e.g. Java, .NET, PHP, Ruby, Python.
+
+    \item{Real Time}
+    Messages produced by the producer threads should be immediately visible to consumer threads.
+\end{description}
 
 \section{Summary}
+
+TODO

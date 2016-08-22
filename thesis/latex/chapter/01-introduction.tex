@@ -19,22 +19,22 @@ Due to the distributed character of Big Data Applications, where a system is com
 of several interacting components, the examination of log data is not an adequate choice
 to gain insight into an entire system \cite{VanL14}.
 
-%TODO: Was ist der Markt?
+Apache Flink is a "new player" in the plurality of stream processing frameworks. It was
+initialized by researchers of the Technische Universität Berlin, Humboldt Universität
+Berlin and Hasso-Plattner Institut Potsdam in 2008. On the 12th of January 2015 Flink
+became a top level project of the Apache Foundation. In the meantime, the development of
+Flink is driven by a grown community (216 contributers, 22.08.2016) and a wide range of
+companies that are actively using it.
 
 \section{Objective}
 
 The main goal of the thesis is the design and implementation of a software system to ingest
 and  store system and operational data of Big Data Analytics Applications on the example
-of the streaming frameworks Apache Flink and Apache Kafka. It will be examined which
-data is available and can be collected at all, what data is relevant and how to collect
-from source systems. Furhermore, the collected data must be stored in a persistence system
-to become available for possible consumers like visualization applications, analytical processes
-or as a data source for applications from the context of Machine Learning for example.
-
-In preparation for this thesis my supervisor Prof. Dr. Stefan Edlich once said \textit{"Sie sammeln
-alles, was nicht bei drei auf dem Baum ist"}. According to this statement the collection and
-storage of as much data as possible is the main focus of this work and excludes processing,
-visualization or analysis of the collected data.
+of the streaming frameworks Apache Flink. It will be examined which data is available and
+can be collected at all, what data is relevant and how to collect from source systems.
+Furhermore, the collected data must be stored in a persistence system to become available
+for possible consumers like visualization applications, analytical processes or as a data
+source for applications from the context of Machine Learning for example.
 
 \section{Structure of thesis}
 
@@ -43,14 +43,14 @@ chapter, the Chapter 2 covers basic concepts of Big Data Analytics Applications,
 the concept of stream processing and introduces Apache Flink and Apache Kafka as
 representatives of widely used stream-processing frameworks.
 
-Chapter 3 investigates which sources for collecting data exist for Apache Flink and Apache
-Kafka and which data should be collected and stored in a persistence system regarding
-to its relevance and data quality.
+Chapter 3 examines Apache Flink and Apache Kafka regarding to the provided data both of the systems,
+which sources for data exist which data should be collected and stored in a persistence system regarding
+to its relevance and data quality. According to the results of the data analysis, the functional and
+non-functional requirements of the system being developed will be introduced at the end of the chapter.
 
-The requirements and the target definition of the software system will be introduced in
-Chapter 4, Chapter 5 describes the software solution by giving a detailed conceptional
-overview of the software components whilst Chapter 6 will explain implementation details
-for selected items.
+Based on the requirements elaborated in the Chapter before, Chapter 4 introduces the software solution by
+giving a detailed conceptional overview of the software components involved and discusses implementation
+details for selected items.
 
 In chapter 7 we'll see how to setup the technical environment for the usage of the prototype
 to verify the correct functionality related to the requirements defined in Chapter 4.
