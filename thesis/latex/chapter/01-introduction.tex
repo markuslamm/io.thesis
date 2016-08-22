@@ -1,58 +1,82 @@
 \chapter{Introduction}
 
 \section{Motivation}
-According to a survey in Germany, nine out of ten companies (89 percent) analyze large
-volumes of data from a variety of diffent sources for operational decision-making processes
-using modern Big Data Analytics Applications, where 48 percent of the respondents see
-the greatest potential of Big Data \cite{Bitk14}. The analysis of continuous data streams is
-taking up a growing importance for companies and therefore constitutes an important
-factor for business success.
 
-Collecting, storing and analyzing system and operational data of Big Data Applications is
-therefore an essential tool in order to ensure successful operation and to prevent failures.
-Even though logfiles are usefull for tracing problems in software systems, problems can
-be tracked and potential sources of error can be identified much earlier by collecting and
-storing execution and service data at runtime to describe the state of the system at a
-given point in time.
+In preparation of this thesis, I first got in contact with Prof. Dr. Stefan Edlich on January 29th
+this year and presented an own idea for a topic of a bachelor's thesis. At this time, I was
+visiting my last course at Beuth Hochschule, the software-project which is spread over two semesters
+aiming to design and implement a software application in cooperation with software related companies
+based in Berlin, which was Lieferando in my case, an online food order service. During this project,
+I got in touch with a lot of technologie like Apache Kafka, Apache Spark, Cassandra, Elasticsearch
+and Consul, all together well known as "buzzwords" from technology-blogs and magazines.
 
-Due to the distributed character of Big Data Applications, where a system is composed
-of several interacting components, the examination of log data is not an adequate choice
-to gain insight into an entire system \cite{VanL14}.
+Because I was interested to learn a bit more about that "big-data-streaming-thing" and especially how
+to build software using stream processing frameworks, I decided my thesis to be in this big data context
+and created a working title "Design And Implementation Of A 'Data Processing Pipeline'” To Transform
+Continous Monititoring Data Streams". The basic idea was to aggregate data from REST RabbitMQ endpoints,
+send this raw data to a stream processor and create a model which fits the monitoring domain and store
+this data in a storage system which enables further data analytics.
+
+During the following email correspondence, Prof. Dr. Stefan Edlich he suggested me to get the data
+from the the streaming platforms components itself, instead of a RabbitMQ queue as my idea suggested.
+So he presented one of his own topics which was quite congruent to my own idea with the given title
+\textit{Design and Implementation of a Tool to Collect Execution- and Service-Data of Big Data Analytics
+Applications}, which I finally choosed to be the one to work out.
+
+This topic is located on germans biggest big data research project "Berlin Big Data Center", which is
+Prof. Dr. Stefan Edlich a member of. Within the project, a program will be developed, which collects
+and stores relevant data of streaming platforms like Apache Flink, Apache Kafka or Apache Spark,
+with the overall aim of which is to build a software that is able to "learn", based on the data that
+will be collected by the system that will be deisgned in this thesis.
 
 Apache Flink is a "new player" in the plurality of stream processing frameworks. It was
 initialized by researchers of the Technische Universität Berlin, Humboldt Universität
-Berlin and Hasso-Plattner Institut Potsdam in 2008. On the 12th of January 2015 Flink
-became a top level project of the Apache Foundation. In the meantime, the development of
-Flink is driven by a grown community (216 contributers, 22.08.2016) and a wide range of
-companies that are actively using it.
+Berlin and Hasso-Plattner Institut Potsdam in 2008 and has emerged from the research project described
+above.  On the 12th of January 2015 Flink became a top level project of the Apache Foundation. In the
+meantime, the development of Flink is driven by a grown community (216 contributers, 22.08.2016) and
+a wide range of companies that are actively using it.
 
 \section{Objective}
 
-The main goal of the thesis is the design and implementation of a software system to ingest
-and  store system and operational data of Big Data Analytics Applications on the example
-of the streaming frameworks Apache Flink. It will be examined which data is available and
-can be collected at all, what data is relevant and how to collect from source systems.
+The main goal of the thesis is a working software system to ingest and store data that can be collected
+from Apache Flink and Apache Kafka. It will be examined, which data is available and can be collected
+at all, what data is relevant and how to collect from source systems.
+
 Furhermore, the collected data must be stored in a persistence system to become available
 for possible consumers like visualization applications, analytical processes or as a data
 source for applications from the context of Machine Learning for example.
 
+This thesis will not be a deep introduction into big data, stream processing or covers deeper
+details of the internals of Apache Flink and Apache Kafka. To understand the context this
+frameworks are located in, the underlying concepts will be explained only briefly.
+
+%Collecting, storing and analyzing system and operational data of Big Data Applications is
+%therefore an essential tool in order to ensure successful operation and to prevent failures.
+%Even though logfiles are usefull for tracing problems in software systems, problems can
+%be tracked and potential sources of error can be identified much earlier by collecting and
+%storing execution and service data at runtime to describe the state of the system at a
+%given point in time.
+%
+%Due to the distributed character of Big Data Applications, where a system is composed
+%of several interacting components, the examination of log data is not an adequate choice
+%to gain insight into an entire system \cite{VanL14}.
 \section{Structure of thesis}
 
 After a short introduction to the topics and the main goals of the present thesis in this
-chapter, the Chapter 2 covers basic concepts of Big Data Analytics Applications, discusses
-the concept of stream processing and introduces Apache Flink and Apache Kafka as
-representatives of widely used stream-processing frameworks.
+chapter, Chapter 2 discusses the context of stream processing, introduces Apache Flink and
+Apache Kafka as representatives of widely used stream processing frameworks.
 
-Chapter 3 examines Apache Flink and Apache Kafka regarding to the provided data both of the systems,
-which sources for data exist which data should be collected and stored in a persistence system regarding
-to its relevance and data quality. According to the results of the data analysis, the functional and
-non-functional requirements of the system being developed will be introduced at the end of the chapter.
+Chapter 3 examines Apache Flink and Apache Kafka regarding to the provided data both of the systems.
+The different sources for the data collection will be described, as well as the question, which data
+should be collected and stored in a persistence system regarding to its relevance and data quality.
+According to the results of the data analysis, the functional and non-functional requirements of the
+system being developed will be introduced at the end of the chapter.
 
-Based on the requirements elaborated in the Chapter before, Chapter 4 introduces the software solution by
+Based on the requirements elaborated in Chapter 3, Chapter 4 introduces the software solution by
 giving a detailed conceptional overview of the software components involved and discusses implementation
 details for selected items.
 
-In chapter 7 we'll see how to setup the technical environment for the usage of the prototype
+In chapter 5 we'll see how to setup the technical environment for the usage of the prototype
 to verify the correct functionality related to the requirements defined in Chapter 4.
 
-The last Chapter 8 covers a conclusion and summary of the present work.
+The last Chapter 6 covers a conclusion and gives a resumee of the present work.
