@@ -1,28 +1,13 @@
 \chapter{Basic Concepts}
-
-After a short introduction to the terminology of Big Data, this chapter will discuss
-the main characteristics of Big Data Analytics Applications and introduces the concept of
-stream processing, which is one of the main characteristics of the popular streaming
-frameworks Apache Flink and Apache Kafka. The underlying concepts both of these systems
-and how they're used in context of Big Data Analytics will be explained at the
-end of this chapter.
+After a short introduction to the terminology of Big Data and Big Data Analytics Applications
+this chapter introduces the concept of stream processing, which is one of the main characteristics
+of the streaming frameworks Apache Flink and Apache Kafka. The underlying concepts both of these systems
+and their usage in context of Big Data Analytics will be explained at the end of this chapter.
 
 \section{Big Data}
-
-According to \cite{Marz15} the term “Big Data” is a misleading name since it implies that
-pre-existing data is somehow small, which is not true, or that the only challenge is the
-sheer size of data, which is just one one them among others. In reality, the term Big Data
-applies to information that can’t be processed or analyzed using traditional processes or
-tools.
-
-Another definition comes from the the science historian George Dyson, who was cited by
-Tim O'Reilly in \cite{Dys13}:
-\textit{Big data is what happened when the cost of storing information became less than the
-cost of making the decision to throw it away.}
-
 In the past decade the amount of data being created is a subject of immense growth.
 More than 30,000 gigabytes of data are generated every second, and the rate of data
-creation is only accelerating.\cite{Marz15}. People create content like blog posts, tweets, social
+creation is accelerating\cite{Marz15}. People create content like blog posts, tweets, social
 network interactions, photos, servers continuously log messages, scientists create detailed
 measurements, permanently.
 
@@ -34,27 +19,26 @@ measurements, permanently.
 \end{figure}
 
 Through advances in communications technology, people and things are becoming in-
-creasingly interconnected. Generally referred to as machine-to-machine (M2M), inter-
+creasingly interconnected. Generally titled as machine-to-machine (M2M), inter-
 connectivity is responsible for double-digit year over year data growth rates. Finally,
 because small integrated components are now affordable, it becomes possible to add
 intelligence to almost everything. As an example, a simple railway car has hundreds
 of sensors for tracking the state of individual parts and GPS-based data for shipment
-tracking and logistics.\cite{Ziko12}
+tracking and logistics\cite{Ziko12}.
 
-Besides the extremely growing amount of data, an increase in data diversity goes hand
-in hand. It comes in its raw and unstructured, semistructured or structured form, which
-makes processing it in a traditional relational system impractical or impossible.\cite{Bitk12}
-describes, that around 85 percent of the data comes in an unstructured form, but containing
-valuable information.
+Besides the extremely growing amount of data, the data becomes more and more diverse.
+It exists in its raw and unstructured, semistructured or in rare cases in a structured form.
+\cite{Bitk12} describes, that around 85 percent of the data comes in an unstructured
+form, but containing valuable information what makes processing it in a traditional
+relational system impractical or impossible.
 
 According to \cite{Marz15} \cite{Ziko12}, Big Data is defined by three characteristics:
 \begin{description}
-    \item [Volume] The amount of data present is growing because of growing amount of producers,
-    e.g. environmental data, financial data, medical data, surveillance data.
+    \item [Volume] The amount of present data because of growing amount of producers,
+    e.g. environmental data, financial data, medical data, log data, sensor data.
     \item [Variety] Data varies in its form, it comes in different formats from different sources.
     \item [Velocity] Data needs to be evaluated and analyzed quickly, which leads to new challenges
-    like analysis of large data sets with answers in seconds range, data processing in
-    realtime, data generation and transmission at highspeed.
+    of analyzing large data sets in seconds range or processing of data in realtime
 \end{description}
 \begin{figure}[H]
 	\centering
@@ -67,8 +51,18 @@ A possible definition for Big Data could be derived as follows: \textit{Big Data
 of large amounts of data from multiple sources with a high processing speed for generating
 valuable information based on the underlying data.}
 
-\section{Big Data Analytics Applications}
+Another definition comes from the the science historian George Dyson, who was cited by
+Tim O'Reilly in \cite{Dys13}:
+\textit{Big data is what happened when the cost of storing information became less than the
+cost of making the decision to throw it away.}
 
+According to \cite{Marz15} the term “Big Data” is a misleading name since it implies that
+pre-existing data is somehow small, which is not true, or that the only challenge is the
+sheer size of data, which is just one one them among others. In reality, the term Big Data
+applies to information that can’t be processed or analyzed using traditional processes or
+tools.
+
+\section{Big Data Analytics Applications}
 Big Data Analytics describes the process of collecting, organizing and analyzing large
 volumes of data with the aim to discover patterns, relationships and other useful informa-
 tion extracted from incoming data streams \cite{Marz15}. The process of analytics is typically
@@ -76,8 +70,8 @@ performed using specialized software tools and applications for predictive analy
 mining, text mining, forecasting and data optimization.
 
 The analytical methods raise data quality for unstructured data on a level that allows
-more quantitative and qualitative analysis. With this structure it becomes posssible
-to extract the data that is relevant by iteratively refined queries.
+more quantitative and qualitative analysis. With this structure it becomes possible
+to extract the data that is relevant for more detailed queries to extract the desired information.
 
 The areas of applications may be extremely diverse and ranges from analysis of financial
 flows or traffic data, processing sensor data or environmental monitoring as explained in
@@ -97,31 +91,30 @@ The following section will discus the topic stream processing, which is part of 
 
 \section{Stream Processing}
 
-Computing paradigms on big data currently differ on whether the processing will be done
-in batch mode, or in real-time/near real-time on streaming data. This section is focussed
-on processing continous data streams in real-time/near real-time and introduces Apache Flink
-and Apache Kafka as representants of streaming frameworks.
+Computing infrastructures on big data currently differ on whether the processing on streaming data
+will be computed in batch mode, or in real-time/near real-time . This section is focussed on processing
+continous data streams in real-time/near real-time and introduces Apache Flink and Apache Kafka as
+representants of streaming frameworks.
 
-According to \cite{Klepp16}, stream processing is the real-time processing of data continuously,
-concurrently, and in a record-by-record fashion in which data is treated not as static tables
-or files, but as a continuous infinite stream of data integrated from both live and historical
-sources. Various data streams could have own features. For example, a stream
+According to \cite{Klepp16}, stream processing is the computing of data continuously,
+concurrently, in real time and in a record-by-record fashion. In a stream, data isn't as treated static tables
+or files, but as a continuous infinite stream of data extracted from both live and historical
+sources. Various data streams could have own features, for example, a stream
 from the financial market describes the whole data. In the same time, a stream for sensors
 depends on sampling (e.g. get new data every 5 minutes).
 
 The general approach is to have a small component that processes each of the events
 separately. In order to speed up the processing, the stream may be subdivided, and the
-computation distributed across clusters. Stream processing frameworks primarily addresses
-parallelization of the computational load; an additional storage layer is needed to store
-the results in order to be able to query them.
+computation distributed across clusters. Stream processing frameworks like Apache Flink and
+Apache Kafka primarily addresses parallelization of the computational load, an additional storage
+layer is needed to store the results in order to be able to query them.
 
-Benefits of stream processing:
+This continous processing of data streams leads to the benefits of stream processing frameworks:
 
 \begin{itemize}
-	\item Accessibility: live data can be used while still in motion, before being stored.
-	\item Completeness: historical data can be streamed and integrated with live data for
-	more context.
-	\item High throughput: large volumes of data can be processed in high-velocity minimal latency.
+	\item Accessibility: live data can be used while the data flow is still in motion and before the data being stored.
+	\item Completeness: historical data can be streamed and integrated with live data for more context.
+	\item High throughput: large volumes of data can be processed in high-velocity with minimal latency.
 \end{itemize}
 
 To introduce a more formal expression, a data stream is described as an ordered pair (S, T) where:
@@ -186,33 +179,28 @@ and transformation operators (3) where each dataflow starts with one or more sou
 the data is received from and the resulting stream will be written in one or more sinks (3).
 to.
 
-The following overview summarises the most important streaming features of Apache Flink:
+The dataflows of Apache Flink are in inherently parallel and distributed, by splitting streams into
+stream partitions and operators into operator subtasks, which are execute independently from each
+other, in different threads and on different machines or containers.
 
-\begin{description}
-    \item [Event time and out of order streams]
-    Due to the distributed character of Big Data Analytics Applications, data doesn't arrive
-    necessarily in the order that they are produced. Since version 0.10, Flink provides the
-    concept of "event time", the processing of events by the time they happened in the real
-    world to support "out of order" streams what enables consistently processing of events
-    according to their timestamps.
+For the distributed processing of dataflows, Flink defines two type of processes:
 
-    \item [Windows]
-    Flink uses a concept called windows to divide a data stream that can be potentially infinite
-    into finite slices based on the timestamps of elements or other criteria. This division
-    is required when working with infinite streams of data and performing transformations that
-    aggregate elements
+\begin{enumerate}
+    \item JobManagers (master process). At least one is required, it coordinates the
+    distributed execution and is responsible for scheduling tasks, coordinate recovery
+    on failures, etc.
+    \item TaskManagers (worker processes) At least one is required, it executes the tasks, more
+    specifically, the subtasks of a dataflow, and buffer and exchange the data streams.
+\end{enumerate}
 
-    \item [Consistency, fault tolerance, and high availability]
-    Flink guarantees consistent state updates and data movement in the presence of failures
-    between selected sources and sinks. Such failures include machine hardware failures, network
-    failures, transient program failures, etc. It supports worker and master failover,
-    eliminating any single point of failure by providing  a checkpointing mechanism that recovers
-    streaming jobs after failures.
+A basic Flink cluster set up with a single JobManager and TaskManager on Docker will be introduced in
+Chapter 5 Evaluation and serves as source to collect data from, as well as a streaming component for
+processing collected data.
 
-    \item [Connectors and integration points]
-    Flink integrates with a wide variety of open source systems for data input and output (Kafka,
-    Elasticsearch and others) which makes technical decisions regarding the infrastructure quite flexible.
-\end{description}
+In addition, Apache Flink provides a client, which is not part of the runtime. It is used as a part
+of Java/Scala applications to create and send dataflows to the JobManager. The client will
+be used in the software component "CollectorDataProcessor" and introduced in Chapter 4 Architecture
+and Implementation.
 
 \subsection{Apache Kafka}
 
@@ -237,28 +225,22 @@ new messages are published to the topic.}
 A common use case for Apache Kafka in the context of stream processing is the buffering of messages
 between stream producing systems by providing a queue for incoming and outgoing data. According
 to the explanation of the concept of data sources and sinks in the section above, Apache Kafka
-is heavily used as an input source, as well as output sink for the Apache Flink processing dataflow.
+is heavily used as an input source, as well as output sink for the processing dataflow in Apache Flink
+applications.
 
-The design of Apache Kafka has the following characteristics:
+The following figure shows a typical use case for a data pipeline that typically start by pushing data
+streams into Kafka, consumed by Flink applications, which range from simple data transformations
+to complex data aggregations in a given time window. The resulting streams are written back to Kafka
+for the consumption by other services or the storage in a persitent medium.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\textwidth]{../images/05-kafka-flink-pipeline.png}
+	\caption{A typical Kafka-Flink pipeline{\cite{Dartisans15}}}
+	\label{kafka-flink-pipeline}
+\end{figure}
 
-\begin{description}
-    \item [Persistent messages]
-    To avoid any kind of data loss, Apache Kafka provides constant-time performance even with very
-    large volumes of stored messages, which is in order of Terrabytes.
-
-    \item [High throughput]
-    Even on commodity hardware, Apache Kafka supports millions of messages per second.
-
-    \item [Distributed by design]:
-    Enables Messages partitioning over Kafka servers and distributing consumption over a cluster of
-    message consuming machines
-
-    \item{Multiple client support}
-    Integration of clients from different platforms, e.g. Java, .NET, PHP, Ruby, Python.
-
-    \item{Real Time}
-    Messages produced by the producer threads should be immediately visible to consumer threads.
-\end{description}
+Chapter 5 Evaluation describes the Docker setup for a single Kafka node that is part of the
+software solution in addition of provisioning data for collection.
 
 \section{Summary}
 
