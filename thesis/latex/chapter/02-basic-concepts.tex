@@ -3,6 +3,7 @@ After a short introduction to the terminology of Big Data and Big Data Analytics
 this chapter introduces the concept of stream processing, which is one of the main characteristics
 of the streaming frameworks Apache Flink and Apache Kafka. The underlying concepts both of these systems
 and their usage in context of Big Data Analytics will be explained at the end of this chapter.
+TODO REST JMX
 
 \section{Big Data}
 In the past decade the amount of data being created is a subject of immense growth.
@@ -13,7 +14,7 @@ measurements, permanently.
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.7\textwidth]{../images/04-sources-of-bigdata.png}
+	\includegraphics[width=0.55\textwidth]{../images/04-sources-of-bigdata.png}
 	\caption{Sources of Big Data{\cite{Bitk12}}}
 	\label{sources-of-bigdata}
 \end{figure}
@@ -42,7 +43,7 @@ According to \cite{Marz15} \cite{Ziko12}, Big Data is defined by three character
 \end{description}
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.7\textwidth]{../images/03-three-vs-of-bigdata.png}
+	\includegraphics[width=0.5\textwidth]{../images/03-three-vs-of-bigdata.png}
 	\caption{The three 'V's of Big Data{\cite{Ziko12}}}
 	\label{three-vs-of-bigdata}
 \end{figure}
@@ -81,7 +82,7 @@ The illustration below summarises the six-dimensional taxonomy \cite{Bitk14, Csa
 Data Analytics Applications.
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.7\textwidth]{../images/05-big-data-taxonomy.jpg}
+	\includegraphics[width=0.5\textwidth]{../images/05-big-data-taxonomy.jpg}
 	\caption{Taxonomy of Big Data Analytics Applications \cite{Bitk14, Csa14}}
 	\label{taxonomy-bigdata-applications}
 \end{figure}
@@ -241,6 +242,70 @@ for the consumption by other services or the storage in a persitent medium.
 
 Chapter 5 Evaluation describes the Docker setup for a single Kafka node that is part of the
 software solution in addition of provisioning data for collection.
+
+\section{Representational State Transfer (REST)}
+In his doctoral dissertation from 2000 titled "Architectural Styles and the Design of Network-based
+Software Architectures", Roy Thomas Fiedling introduced the term Representational
+State Transfer (REST) as core set of principles, properties, and constraints defining an "architectural
+style for distributed hypermedia systems"\cite{Field00}.
+
+Focussed on component roles and interactions between data elements rather than implementation details,
+Fielding defines a set of core principles of REST architectures. The following section discusses the relavant
+parts according to the thesis:
+\begin{enumerate}
+    \item \textbf{Client-Server}
+    Clients and servers are separated by a uniform interface to facilitate portability. For example, a user interface
+    is not concerned with data storage because is internal to the server. On the other hand, the server is not concerned
+    with the user interface or state. As long as the interface is not altered, the separation of concerns enables the
+    components to evolve independently and thereby the improves scalability of the entire system.
+    \item \textbf{Stateless}
+    The communication between clients and server must be stateless. Each request from any client contains all the
+    information necessary to service the request, and session state is held in the client.
+    \item \textbf{Uniform Interface}
+    The uniform interface between the interacting components is a fundamental characteristic of REST architectures and subjects
+    to the following constraints:
+    \begin{enumerate}
+        \item identification of resources
+        \item manipulation of resources through representations
+        \item self-descriptive messages
+        \item hypermedia as the engine of application state
+    \end{enumerate}
+%    \item \textbf{Caching}
+%    A response to a request be implicitly or explicitly defined as cacheable or non-cacheable.
+%    If a response is cacheable, a client cache can reuse that response data for later, equivalent requests,
+%    and therefore eliminates some client-server interactions.
+%    , improving efficiency, scalability, performance by
+%    reducing the average latency of a series of interactions.
+\end{enumerate}
+
+
+
+%Bei einer RESTful API handelt es sich um eine Programmierschnittstelle (Application Programming Interface, API),
+%die HTTP-Anfragen verwendet, um per GET, PUT, POST und DELETE auf Daten zuzugreifen.
+
+%RESTful APIs machen sich explizit die in RFC 2616 definierten HTTP-Anfragemethoden zunutze. Sie verwenden PUT, um den
+%Zustand einer Ressource (das kann ein Objekt, eine Datei oder ein Block sein) zu ändern oder sie zu aktualisieren.
+%Mit GET wird eine Ressource abgerufen, mit POST wird sie erstellt und mit DELETE gelöscht.
+
+
+
+%Als Internetprotokoll sollte HTTP/1.1
+%dienen. Über URIs adressierbare Informationsbündel bezeichnet man Ressourcen, welche über
+%Repräsentations- beziehungsweise. Darstellungsmöglichkeiten verfügen und Meta Daten enthalten. 71 Man
+%denkt in Ressourcen. Aber was ist eine Ressource? Jede Ressource ist über eine eindeutige URI
+%identifizierbar und gilt als Inhalt, welcher bei der Web Applikation liegt. Ressourcen können Sub Ressourcen
+%haben, worauf keine oder mehrere Methoden anwendbar sind. Neben der freien Dokumentation des Web
+%Services, wird oft die in XML verfügbare Web Application Description Language (WADL) des RESTful
+%Services veröffentlicht. 72 Da REST auf HTTP basiert, werden auch die dort bekannte    n idempotenten
+%Methoden wie GET, PUT, POST, DELETE verwendet. Idempotenz bedeutet in diesem Zusammenhang, dass
+%keine Nebeneffekte auftreten, wenn eine HTTP Anfrage öfter als einmal ausgeführt wird. Weiterhin werden die
+%durch das offene Internetprotokoll bekannten HTTP Status Codes für Antworten verwendet. 73 Neben der von
+%Fielding erwähnten Repräsentationen als HTML Dokument und Image 74 existieren heute eher XML und JSON,
+%wobei binäre Daten nicht zu vergessen sind.
+
+\section{{Java Management Extensions (JMX)}}
+
+General JMX explanation, data access MBeansServerConnection
 
 \section{Summary}
 
