@@ -247,61 +247,38 @@ software solution in addition of provisioning data for collection.
 In his doctoral dissertation from 2000 titled "Architectural Styles and the Design of Network-based
 Software Architectures", Roy Thomas Fiedling introduced the term Representational
 State Transfer (REST) as core set of principles, properties, and constraints defining an "architectural
-style for distributed hypermedia systems"\cite{Field00}.
+style for distributed hypermedia systems"\cite{Field00}. To understand the way of data exchange of the software system
+coming in Chapter 5 Architecture and Implementation, an excerpt of relevant characteristics of REST architectures will be
+discussed in this section.
 
-Focussed on component roles and interactions between data elements rather than implementation details,
-Fielding defines a set of core principles of REST architectures. The following section discusses the relavant
-parts according to the thesis:
+REST architectures must meet the following characteristics, et al:
 \begin{enumerate}
-    \item \textbf{Client-Server}
+    \item \textbf{Client-Server architecture:}
     Clients and servers are separated by a uniform interface to facilitate portability. For example, a user interface
-    is not concerned with data storage because is internal to the server. On the other hand, the server is not concerned
+    is not concerned with data storage because it is internal to the server. On the other hand, the server is not concerned
     with the user interface or state. As long as the interface is not altered, the separation of concerns enables the
     components to evolve independently and thereby the improves scalability of the entire system.
-    \item \textbf{Stateless}
+    \item \textbf{Stateless:}
     The communication between clients and server must be stateless. Each request from any client contains all the
     information necessary to service the request, and session state is held in the client.
-    \item \textbf{Uniform Interface}
+    \item \textbf{Uniform Interface:}
     The uniform interface between the interacting components is a fundamental characteristic of REST architectures and subjects
     to the following constraints:
     \begin{enumerate}
-        \item identification of resources
-        \item manipulation of resources through representations
-        \item self-descriptive messages
-        \item hypermedia as the engine of application state
+        \item \textbf{Identification of Resources:}
+        Resources describe any information that is originated on the server and can be be identified using URIs in web-based
+        REST systems. The resources themselves are conceptually separate from the representations that are returned to the client.
+        For example, the server may send data from its database as JSON data or HTML web page, what is diffent to the server's
+        internal representation.
+        \item \textbf{Manipulation of Resources through Representations:}
+        The modification of the resource is performed by using the representation. If the representation and attached metadata
+        is available, clients are able to change the state of the resource by modifying or deleting the resource.
     \end{enumerate}
-%    \item \textbf{Caching}
-%    A response to a request be implicitly or explicitly defined as cacheable or non-cacheable.
-%    If a response is cacheable, a client cache can reuse that response data for later, equivalent requests,
-%    and therefore eliminates some client-server interactions.
-%    , improving efficiency, scalability, performance by
-%    reducing the average latency of a series of interactions.
 \end{enumerate}
 
-
-
-%Bei einer RESTful API handelt es sich um eine Programmierschnittstelle (Application Programming Interface, API),
-%die HTTP-Anfragen verwendet, um per GET, PUT, POST und DELETE auf Daten zuzugreifen.
-
-%RESTful APIs machen sich explizit die in RFC 2616 definierten HTTP-Anfragemethoden zunutze. Sie verwenden PUT, um den
-%Zustand einer Ressource (das kann ein Objekt, eine Datei oder ein Block sein) zu ändern oder sie zu aktualisieren.
-%Mit GET wird eine Ressource abgerufen, mit POST wird sie erstellt und mit DELETE gelöscht.
-
-
-
-%Als Internetprotokoll sollte HTTP/1.1
-%dienen. Über URIs adressierbare Informationsbündel bezeichnet man Ressourcen, welche über
-%Repräsentations- beziehungsweise. Darstellungsmöglichkeiten verfügen und Meta Daten enthalten. 71 Man
-%denkt in Ressourcen. Aber was ist eine Ressource? Jede Ressource ist über eine eindeutige URI
-%identifizierbar und gilt als Inhalt, welcher bei der Web Applikation liegt. Ressourcen können Sub Ressourcen
-%haben, worauf keine oder mehrere Methoden anwendbar sind. Neben der freien Dokumentation des Web
-%Services, wird oft die in XML verfügbare Web Application Description Language (WADL) des RESTful
-%Services veröffentlicht. 72 Da REST auf HTTP basiert, werden auch die dort bekannte    n idempotenten
-%Methoden wie GET, PUT, POST, DELETE verwendet. Idempotenz bedeutet in diesem Zusammenhang, dass
-%keine Nebeneffekte auftreten, wenn eine HTTP Anfrage öfter als einmal ausgeführt wird. Weiterhin werden die
-%durch das offene Internetprotokoll bekannten HTTP Status Codes für Antworten verwendet. 73 Neben der von
-%Fielding erwähnten Repräsentationen als HTML Dokument und Image 74 existieren heute eher XML und JSON,
-%wobei binäre Daten nicht zu vergessen sind.
+Chapter 4 Architecture and Implementation will apply these principles to enable the exchange of data between distributed
+software components by using an uniform interface based on the on Hypertext Transfer Protocol and the the corresponding HTTP
+verbs (GET, POST, PUT, DELETE,..).
 
 \section{{Java Management Extensions (JMX)}}
 
