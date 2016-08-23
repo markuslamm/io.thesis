@@ -28,8 +28,11 @@ of SP.
 
 TODO
 
+\subsection{Technologies}
+
 \subsection{Infrastructure Components}
 
+make refs to taxonomy
 \subsubsection{Service-Discovery}
 
 Registraction for CollectorClients
@@ -37,16 +40,22 @@ Registraction for CollectorClients
 \subsubsection{Message-Broker}
 Queueing, see Marz15
 
+compute layer
+
 Transport, "Event-Log", see \cite{Kreps13}
 Collect the streams and make them available for consumption
 
 \subsubsection{Indexer}
 
-Receive messages from Kafka, roote data, create ES index, why, describe context BDAA
+Receive messages from Kafka, route data, create ES index, why, describe context BDAA
+
+compute layer
 
 \subsubsection{Persistence}
 
 ES as search index for time-series based data, easy vizualization with Kibana, why?
+
+storage layer
 
 \subsection{Software Components}
 
@@ -55,6 +64,8 @@ ES as search index for time-series based data, easy vizualization with Kibana, w
 The CollectorClient tier is our entry point for bringing data into the system...
 A module to gather the event streams from data sources.
 
+data layer
+
 \subsubsection{CollectorManager}
 
 Gives overview, uses Consul as service-discovery
@@ -62,6 +73,8 @@ Gives overview, uses Consul as service-discovery
 \subsubsection{CollectorDataProcessor}
 
 module to analyze the streams creating derived streams and persist flat data -> data transformation
+
+analytics layer
 
 %READ
 %Messaging is the art of moving message across the producer and consumer

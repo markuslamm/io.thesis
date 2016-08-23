@@ -1,9 +1,9 @@
 \chapter{Basic Concepts}
-After a short introduction to the terminology of Big Data and Big Data Analytics Applications
-this chapter introduces the concept of stream processing, which is one of the main characteristics
-of the streaming frameworks Apache Flink and Apache Kafka. The underlying concepts both of these systems
-and their usage in context of Big Data Analytics will be explained at the end of this chapter.
-TODO REST JMX
+After a short introduction to the terminology of Big Data and Big Data Analytics Applications, the concept of
+stream processing and Apache Flink and Apache Kafka as streaming data frameworks. The concept of Representational
+State Transfer (REST), an architecture paradigma for distributed software systems as well as the specification for
+managing and monitoring Java applications named Java Management Extensions (JMX) will be discussed at the end of
+the chapter.
 
 \section{Big Data}
 In the past decade the amount of data being created is a subject of immense growth.
@@ -12,20 +12,20 @@ creation is accelerating\cite{Marz15}. People create content like blog posts, tw
 network interactions, photos, servers continuously log messages, scientists create detailed
 measurements, permanently.
 
+Through advances in communications technology, people and things are becoming in-
+creasingly interconnected. Generally titled as machine-to-machine (M2M), interconnectivity is
+responsible for double-digit year over year data growth rates. Finally,
+because small integrated components are now affordable, it becomes possible to add
+intelligence to almost everything. As an example, a simple railway car has hundreds
+of sensors for tracking the state of individual parts and GPS-based data for shipment
+tracking and logistics\cite{Ziko12}.
+
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.55\textwidth]{../images/04-sources-of-bigdata.png}
 	\caption{Sources of Big Data{\cite{Bitk12}}}
 	\label{sources-of-bigdata}
 \end{figure}
-
-Through advances in communications technology, people and things are becoming in-
-creasingly interconnected. Generally titled as machine-to-machine (M2M), inter-
-connectivity is responsible for double-digit year over year data growth rates. Finally,
-because small integrated components are now affordable, it becomes possible to add
-intelligence to almost everything. As an example, a simple railway car has hundreds
-of sensors for tracking the state of individual parts and GPS-based data for shipment
-tracking and logistics\cite{Ziko12}.
 
 Besides the extremely growing amount of data, the data becomes more and more diverse.
 It exists in its raw and unstructured, semistructured or in rare cases in a structured form.
@@ -187,10 +187,10 @@ other, in different threads and on different machines or containers.
 For the distributed processing of dataflows, Flink defines two type of processes:
 
 \begin{enumerate}
-    \item JobManagers (master process). At least one is required, it coordinates the
+    \item \textbf{JobManagers:} The master process, at least one is required. It coordinates the
     distributed execution and is responsible for scheduling tasks, coordinate recovery
     on failures, etc.
-    \item TaskManagers (worker processes) At least one is required, it executes the tasks, more
+    \item \textbf{TaskManagers:} Worker processes, at least one is required. It executes the tasks, more
     specifically, the subtasks of a dataflow, and buffer and exchange the data streams.
 \end{enumerate}
 
