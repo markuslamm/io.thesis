@@ -244,14 +244,20 @@ Chapter 5 Evaluation describes the Docker setup for a single Kafka node that is 
 software solution in addition of provisioning data for collection.
 
 \section{Representational State Transfer (REST)}
-In his doctoral dissertation from 2000 titled "Architectural Styles and the Design of Network-based
-Software Architectures", Roy Thomas Fiedling introduced the term Representational
-State Transfer (REST) as core set of principles, properties, and constraints defining an "architectural
-style for distributed hypermedia systems"\cite{Field00}. To understand the way of data exchange of the software system
-coming in Chapter 5 Architecture and Implementation, an excerpt of relevant characteristics of REST architectures will be
-discussed in this section.
+In his doctoral dissertation from 2000 titled "Architectural Styles and the Design of
+Network-based Software Architectures", Roy Thomas Fiedling introduced the term
+Representational State Transfer (REST) as core set of principles, properties, and
+constraints defining an "architectural style for distributed hypermedia systems"\cite{Field00}.
 
-REST architectures must meet the following characteristics, et al:
+The purpose of REST is focused on machine-to-machine communication and provides a simple alternative to similar procedures
+as Simple Object Access Protocol (SOAP) and the Web Services Description Language (WSDL). But REST is not a standard or
+technology. It should be more considered as reference for the development of applications that use the existing internet
+infrastructure Hypertext Transfer Protocol (HTTP) and corresponding HTTP verbs (GET, POST, PUT, DELETE, et al) for the
+exchange and manipulation of data, which is uniquely identified by Universal Resource Identifiers (URI) in the form of
+Uniform Resource Locators (URL).
+
+Applications that follow the architectural style of REST are generally referred to as "Restful" web services and must meet
+the following characteristics, et al, according to \cite{Field00}:
 \begin{enumerate}
     \item \textbf{Client-Server architecture:}
     Clients and servers are separated by a uniform interface to facilitate portability. For example, a user interface
@@ -268,21 +274,58 @@ REST architectures must meet the following characteristics, et al:
         \item \textbf{Identification of Resources:}
         Resources describe any information that is originated on the server and can be be identified using URIs in web-based
         REST systems. The resources themselves are conceptually separate from the representations that are returned to the client.
-        For example, the server may send data from its database as JSON data or HTML web page, what is diffent to the server's
-        internal representation.
+        For example, based on the requested representation, the server may send data from its database as JSON data or HTML web
+        page, what is diffent to the server's internal representation.
         \item \textbf{Manipulation of Resources through Representations:}
         The modification of the resource is performed by using the representation. If the representation and attached metadata
-        is available, clients are able to change the state of the resource by modifying or deleting the resource.
+        is available, clients are able to change the state of the resource by modifying or deleting the resource using the
+        HTTP verbs (GET, POST, PUT, DELETE, et al) in corresponding requests.
     \end{enumerate}
 \end{enumerate}
 
 Chapter 4 Architecture and Implementation will apply these principles to enable the exchange of data between distributed
 software components by using an uniform interface based on the on Hypertext Transfer Protocol and the the corresponding HTTP
-verbs (GET, POST, PUT, DELETE,..).
+verbs (GET, POST, PUT, DELETE, et al).
 
 \section{{Java Management Extensions (JMX)}}
 
-General JMX explanation, data access MBeansServerConnection
+JMX was created in 1998 as a Java Specification Request 3 (JSR-003), at that time still
+under the name Java Management API 2.0 and emerged with the participation of big
+companies such as IBM and Borland. Meanwhile, the specifications in the JSR-160 and
+JSR-77 contribute significantly to the term JMX. JSR-003 introduces the Java Management
+Extensions, also called the JMX specification as "architecture, the design patterns,
+the APIs, and the services for application and network management and monitoring in
+the Java programming language" \cite{Sun13}, "an isolation and mediation layer between manageable
+resources and management systems \cite{Kreg03}. In other words, JMX provides an programming interface between ressources
+and management systems based on the Java Virtual Machine(JVM) and is part of the core Java plattform since
+version 5. The following section explains the basic terms in preparation to the software solution discussed
+in Chapter 4.
+
+The central point of a general JMX architecture is a \textbf{Manageable Resource}.
+A Manageable Resource can befor any Java based application, service or device and
+applies both to the configuration and the monitoring of resources. In the Java world,
+Servlets, Enterprise JavaBeans (EJB) other JVMs are typical examples of Manageable Resources.
+
+Java objects that implement a specific interface and conforms to certain design patterns according
+to the specification are called \textbf{MBean}s. The management interface of a resource is the
+set of all necessary information to gain access to the attributes and operations of the Managed Resource.
+
+The \textbf{MBeanServer} represents a registry for MBeans in the JMX architecture. The MBean server is the
+component that provides the services for querying and manipulating MBeans. All management operations performed on the
+MBeans are done through the MBeanServer interface.
+
+The \textbf{MBeanServerConnection} is a specialization of the MBeanServer interface, that provides a common way to
+access a MBean server regardless of whether it is remote, namely, accessed through a connector, or local, and accessed
+directly as a Java object.
+
+The address of a connector is defined by the \textbf{JMXServiceURL} which clients can use to establish connections
+to the connector server. Taken from Chapter 4 Architecture and Implementation, the url \textit{"service:jmx:rmi:///jndi/rmi://localhost:9999/jmxrmi"}
+enables the remote access to Apache Flink and Apache Kafka for collecting data according to the topic of this thesis.
+
+An \textbf{ObjectName} uniquely identifies an MBean within an MBean server. Applications use this object name to identify
+the MBean to gain access to and to query data from. The class represents an object name that consists of two parts,
+a domain name, an unordered set of one or more key properties. The ObjectName \textit{"java.lang:type=Runtime"}
+as an example enables access to the management interface for the runtime system of the Java virtual machine.
 
 \section{Summary}
 
