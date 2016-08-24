@@ -2,17 +2,12 @@
 
 After a short introduction to the basic concepts of Big Data, Big Data Analytics Applications
 and Apache Flink and Apache Kafka as examples for streaming frameworks, this chapter
-examines what different kind of data are available  for both of the systems and should be
+examines what different kind of data are available for both of the systems and should be collected from source systems and
 transported to a central storage system. According to the results of the data analysis, the
 functional and non-functional requirements of the software system which is forming the core of
 the present thesis will be defined.
 
 \section{Data Analysis}
-
-live and historical sources
-
-"COLLECT EVERYTHING!
-
 %What to Transport? Logs vs. Metrics see http://blog.mmlac.com/log-transport-with-apache-kafka/
 %The first consideration should be if it is possible and/or necessary to transport all logs to a central location. If there are many servers or a lot of log data, this might be very resource intensive and aggregating or filtering the data might be necessary. The extremes of this are either transporting every single log vs. only transporting aggregated metrics. The following paragraphs try to help you decide on the right balance for your use case.
 %
@@ -51,6 +46,10 @@ Analyze Flinks REST data
 Define DQ, evaluate quality for data above
 
 \section{Functional Requirements}
+
+The main objective of this bachelor thesis is to implement a software solution to collect ....
+"COLLECT EVERYTHING!
+live and historical sources
 
 Describe "big picture" functionality see \cite{VanL14}, follows distributed character of Big Data Analytics
 Applications, provide "on demand" data collection, as much data as possible, realtime?, three main components,
