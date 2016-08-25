@@ -6,7 +6,37 @@ functional and non-functional requirements of the software system which is formi
 
 \section{Data Analysis}
 
-\textit{"You can only control what you observe and measure."}\cite{Ebert07}
+In preparation of this thesis my supervisor Prof. Dr. Stefan Edlich once said \textit{"Sie sammeln
+alles, was nicht bei drei auf dem Baum ist"}. According to this statement, the main focus of the coming section
+is the analysis of available data that will be collected by the software solution and not a deeper exploration according
+to the relevance and quality of data that is availbale for Apache Flink and Apache Kafka.
+
+\textit{"You can only control what you observe and measure."}\cite{Ebert07}. Even though logfiles, both provided by
+Apache Flink and Apache Kafka, are usefull for tracing problems in software systems, problems can be tracked and potential
+sources of error can be identified much earlier by collecting and storing system and application data at runtime to
+describe the state of the entire system at a given point in time.
+
+Due to the distributed character of Apache Flink and Apache Kafka, where a system is composed
+of several interacting components, the examination of log data is not an adequate choice
+to gain insight into an entire system \cite{VanL14}.
+
+
+%The following section describes the sources for system and application data available:
+
+\subsection{System data}
+
+Observation of cpu-, disk- and memory-utilization, why \cite{Hoeb12}.
+Dstat system util introduction
+
+To monitor the performance, such as processor, memory, network, and
+system utilization. The servers should always in its best performance and should be available when needed. To monitor
+all of those components in Linux system, we already know iostat (monitor system input output),
+vmstat (monitor memory utilization) and ifstat (monitor network usage). What if you can have 1 tool which has
+those 3 functions above and even more? We can do it using dstat tool.
+
+
+
+
 
 %What to Transport? Logs vs. Metrics see http://blog.mmlac.com/log-transport-with-apache-kafka/
 %The first consideration should be if it is possible and/or necessary to transport all logs to a central
@@ -32,17 +62,15 @@ functional and non-functional requirements of the software system which is formi
 %There is no strict rule to follow and it is perfectly ok to mix and match. An example would be to just transport logs that contain examinable data and aggregate performance metrics, like average response time or jobs processed per minute, on the server.
 %
 %This post will focus on the transport of raw log data. The posts “Server Monitoring with Sensu” and “Metrics with Graphite” will introduce better suited technologies to work with pure metrics.
-
-\subsection{System data}
-
-Observation of cpu-, disk- and memory-utilization, why.
-Dstat system util introduction
-
 \subsection{Application data}
 
 Apache Flink provides application data via Monitoring REST API, describe REST
 Since version 1.1.0 new Metrics data via JMX
 Analyze Flinks REST data
+
+
+
+KORRELATION sytem and application data
 
 \section{Data Quality}
 

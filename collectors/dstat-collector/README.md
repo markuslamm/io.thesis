@@ -139,37 +139,7 @@ Collects data provided by dstat system utility and exports the result:
         "net": {
             "traffic": [
                 {
-                    "name": "br-cab8",
-                    "send": 0.0,
-                    "received": 0.0
-                },
-                {
                     "name": "docker0",
-                    "send": 0.0,
-                    "received": 0.0
-                },
-                {
-                    "name": "veth27a",
-                    "send": 0.0,
-                    "received": 0.0
-                },
-                {
-                    "name": "veth58d",
-                    "send": 0.0,
-                    "received": 0.0
-                },
-                {
-                    "name": "veth943",
-                    "send": 0.0,
-                    "received": 0.0
-                },
-                {
-                    "name": "vetha09",
-                    "send": 0.0,
-                    "received": 0.0
-                },
-                {
-                    "name": "vethcb4",
                     "send": 0.0,
                     "received": 0.0
                 },
