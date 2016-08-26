@@ -1,10 +1,9 @@
-\chapter{Data Analysis}
+\chapter{Analysis}
 
 After a short introduction to the basic terms and Apache Flink and Apache Kafka in
 context of big data and stream processing, this chapter examines what different kind of
 data are available for both of the systems to build the foundation of the functional and
-non-functional requirements of the software system which is forming the core of the
-present thesis.
+non-functional requirements to be defined in Chapter 5 Requirements and Specification.
 
 In preparation of this thesis my supervisor Prof. Dr. Stefan Edlich once said \textit{"Sie sammeln
 alles, was nicht bei drei auf dem Baum ist"}. According to this statement, the main focus
@@ -97,31 +96,6 @@ Macintosh. Since Apache Flink and Apache Kafka are operated on Unix systems in m
 cases, this fact can be neglected because this tool offers a wide range of data to describe
 the system state a certain point of time.
 
-
-%What to Transport? Logs vs. Metrics see http://blog.mmlac.com/log-transport-with-apache-kafka/
-%The first consideration should be if it is possible and/or necessary to transport all logs to a central
-%location. If there are many servers or a lot of log data, this might be very resource intensive and aggregating
-%or filtering the data might be necessary. The extremes of this are either transporting every single log vs. only
-%transporting aggregated metrics. The following paragraphs try to help you decide on the right balance for your use case.
-%
-%Advantages of transporting all logs:
-%
-%Metrics can be added, modified and deleted in one central location
-%Historical data on new metrics can be computed from the stored logs
-%Possibility to peek into live data-stream
-%Allows building complex debugging and monitoring tools
-%Central location for all logs. Invaluable for debugging, root-cause analysis and correlation of incidents
-%Advantages of transporting only metrics:
-%
-%Transporting (aggregated) metrics requires far less bandwidth
-%Smaller storage requirements
-%Scales far better
-%Better than nothing
-%Overall transporting all logs has many advantages and should be preferred over aggregated metrics if possible. Especially managing metric definitions in one place and the ability to compute historic data for new metrics is very valuable. Also does transporting all logs allow for thorough (computationally expensive) data analysis on historic data to i.e. train machine learning models, predict behavior or give enhanced insights into who your users are and what they do.
-%
-%There is no strict rule to follow and it is perfectly ok to mix and match. An example would be to just transport logs that contain examinable data and aggregate performance metrics, like average response time or jobs processed per minute, on the server.
-%
-%This post will focus on the transport of raw log data. The posts “Server Monitoring with Sensu” and “Metrics with Graphite” will introduce better suited technologies to work with pure metrics.
 \section{Application data}
 
 Every application running on the Java Virtual Machine, can be accessed via JMX as discussed
@@ -155,6 +129,43 @@ This "default" set of management interfaces provides a deep insight into JVM dat
 available for Apache Flink and Apache Kafka and will be included in the software solution
 in Chapter 4.
 
+\subsection{Apache Flink}
+
+Apache Flink provides application data via its monitoring API, a RESTful API, see
+Chapter 2 Basic Concepts, that delivers JSON data based on HTTP
+GET requests. It can be used to query general cluster information and status and
+statistics of running and completed jobs. The dashboard that comes with Apache Flink
+uses this monitoring API, but is designed to be used also by custom monitoring tools. The
+monitoring API runs as part of the JobManager and listens at post 8081 by default. All requests
+are of the sample form http://hostname:8081/jobs, below a list of available REST resources that
+will be used to fetch cluster- and job-related data for Apache Flink in Chapter 6 Implementation,
+see Appendix A for the corresponding JSON responses.
+
+\begin{table}[H]
+    \begin{tabular}{ll}
+        \textbf{API path} & \textbf{Description} \\
+        /config & Server setup \\
+        /overview & Cluster status \\
+        /jobs & Job ids by status running, finished, failed, canceled. \\
+        /jobs/{jobId} & Job details, dataflow plan, status, timestamps of state transitions \\
+        /jobs/{jobId}/exceptions &  Exceptions that have been observed by the job \\
+        /jobs/{jobId}/config & User-defined execution config used by the job \\
+    \end{tabular}
+    \caption{Dstat data categories}
+    \label{tbl:dstatcategories}
+\end{table}
+
+Appendix A provides a list with sample JSON response according to this REST endpoints. TODO
+
+Since version 1.1.0, Apache Flink also provides a rudimentary metrics system that exposes
+basic data for the Java Virtual Machine, the JobManagers and TaskManagers are running
+on. This data includes inter alia cpu usage or memory consumption, as well as basic
+information about running jobs. According to the "default" JVM data described in Table 3.2
+and the data provided by the monitoring REST api, the metrics system in its current version
+represents just an excerpt of the data that will be collected anyway.
+
+\subsection{Apache Kafka}
+
 In addition to the standard interfaces and MBeans that come with the implementation
 of the JVM, Apache Kafka provides a set of managed resources providing application
 specific metrics concerning the Kafka domain, reaching from global broker metrics, global
@@ -163,19 +174,46 @@ on the requirement to collect as much data as possible, the data of all provided
 will be collected, the complete list of MBeans observed for Apache Kafka is available in
 Appendix A.
 
-Apache Flink provides application data via its monitoring API, a RESTful API, see
-Chapter 2 Basic Concepts, that delivers JSON data based on HTTP
-GET requests. It can be used to query general cluster information and status and
-statistics of running and completed jobs. The dashboard that comes with Apache Flink
-uses this monitoring API, but is designed to be used also by custom monitoring tools. The
-monitoring API runs as part of the JobManager and listens at post 8081 by default.
+\section{Data Quality}
 
-Since version 1.1.0, Apache Flink also provides a rudimentary metrics system that exposes
-basic data for the Java Virtual Machine, the JobManagers and TaskManagers are running
-on. This data includes inter alia cpu usage or memory consumption, as well as basic
-information about running jobs. According to the "default" JVM data described in Table 3.2
-and the data provided by the monitoring REST api, the metrics system in its current version
-represents just an excerpt of the data that will be collected anyway.
+The following covers the basics of the term "Data Quality" and examines the data sources
+introduced above based on common quality criteria.
+
+Data quality refers to the quality of data as it is provided by measurements and describes the
+ability of data to represent the mapping from an empirical system("the real world" we operate in)
+to the numeric system correctly with the main goal to satisfy a given need or objective. \cite{Ebert07}
+
+\cite{Daqua13} and  \cite{Ebert07} introduce multiple common criteria for measuring the quality of data,
+from which a selection is made to check the data previously described on their quality:
+
+\begin{enumerate}
+    \item \textbf{Correctness, Faultlessness:}
+    The data correspond to the entities of the real world, that is, the data represent the reality.
+
+    \item \textbf{Consistency:}
+    Recorded data sets does not show discrepancies, logical contradictions or errors when compared
+    among themselves.
+
+    \item \textbf{Reliability, Traceability:}
+    The origin of the data is traceable and the sources are trusted.
+
+    \item \textbf{Completeness:}
+    The required information is available and no data values are missing or in an unusable state.
+
+    \item \textbf{Accuracy:}
+    Expresses the mapping from the empirical system to the intended numerical system. Recorded values
+    conform to actual values,
+
+    \item \textbf{Timeliness:}
+    All data records correspond to the current state of the modeled world and thus are not outdated.
+    The data are the actual properties of an object from a timely manner.
+\end{enumerate}
+
+
+%
+%TODO Define DQ, evaluate quality for data above
+
+\section{Summary}
 
 According to these examinations, the following matrix of data sources results for Apache
 Flink and Apache Kafka:
@@ -191,9 +229,9 @@ Flink and Apache Kafka:
 \label{data-source-matrix}
 \end{table}
 
-TODO: Correlation sytem and application data
 
-\section{Summary}
+
+%TODO: Correlation sytem and application data
 
 In this Chapter, we discussed Dstat as a system tool that is due to its amount of available parameters
 an adequate source for retriving system data for both Apache Flink and Kafka.
