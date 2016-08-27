@@ -8,12 +8,6 @@ and non-functional requirements to be defined at the end of the chapter. The the
 of the coming section is the analysis of available data that will be collected by the software
 solution and not a deeper exploration according to the relevance and quality of data.
 
-%In preparation of this thesis my supervisor Prof. Dr. Stefan Edlich once said \textit{"Sie sammeln
-%alles, was nicht bei drei auf dem Baum ist"}. According to this statement, the main focus
-%of the coming section is the analysis of available data that will be collected by the software
-%solution and not a deeper exploration according to the relevance and quality of data that
-%is available for Apache Flink and Apache Kafka.
-
 \section{Data Analysis}
 
 \textit{"You can only control what you observe and measure."}\cite{Ebert07}. Even though logfiles, both
@@ -251,13 +245,20 @@ lowest level of abstraction. On a higher level, application data is provided by 
 application-related data, like broker metrics for Apache Kafka or job information for Apache Flink, but also "default"
 JVM data for all Java based systems. The JMX metrics system of Apache Flink exists since version 1.1.0 (Release date
 9th of August 2016) and represents a current feature, which is not fully developed yet according to the JIRA of
-Apache Flink. The full set of Flink related application data is exposed via its HTTP monitoring API.
+Apache Flink. The full set of Flink related application data is exposed via its HTTP
+monitoring API.
 
-According to the criteria introduced above, a certain level of Data Quality can be assumed, because the match these criteria.
+According to the criteria introduced above, a certain level of Data Quality can be assumed,
+because the data sufficiently matches these criteria.
 
 \section{Functional Requirements}
 
 
+%In preparation of this thesis my supervisor Prof. Dr. Stefan Edlich once said \textit{"Sie sammeln
+%alles, was nicht bei drei auf dem Baum ist"}. According to this statement, the main focus
+%of the coming section is the analysis of available data that will be collected by the software
+%solution and not a deeper exploration according to the relevance and quality of data that
+%is available for Apache Flink and Apache Kafka.
 
 %see Main goal, ased on the data analysis,...TODO
 %%Collect DStat system data for both
