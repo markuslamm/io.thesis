@@ -263,38 +263,56 @@ to Table 3.2 and Table 3.3.
 
 \section{Functional Requirements}
 
+The main goal of the thesis is a working software system to collect system and application data available
+for Apache Flink and Apache Kafka. Furhermore, the collected data must be stored in a
+persistence system to become available for possible consumers like visualization applications,
+analytical processes or as a data source for applications from the context of Machine Learning
+for example.
 
-%In preparation of this thesis my supervisor Prof. Dr. Stefan Edlich once said \textit{"Sie sammeln
-%alles, was nicht bei drei auf dem Baum ist"}. According to this statement, the main focus
-%of the coming section is the analysis of available data that will be collected by the software
-%solution and not a deeper exploration according to the relevance and quality of data that
-%is available for Apache Flink and Apache Kafka.
+From this, three main functional requirements derive:
+\begin{enumerate}
+    \item Collection of data from Apache Flink and Apache Kafka source systems.
+    \item Storage of collected data in a persistent medium.
+    \item The transport of data from source systems to the storage system.
+\end{enumerate}
 
-% The main objective of this bachelor thesis is to implement a software solution, which would be
-%  able to..TODO
-%%Collect DStat system data for both
-%%Collect JVM data for both
-%%Collect JMX metrics data for both
-%%Collect REST metrics data for both
-%
-%%The main objective of this bachelor thesis is to implement a software solution to collect ....
-%%"COLLECT EVERYTHING!
-%%live and historical sources
-%%
-%%Describe "big picture" functionality see \cite{VanL14}, follows distributed character of Big Data Analytics
-%%Applications, provide "on demand" data collection, as much data as possible, realtime?, three main components,
-%%break down for:
-\subsection{Collection}
-%%collect data in clustered environments
-%
-\subsection{Transport}
-%%Scalability with message broker, other consumers possible
-%
-\subsection{Persistence}
-%%Accessibility for AI, UI applications
-%
+The following section provides a detailed explanation and present the resulting sub-requirements.
+
+In preparation of this thesis my supervisor Prof. Dr. Stefan Edlich once said \textit{"Sie sammeln
+alles, was nicht bei drei auf dem Baum ist"}, which leads to the requirement to collect as much data
+as possible. As a result, available data sources for has been inspected and resulted in the data source matrix
+shown in Table 3.4.
+
+In addition to the collection on source systems, data must be must be stored on a centralized storage system
+to become available for potential data consumers, which are unknown at present. The data must be held in a
+common format to be accessible to a variety of consumers. Since the JavaScript Object Notation (JSON)
+is a standard format for exchanging data, the collected data will be in JSON format,
+therefore the storage system must be able to store and to query JSON data.
+
+TODO:management of "collect on demand", distributed system->distributed collection in clustered environments in realtime
+
+This results in the following requirements:
+
+\begin{table}[H]
+\begin{tabular}{ll}
+... & \\
+C1 & Collect Dstat system utility data for both systems \\
+C2 & Collect "default" JVM data using JMX for both systems \\
+C3 & Collect application data using JMX for both systems \\
+C4 & Collect application data using REST for Apache Flink \\
+C5 & Data must be transfered into a JSON model \\
+S1 & The data must be stored in JSON format \\
+... & TODO \\
+\end{tabular}
+\caption{Functional requirements}
+\label{functional-requirements}
+\end{table}
+
 \section{Non-Functional Requirements}
-%%Performance, scalability,
-%%simplicity, modifiability, visibility, portability, and reliability
+Performance, scalability, multiple consumer architecture, easy integration for consumers and producers...
+Extensibility: collector architecture should be easy  to adapt for other source systems like Spark, ...
+Reliability, on db crash no data loss!!!!
+Portability: on db change, no impact
+Simplicity: direct pipeline no interchange operations
 
 \section{Summary}
