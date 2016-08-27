@@ -150,8 +150,8 @@ see Appendix A for the corresponding JSON responses.
         /jobs/{jobId}/exceptions &  Exceptions that have been observed by the job \\
         /jobs/{jobId}/config & User-defined execution config used by the job \\
     \end{tabular}
-    \caption{Dstat data categories}
-    \label{tbl:dstatcategories}
+    \caption{HTTP monitoring endpoints Apache Flink}
+    \label{tbl:http-api-flink}
 \end{table}
 
 Appendix A provides a list with sample JSON response according to this REST endpoints. TODO
@@ -206,6 +206,10 @@ previously described on their quality:
     \item \textbf{Timeliness:}
     All data records correspond to the current state of the modeled world and thus are not outdated.
     The data are the actual properties of an object from a timely manner.
+
+    \item \textbf{Redundancy-free:}
+    The data does not contain any duplicates, where a duplicate is meant to be data describing the same entity
+    in the real world.
 \end{enumerate}
 
 \subsection{Results}
@@ -237,6 +241,10 @@ Regarding the criteria of Data Quality, the following statements can be made:
     underlying system.
     \item The data is \textbf{timely}. Dstat, JMX and REST data describe the state at the point when the data is
     queried.
+    \item The data is not redundancy-free! The "default" JMX data provided by the implementation of the JVM and the
+    application data for Apache Flink available since version 1.1.0 both contain cpu, memory, garbage-collector, et al,
+    data based on the management interfaces listed in Table 3.2. The same applies for the data available via Apache Flink's
+    monitoring API and the application metrics regarding jobs and Job-/TaskManager information.
 \end{enumerate}
 
 To summarise the results of the data analysis, there're three different sources for collecting system and application
@@ -248,8 +256,10 @@ JVM data for all Java based systems. The JMX metrics system of Apache Flink exis
 Apache Flink. The full set of Flink related application data is exposed via its HTTP
 monitoring API.
 
-According to the criteria introduced above, a certain level of Data Quality can be assumed,
-because the data sufficiently matches these criteria.
+According to the criteria introduced above, a certain level of Data Quality can be assumed, because the data sufficiently
+matches these criteria except. The only exception is the criterion that requires data to be free of redundancies. The metrics
+for Apache Flink are just a very small excerpt of the JVM and application related data that will be collected anyway according
+to Table 3.2 and Table 3.3.
 
 \section{Functional Requirements}
 
@@ -260,7 +270,8 @@ because the data sufficiently matches these criteria.
 %solution and not a deeper exploration according to the relevance and quality of data that
 %is available for Apache Flink and Apache Kafka.
 
-%see Main goal, ased on the data analysis,...TODO
+% The main objective of this bachelor thesis is to implement a software solution, which would be
+%  able to..TODO
 %%Collect DStat system data for both
 %%Collect JVM data for both
 %%Collect JMX metrics data for both
@@ -273,11 +284,11 @@ because the data sufficiently matches these criteria.
 %%Describe "big picture" functionality see \cite{VanL14}, follows distributed character of Big Data Analytics
 %%Applications, provide "on demand" data collection, as much data as possible, realtime?, three main components,
 %%break down for:
-\subsection{Data collection}
+\subsection{Collection}
 %%collect data in clustered environments
 %
 \subsection{Transport}
-%%Scalability with message broker
+%%Scalability with message broker, other consumers possible
 %
 \subsection{Persistence}
 %%Accessibility for AI, UI applications

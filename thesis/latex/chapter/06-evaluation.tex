@@ -1,13 +1,17 @@
-\chapter{Evaluation}
-%TODO Aufbau der Messumgebung, see docker-deploy
-%
+\chapter{Evaluation And Test}
+%Aufbau der Messumgebung, see docker-deploy
 %Server/Betriebssystem etc.,Datensätze,
 %Anfragen, Systeme/Ansätze gegen die Sie sich vergleichen,
 %Wie messen Sie? Methodik und Maßeinheiten?
-
 \section{Local test environment}
 
+Unit- and Integration tests, IT needs docker infrastructure, usually mocked JMX, REST data,
+lack of time, test separation via naming *Test and *IT via Maven Failsafe, check test coverage,
+
 \section{Docker environment}
+
+Short Docker intro, benefits in microservice environments, describe setup for components (docker-compose.yml),
+describe modifications made for Apache Flink and Apache Kafka to enable JMX remote access
 
 \section{Observations}
 
