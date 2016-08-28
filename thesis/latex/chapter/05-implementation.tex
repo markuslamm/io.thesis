@@ -6,6 +6,8 @@ explained the interaction between them, this chapter explains implementation det
 the system architecture, including several collector implementations, the "CollectorClient" and "CollectorManager"
 component.
 
+TODO: spring-boot, spring-kafka, eclipse jetty servlet container
+
 For the implementation of the software components, Java in its version 8 had been chosen. In this current version,
 it supports more functional elements in form of lambda expression, the processing of collections as Streams as well
 as an Optional type for handling optional values respectively null values. According to the functional requirements
@@ -13,20 +15,60 @@ discussed in Chapter 3 "Requirements and Specification", any other programming l
 it is possible to provide and consume a RESTfull API and integration for the Producer and Consumer API of Apache
 Kafka is available.
 
-Refer to architecture, distributed system in cluster environments -> MS approach
-
 \section{Collectors}
 
-in artifarct "collectors-parent", explain SampleCollector concept, collector results aggregated of sample collector results,
-extensibility for further sample sources
+TODO: In artifarct "collectors-parent", explain SampleCollector concept:
 
-\begin{lstlisting}[caption={ types}, captionpos=b, label={lst:jvmsampleregistry}]
+\begin{lstlisting}[caption={Sample registry for "JvmCollector"}, captionpos=b, label={lst:jvmsampleregistry}]
+private static Map<String, SampleCollector> jvmSampleRegistry(final MBeanServerConnection mBeanServerConnection) {
+    final Map<String, SampleCollector> registry = Maps.newHashMap();
+    registry.put(ClassloadingSampleCollector.SAMPLE_KEY, new ClassloadingSampleCollector(mBeanServerConnection));
+    registry.put(BufferPoolSampleCollector.SAMPLE_KEY, new BufferPoolSampleCollector(mBeanServerConnection));
+    registry.put(GcSampleCollector.SAMPLE_KEY, new GcSampleCollector(mBeanServerConnection));
+    registry.put(MemorySampleCollector.SAMPLE_KEY, new MemorySampleCollector(mBeanServerConnection));
+    registry.put(MemoryPoolSampleCollector.SAMPLE_KEY, new MemoryPoolSampleCollector(mBeanServerConnection));
+    registry.put(OsSampleCollector.SAMPLE_KEY, new OsSampleCollector(mBeanServerConnection));
+    registry.put(RuntimeSampleCollector.SAMPLE_KEY, new RuntimeSampleCollector(mBeanServerConnection));
+    registry.put(ThreadSampleCollector.SAMPLE_KEY, new ThreadSampleCollector(mBeanServerConnection));
+    return registry;
+}
+\end{lstlisting}
 
+TODO: Collector results aggregated of sample collector results, extensibility for further sample sources
 
+\begin{lstlisting}[caption={The "collect"-algorithm in "AbstractCollector"}, captionpos=b, label={lst:abstractcollectorcollect}]
+@Override
+public CompletableFuture<CollectorResult> collect() {
+    LOG.debug("Entering AbstractCollector collect()");
+    final CompletableFuture<CollectorResult> collectorResultCF = CompletableFuture.supplyAsync(() -> {
+    checkRegistry();
+    final List<CompletableFuture<Map<String, Object>>> sampleResultCPList =
+        getSampleRegistry().values().stream()
+                    .map(SampleCollector::collectSample)
+                    .collect(Collectors.toList());
+
+    return CompletableFuture.allOf(sampleResultCPList.toArray(
+        new CompletableFuture[sampleResultCPList.size()]))
+            .thenApply(aVoid ->
+                sampleResultCPList.stream().map(CompletableFuture::join)
+                    .collect(Collectors.toList()))
+            .thenApply(sampleResults -> {
+                final Map<String, Object> dataMap = Maps.newLinkedHashMap();
+                sampleResults.forEach(dataMap::putAll);
+                final CollectorResult collectorResult =
+                    new CollectorResult(getCollectorType().name().toLowerCase(), dataMap);
+                LOG.debug("Finished AbstractCollector collect()");
+                return collectorResult;
+            }).join();
+        });
+        LOG.debug("Immediately return from AbstractCollector collect()");
+        return collectorResultCF;
+}
+\end{lstlisting}
 
 \subsection{CollectorType}
 
-Distinguishes collectors, meta information not neccessarily required
+TODO: Distinguishes collectors, meta information not neccessarily required
 
 \begin{lstlisting}[caption={Collector types}, captionpos=b, label={lst:collectortypesimpl}]
 public enum CollectorType {

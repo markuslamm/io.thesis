@@ -53,8 +53,8 @@ heartbeats, needed another db for storing clients, Consul because of registry fo
 %Registration for CollectorClients
 \section{Message-Broker}
 
-The Message-Broker integrates distributed collector client to an overall system by providing a
-message queue for transmitting data  between them. The CollectorClients can publish
+The Message-Broker integrates distributed collector-client to an overall system by providing a
+message queue for transmitting data between them. The CollectorClients can publish
 its data to the queue and the other applications can asynchronously read it from the queue at any time.
 Message Broker systems persist incoming messages in an special type of a message queue, named topic.
 
@@ -72,18 +72,16 @@ ES as search index for time-series based data, easy visualization with Kibana, w
 
 \section{Technologies}
 
-The following section intruduces the technologies used to realize the software architecture described above.
+The following section introduces the infrastructure components used to realize the software architecture described above.
 
 \begin{itemize}
-	\item Spring-Boot  WHY
-	\item Spring-Kafka  WHY
-	\item Eclipse Jetty servlet container  WHY
+%	\item Spring-Boot  WHY
+%	\item Spring-Kafka  WHY
+%	\item Eclipse Jetty servlet container  WHY
 	\item Apache Kafka message broker  WHY
 	\item Logstash indexer  WHY
 	\item Elasticsearch search index  WHY
 \end{itemize}
-
-Maven, Java, Spring boot(MS, REST, Kafka intergration), Kafka, Logstash, Elasticsearch, why?
 
 \section{Summary}
 
