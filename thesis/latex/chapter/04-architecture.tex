@@ -1,13 +1,4 @@
 \chapter{System Architecture}
-
-Distributed system -> distributed collection, cloud environments, microservice architecture,
-service-discovery, communication via REST, Publish(client) -> Topic <- Subscribe Logstash,
-
-continuous, distributed, time-series "data feed", difference raw and aggregated\cite{Klepp16},
-events as "immutable facts", why?
-arch uses both, raw because of unknown interests in data, flink-job-index for demonstration
-of SP.
-
 %Welche Teilprobleme leiten sich aus der Zielstellung weiter ab?
 %Was sind die Rahmenbedingungen für die Probleme und wie können wir diese lösen.
 %
@@ -24,57 +15,79 @@ of SP.
 %Datenquellen?
 %Transformationen?
 %Datenverarbeitung?
-\section{Architecture}
 
-TODO
+TODO:
+Distributed system -> distributed collection with clients, software solution is a streaming platform itself,
+cloud environments, client server architecture, client-management with service-discovery, explain", communication via REST,
+Publish(client) -> Topic <- Subscribe Logstash,
 
-\subsection{Infrastructure Components}
+continuous, distributed, time-series "data feed", difference raw and aggregated\cite{Klepp16},
+events as "immutable facts", why?
+arch uses both, raw because of unknown data consumers, flink-job-index for demonstration
+of SP.
 
-make refs to taxonomy
-\subsubsection{Service-Discovery}
+Pipeline: Collect-Transport-Persistence, see \cite{VanL14}
 
-Registraction for CollectorClients
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1.0\textwidth]{../uml/component-diagram.jpg}
+	\caption{Component diagram}
+	\label{component-diagram}
+\end{figure}
 
-\subsubsection{Message-Broker}
-Queueing, see Marz15
+\section{CollectorClient}
 
-compute layer
-
-Transport, "Event-Log", see \cite{Kreps13}
-Collect the streams and make them available for consumption
-
-\subsubsection{Indexer}
-
-Receive messages from Kafka, route data, create ES index, why, describe context BDAA
-
-compute layer
-
-\subsubsection{Persistence}
-
-ES as search index for time-series based data, easy vizualization with Kibana, why?
-
-storage layer
-
-\subsection{Software Components}
-
-\subsubsection{CollectorClient}
-
-The CollectorClient tier is our entry point for bringing data into the system...
-A module to gather the event streams from data sources.
+The CollectorClient tier is our entry point for bringing data into the system , module to gather the data streams
+from data sources, installed on source systems, a small service that needs to be installed on source systems
 
 data layer
 
-\subsubsection{CollectorManager}
+\section{CollectorManager}
 
-Gives overview, uses Consul as service-discovery
+Clients need to be scheduled -> management component for Collector clients, gives overview and enables start/stop of
+registred CollectorClients, uses Consulas client-discovery backend, why? First experiments with implementing a "client-registry",
+heartbeats, needed another db for storing clients, Consul because of registry for components in distributed systems
 
-\subsubsection{CollectorDataProcessor}
+%\section{Client-Discovery}
+%
+%Registration for CollectorClients
+\section{Message-Broker}
 
-module to analyze the streams creating derived streams and persist flat data -> data transformation
+The Message-Broker integrates distributed collector client to an overall system by providing a
+message queue for transmitting data  between them. The CollectorClients can publish
+its data to the queue and the other applications can asynchronously read it from the queue at any time.
+Message Broker systems persist incoming messages in an special type of a message queue, named topic.
 
-analytics layer
+Queueing, see Marz15, compute layer
+Transport, "Event-Log", see \cite{Kreps13}
+Collect the streams and make them available for consumption
 
-\subsection{Technologies}
+\section{Indexer}
+
+Receive messages from Message-Broker, route data, create ES index, why, describe context BDAA, compute layer
+
+\section{Persistence}
+
+ES as search index for time-series based data, easy visualization with Kibana, why?, searchable, common in BDA, storage layer
+
+\section{Technologies}
+
+The following section intruduces the technologies used to realize the software architecture described above.
+
+\begin{itemize}
+	\item Spring-Boot  WHY
+	\item Spring-Kafka  WHY
+	\item Eclipse Jetty servlet container  WHY
+	\item Apache Kafka message broker  WHY
+	\item Logstash indexer  WHY
+	\item Elasticsearch search index  WHY
+\end{itemize}
+
+Maven, Java, Spring boot(MS, REST, Kafka intergration), Kafka, Logstash, Elasticsearch, why?
+
+\section{Summary}
+
+Summarize architecture, discuss benefits and disadvantages.
 
 %READ
 %Messaging is the art of moving message across the producer and consumer
