@@ -38,13 +38,6 @@ public final class ClusterInfoCollector extends AbstractFlinkRestSampleCollector
         final CompletableFuture<OverviewResult> flinkOverviewFuture = restClient().getFlinkOverview();
         return flinkConfigFuture.thenCombine(flinkOverviewFuture, (flinkConfig, flinkOverview) -> {
             final Map<String, Object> dataMap = Maps.newLinkedHashMap();
-            dataMap.put(FLINK_TIMEZONE_NAME_KEY, flinkConfig.getTimezoneName());
-            dataMap.put(FLINK_TIMEZONE_OFFSET_KEY, flinkConfig.getTimezoneOffset());
-            dataMap.put(FLINK_VERSION_KEY, flinkConfig.getFlinkVersion());
-            dataMap.put(FLINK_REVISION_KEY, flinkConfig.getFlinkRevision());
-            dataMap.put(FLINK_TASKMANAGERS_KEY, flinkOverview.getTaskManagers());
-            dataMap.put(FLINK_SLOTS_TOTAL_KEY, flinkOverview.getSlotsTotal());
-            dataMap.put(FLINK_SLOTS_AVAILABLE_KEY, flinkOverview.getSlotsAvailable());
             dataMap.put(FLINK_JOBS_RUNNING_KEY, flinkOverview.getJobsRunning());
             dataMap.put(FLINK_FINISHED_KEY, flinkOverview.getJobsFinished());
             dataMap.put(FLINK_CANCELLED_KEY, flinkOverview.getJobsCancelled());
