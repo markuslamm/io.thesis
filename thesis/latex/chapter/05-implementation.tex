@@ -1,234 +1,283 @@
 \chapter{Implementation}
 %Eigenschaften des Algorithmus, Komplexität, Wie gehen Sie vor?, Beschreiben Sie was wann passiert
 
-After Chapter 4 "System Architecture" has shown an overview of the main components of the software solution and
-explained the interaction between them, this chapter explains implementation details for all major components of
-the system architecture, including several collector implementations, the "CollectorClient" and "CollectorManager"
-component.
+After Chapter 4 "System Architecture" has shown an overview of the main components of
+the software solution and explained the interaction between them, this chapter explains implementation
+details for all major components of the system architecture, including several
+collector implementations, as well as the "CollectorClient" and "CollectorManager" component.
 
-TODO: spring-boot, spring-kafka, eclipse jetty servlet container
+The system architecture of the collector platform consists two software components to
+be implemented, and the Elasticsearch database, Apache Kafka message broker and the Logstash indexer to be configured to fulfil the
+requirements discussed in Chapter 3 and to realize the proposed system architecture in Chapter 4.
+
+The main component, the CollectorClient must provide a REST interface for starting/stopping the collection process
+on source systems. Furthermore, it must be possible to fetch metadata about each client. The CollectorManager,
+the second software component uses this interface for providing a basic web based UI that lists registered
+CollectorClients, shows detailed client information and allows the scheduling the collection process separately
+for each client. It follows that two web applications are required, the client application must also be able to
+send data to a Apache Kafka, hence the usage of the Procucer API of Kafka must be supported.
+
+The choice for implementing the web applications fell on Spring Boot in the current version 1.4.0. Taken from
+the reference documentation \cite{SpringB16}, "Spring Boot makes it easy to create stand-alone, production-grade
+Spring based Applications that you can "just run". We take an opinionated view of the Spring platform and
+third-party libraries so you can get started with minimum fuss". Features of Spring Boot include the ability to create
+standalone web applications conaining an embedded servlet container, what makes the deployment of war files obsolete
+and multiple integrations for different applications platforms including Apache Kafka in the subproject spring-kafka.
+
+The following code shows a full example of an web application that provides a simple
+HTTP endpoint returning "Hello World". It creates an executable jar file containing
+an embedded Apache Tomcat servlet container and can be started from the command line, what means that there is no
+dedicated Tomcat instance required to deploy a war file to:
+
+\begin{lstlisting}[caption={Spring Boot "Hello World"}, captionpos=b, label={lst:spring-boot-hello-world}]
+@Controller
+@EnableAutoConfiguration
+public class SampleController {
+
+    @RequestMapping("/")
+    @ResponseBody
+    String home() {
+        return "Hello World!";
+    }
+
+    public static void main(String[] args) throws Exception {
+        SpringApplication.run(SampleController.class, args);
+    }
+}
+\end{lstlisting}
+
+The Spring framework provides usefull default configurations, thereby making it possible to create a simple Rest service
+with just a few annotations. The result is a completely self-contained executable jar. Executable jars (sometimes called
+“fat jars”) are archives containing the compiled classes along with all of the jar dependencies that the code needs to run.
+This produces the disadvantage that the memory requirement of the resulting executable increases. But this was ignored while
+making the decision for the framework because the presence of sufficient memory space on Apache Flink and Apache Kafka sources
+systems had been assumed.
 
 For the implementation of the software components, Java in its version 8 had been chosen. In this current version,
-it supports more functional elements in form of lambda expression, the processing of collections as Streams as well
-as an Optional type for handling optional values respectively null values. According to the functional requirements
-discussed in Chapter 3 "Requirements and Specification", any other programming language could had been used, as long
-it is possible to provide and consume a RESTfull API and integration for the Producer and Consumer API of Apache
-Kafka is available.
+it supports more functional elements in form of lambda expressions, the processing of collections as Streams as well
+as an Optional type for handling optional values respectively null values, all features which were used often in the
+implementation of the CollectorClient and CollectorManager.
+%
+%
+%According to the functional requirements
+%discussed in Chapter 3 "Requirements and Specification", any other programming language could had been used, as long
+%it is possible to provide and consume a RESTfull API and integration for the Producer and Consumer API of Apache
+%Kafka is available.
+%
+%\section{Collectors}
+%
+%TODO: In artifarct "collectors-parent", explain SampleCollector concept :
+%
+%\begin{lstlisting}[caption={Sample registry for "JvmCollector"}, captionpos=b, label={lst:jvmsampleregistry}]
+%private static Map<String, SampleCollector> jvmSampleRegistry(final MBeanServerConnection mBeanServerConnection) {
+%    final Map<String, SampleCollector> registry = Maps.newHashMap();
+%    registry.put(ClassloadingSampleCollector.SAMPLE_KEY, new ClassloadingSampleCollector(mBeanServerConnection));
+%    registry.put(BufferPoolSampleCollector.SAMPLE_KEY, new BufferPoolSampleCollector(mBeanServerConnection));
+%    registry.put(GcSampleCollector.SAMPLE_KEY, new GcSampleCollector(mBeanServerConnection));
+%    registry.put(MemorySampleCollector.SAMPLE_KEY, new MemorySampleCollector(mBeanServerConnection));
+%    registry.put(MemoryPoolSampleCollector.SAMPLE_KEY, new MemoryPoolSampleCollector(mBeanServerConnection));
+%    registry.put(OsSampleCollector.SAMPLE_KEY, new OsSampleCollector(mBeanServerConnection));
+%    registry.put(RuntimeSampleCollector.SAMPLE_KEY, new RuntimeSampleCollector(mBeanServerConnection));
+%    registry.put(ThreadSampleCollector.SAMPLE_KEY, new ThreadSampleCollector(mBeanServerConnection));
+%    return registry;
+%}
+%\end{lstlisting}
+%
+%TODO: Collector results aggregated of sample collector results, extensibility for further sample sources
+%
+%\begin{lstlisting}[caption={The "collect"-algorithm in "AbstractCollector"}, captionpos=b, label={lst:abstractcollectorcollect}]
+%@Override
+%public CompletableFuture<CollectorResult> collect() {
+%    LOG.debug("Entering AbstractCollector collect()");
+%    final CompletableFuture<CollectorResult> collectorResultCF = CompletableFuture.supplyAsync(() -> {
+%    checkRegistry();
+%    final List<CompletableFuture<Map<String, Object>>> sampleResultCPList =
+%        getSampleRegistry().values().stream()
+%                    .map(SampleCollector::collectSample)
+%                    .collect(Collectors.toList());
+%
+%    return CompletableFuture.allOf(sampleResultCPList.toArray(
+%        new CompletableFuture[sampleResultCPList.size()]))
+%            .thenApply(aVoid ->
+%                sampleResultCPList.stream().map(CompletableFuture::join)
+%                    .collect(Collectors.toList()))
+%            .thenApply(sampleResults -> {
+%                final Map<String, Object> dataMap = Maps.newLinkedHashMap();
+%                sampleResults.forEach(dataMap::putAll);
+%                final CollectorResult collectorResult =
+%                    new CollectorResult(getCollectorType().name().toLowerCase(), dataMap);
+%                LOG.debug("Finished AbstractCollector collect()");
+%                return collectorResult;
+%            }).join();
+%        });
+%        LOG.debug("Immediately return from AbstractCollector collect()");
+%        return collectorResultCF;
+%}
+%\end{lstlisting}
+%
+%\subsection{CollectorType}
+%
+%TODO: Distinguishes collectors, meta information not neccessarily required
+%
+%\begin{lstlisting}[caption={Collector types}, captionpos=b, label={lst:collectortypesimpl}]
+%public enum CollectorType {
+%    JVM_JMX,
+%    DSTAT,
+%    FLINK_REST,
+%    FLINK_JMX,
+%    KAFKA_BROKER_JMX
+%}
+%\end{lstlisting}
+%
+%\subsection{CollectorResult}
+%
+%Data events as "immutable facts" with state state of system at time, on host, at port, the type of collector and data.
+%Usage of Jackson for JSON serialization.
+%
+%\begin{lstlisting}[caption={CollectorResult}, captionpos=b, label={lst:collectortypesimpl}]
+%public class CollectorResult {
+%    @JsonProperty("client-timestamp")
+%    private final LocalDateTime clientTimestamp;
+%
+%    @JsonProperty("client-host")
+%    private final String clientHost;
+%
+%    @JsonProperty("client-port")
+%    private final Integer clientPort;
+%
+%    @JsonProperty("instance-id")
+%    private final String instanceId;
+%
+%    @JsonProperty("collector-type")
+%    private final String collectorType;
+%
+%    private final Map<String, Object> data;
+%}
+%\end{lstlisting}
+%
+\subsection{DStatCollector}
+%
+%Dstat parameters, see Table 3.1 in Chapter "Basic Concepts"
+%
+%\begin{lstlisting}[caption={Dstat program parameters in "DstatCollector"}, captionpos=b, label={lst:dstatparameters}]
+%private static final String[] DSTAT_COMMAND = {"dstat", "-t",
+%    "--cpu", "--top-cpu-adv", "--top-cputime", "--top-cputime-avg",
+%    "--disk", "--disk-tps", "--disk-util",
+%    "--net", "--socket", "--tcp", "--udp",
+%    "--io", "--top-io-adv", "--lock", "--fs",
+%    "--mem", "--top-mem", "--page", "--swap", "--vm",
+%    "--sys", "--load", "--ipc", "--unix",
+%    "--proc", "--proc-count", "--top-latency", "--top-latency-avg",
+%    "--full",
+%    "--float", "1", "0"};
+%\end{lstlisting}
 
-\section{Collectors}
+%Dstat process with the given parameters results in string containing three lines, where only the third line ist required to
+%to gather data of.
 
-TODO: In artifarct "collectors-parent", explain SampleCollector concept:
-
-\begin{lstlisting}[caption={Sample registry for "JvmCollector"}, captionpos=b, label={lst:jvmsampleregistry}]
-private static Map<String, SampleCollector> jvmSampleRegistry(final MBeanServerConnection mBeanServerConnection) {
-    final Map<String, SampleCollector> registry = Maps.newHashMap();
-    registry.put(ClassloadingSampleCollector.SAMPLE_KEY, new ClassloadingSampleCollector(mBeanServerConnection));
-    registry.put(BufferPoolSampleCollector.SAMPLE_KEY, new BufferPoolSampleCollector(mBeanServerConnection));
-    registry.put(GcSampleCollector.SAMPLE_KEY, new GcSampleCollector(mBeanServerConnection));
-    registry.put(MemorySampleCollector.SAMPLE_KEY, new MemorySampleCollector(mBeanServerConnection));
-    registry.put(MemoryPoolSampleCollector.SAMPLE_KEY, new MemoryPoolSampleCollector(mBeanServerConnection));
-    registry.put(OsSampleCollector.SAMPLE_KEY, new OsSampleCollector(mBeanServerConnection));
-    registry.put(RuntimeSampleCollector.SAMPLE_KEY, new RuntimeSampleCollector(mBeanServerConnection));
-    registry.put(ThreadSampleCollector.SAMPLE_KEY, new ThreadSampleCollector(mBeanServerConnection));
-    return registry;
-}
-\end{lstlisting}
-
-TODO: Collector results aggregated of sample collector results, extensibility for further sample sources
-
-\begin{lstlisting}[caption={The "collect"-algorithm in "AbstractCollector"}, captionpos=b, label={lst:abstractcollectorcollect}]
-@Override
-public CompletableFuture<CollectorResult> collect() {
-    LOG.debug("Entering AbstractCollector collect()");
-    final CompletableFuture<CollectorResult> collectorResultCF = CompletableFuture.supplyAsync(() -> {
-    checkRegistry();
-    final List<CompletableFuture<Map<String, Object>>> sampleResultCPList =
-        getSampleRegistry().values().stream()
-                    .map(SampleCollector::collectSample)
-                    .collect(Collectors.toList());
-
-    return CompletableFuture.allOf(sampleResultCPList.toArray(
-        new CompletableFuture[sampleResultCPList.size()]))
-            .thenApply(aVoid ->
-                sampleResultCPList.stream().map(CompletableFuture::join)
-                    .collect(Collectors.toList()))
-            .thenApply(sampleResults -> {
-                final Map<String, Object> dataMap = Maps.newLinkedHashMap();
-                sampleResults.forEach(dataMap::putAll);
-                final CollectorResult collectorResult =
-                    new CollectorResult(getCollectorType().name().toLowerCase(), dataMap);
-                LOG.debug("Finished AbstractCollector collect()");
-                return collectorResult;
-            }).join();
-        });
-        LOG.debug("Immediately return from AbstractCollector collect()");
-        return collectorResultCF;
-}
-\end{lstlisting}
-
-\subsection{CollectorType}
-
-TODO: Distinguishes collectors, meta information not neccessarily required
-
-\begin{lstlisting}[caption={Collector types}, captionpos=b, label={lst:collectortypesimpl}]
-public enum CollectorType {
-    JVM_JMX,
-    DSTAT,
-    FLINK_REST,
-    FLINK_JMX,
-    KAFKA_BROKER_JMX
-}
-\end{lstlisting}
-
-\subsection{CollectorResult}
-
-Data events as "immutable facts" with state state of system at time, on host, at port, the type of collector and data.
-Usage of Jackson for JSON serialization.
-
-\begin{lstlisting}[caption={CollectorResult}, captionpos=b, label={lst:collectortypesimpl}]
-public class CollectorResult {
-    @JsonProperty("client-timestamp")
-    private final LocalDateTime clientTimestamp;
-
-    @JsonProperty("client-host")
-    private final String clientHost;
-
-    @JsonProperty("client-port")
-    private final Integer clientPort;
-
-    @JsonProperty("instance-id")
-    private final String instanceId;
-
-    @JsonProperty("collector-type")
-    private final String collectorType;
-
-    private final Map<String, Object> data;
-}
-\end{lstlisting}
+%All collector implementations use a sample registry to achieve more flexibility in what data to collect:
+%\begin{lstlisting}[caption={Sample registry in "DstatCollector"}, captionpos=b, label={lst:dstatsampleregistry}]
+%private static Map<String, AbstractDstatSampleCollector> defaultSampleRegistry() {
+%    final Map<String, AbstractDstatSampleCollector> registry = Maps.newHashMap();
+%    registry.put(CpuSampleCollector.SAMPLE_KEY, new CpuSampleCollector());
+%    registry.put(DiskSampleCollector.SAMPLE_KEY, new DiskSampleCollector());
+%    registry.put(IoSampleCollector.SAMPLE_KEY, new IoSampleCollector());
+%    registry.put(MemorySampleCollector.SAMPLE_KEY, new MemorySampleCollector());
+%    registry.put(NetSampleCollector.SAMPLE_KEY, new NetSampleCollector());
+%    registry.put(ProcessSampleCollector.SAMPLE_KEY, new ProcessSampleCollector());
+%    registry.put(SystemSampleCollector.SAMPLE_KEY, new SystemSampleCollector());
+%    return registry;
+%}
+%\end{lstlisting}
+%
+%Java ProcessBuilder to create Dstat process and read output using an InputStreamReader provided by the Process object.
+%\begin{lstlisting}[caption={ProcessBuilder in "DstatCollector"}, captionpos=b, label={lst:dstatprocessbuilder}]
+%final ProcessBuilder processBuilder = new ProcessBuilder(DSTAT_COMMAND);
+%processBuilder.redirectErrorStream(true);
+%final Process process = processBuilder.start();
+%try (BufferedReader processOutputReader =
+%    new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+%        final String dstatResult = processOutputReader.lines()
+%            .map(String::toString)
+%            .collect(Collectors.joining(System.lineSeparator()));
+%        final int exitCode = process.waitFor();
+%}
+%\end{lstlisting}
+%
+%The result will be splitted by System.lineSeparator in AbstractDstatSampleCollector. Implements Function<String, Map<String, Object>>,
+%a functional interface that takes on input and creates a result on apply.
+%\begin{lstlisting}[caption={Split Dstat input in "AbstractDstatSampleCollector"}, captionpos=b, label={lst:dstatsplitdat}]
+%@Override
+%public Map<String, Object> apply(final String dstatResult) {
+%    final String[] lines = dstatResult.split(System.lineSeparator());
+%        if (lines.length != 3) {
+%            throw new DStatCollectorException();
+%        }
+%    return createResultMap(applyData(lines));
+%}
+%\end{lstlisting}
+%
+%DstatCollector iterates through sample registry and invokes "collect" for all registred sample collector implementations.
+%Usage of futures for non-blocking code, block as less as possible to increase performance on source systems.
+%\begin{lstlisting}[caption={Iterate sample registry in "DstatCollector"}, captionpos=b, label={lst:dstatiterate}]
+%final List<CompletableFuture<Map<String, Object>>> dStatDataFuturesList =
+%    sampleRegistry.values().stream()
+%        .map(collector ->
+%            CompletableFuture.supplyAsync(() ->
+%                collector.apply(dstatResult))).collect(Collectors.toList());
+%\end{lstlisting}
+%
+%All Dstat sample collectors are based on regular expressions, the third line of the result is splitted, and the data of interest
+%extracted:
+%\begin{lstlisting}[caption={Extract sample date in  "CpuSampleCollector"}, captionpos=b, label={lst:cpusamplecollector}]
+%CPU_USAGE_PATTERN = Pattern.compile("" +
+%    "(\\d+(\\.\\d+)?)(\\s*)" +
+%    "(\\d+(\\.\\d+)?)(\\s*)" +
+%    "(\\d+(\\.\\d+)?)(\\s*)" +
+%    "(\\d+(\\.\\d+)?)(\\s*)" +
+%    "(\\d+(\\.\\d+)?)(\\s*)" +
+%    "(\\d+(\\.\\d+)?)");
+%
+%private static Map<String, Object> parseCpuUsage(final String rawData, final String cpuName) {
+%    return Optional.ofNullable(rawData).map(raw -> {
+%        final Matcher matcher = CPU_USAGE_PATTERN.matcher(raw.trim());
+%        final Map<String, Object> cpuUsageMap = Maps.newLinkedHashMap();
+%        if (!matcher.matches()) {
+%            LOG.warn("Unable to parse 'CpuUsage'");
+%        } else {
+%            try {
+%                cpuUsageMap.put(CPU_NAME_KEY, cpuName);
+%                cpuUsageMap.put(CPU_USAGE_USER_KEY, Float.valueOf(matcher.group(1)));
+%                cpuUsageMap.put(CPU_USAGE_SYSTEM_KEY, Float.valueOf(matcher.group(4)));
+%                ...
+%            } catch (NumberFormatException ex) {
+%                LOG.warn("Unable to parse 'CpuUsage'");
+%            }
+%        }
+%        return cpuUsageMap;
+%    }).orElse(Maps.newHashMap());
+%}
+%\end{lstlisting}
+%
+%At the end of Dstat collection, the futures of the different sample collectors will be aggregated
+%to one CollectorResult future, that will be returned to the caller of the collect() method of DstatCollector.
+%\begin{lstlisting}[caption={Aggregation of sample results in "DstatCollector"}, captionpos=b, label={lst:dstatsampleaggregation}]
+%dStatDataFuturesList
+%    .stream()
+%        .map(CompletableFuture::join)
+%            .collect(Collectors.toList()))
+%                .thenApply(dstatSamples -> {
+%                    final Map<String, Object> data = Maps.newLinkedHashMap();
+%                    dstatSamples.forEach(data::putAll);
+%                    final CollectorResult dstatCollectorResult = new CollectorResult(CollectorType.DSTAT.name().toLowerCase(), data);
+%                    LOG.debug("Finished {} collecting", CollectorType.DSTAT);
+%                    return dstatCollectorResult;
+%                    }).join();
+%\end{lstlisting}
 
 \subsection{JvmCollector}
 
-Collects data according to Table 3.2, standard set of management interfaces available for JVM data will be used.
-
-\subsection{DStatCollector}
-
-Dstat parameters, see Table 3.1 in Chapter "Basic Concepts"
-
-\begin{lstlisting}[caption={Dstat program parameters in "DstatCollector"}, captionpos=b, label={lst:dstatparameters}]
-private static final String[] DSTAT_COMMAND = {"dstat", "-t",
-    "--cpu", "--top-cpu-adv", "--top-cputime", "--top-cputime-avg",
-    "--disk", "--disk-tps", "--disk-util",
-    "--net", "--socket", "--tcp", "--udp",
-    "--io", "--top-io-adv", "--lock", "--fs",
-    "--mem", "--top-mem", "--page", "--swap", "--vm",
-    "--sys", "--load", "--ipc", "--unix",
-    "--proc", "--proc-count", "--top-latency", "--top-latency-avg",
-    "--full",
-    "--float", "1", "0"};
-\end{lstlisting}
-
-Dstat process with the given parameters results in string containing three lines, where only the third line ist required to
-to gather data of.
-
-All collector implementations use a sample registry to achieve more flexibility in what data to collect:
-\begin{lstlisting}[caption={Sample registry in "DstatCollector"}, captionpos=b, label={lst:dstatsampleregistry}]
-private static Map<String, AbstractDstatSampleCollector> defaultSampleRegistry() {
-    final Map<String, AbstractDstatSampleCollector> registry = Maps.newHashMap();
-    registry.put(CpuSampleCollector.SAMPLE_KEY, new CpuSampleCollector());
-    registry.put(DiskSampleCollector.SAMPLE_KEY, new DiskSampleCollector());
-    registry.put(IoSampleCollector.SAMPLE_KEY, new IoSampleCollector());
-    registry.put(MemorySampleCollector.SAMPLE_KEY, new MemorySampleCollector());
-    registry.put(NetSampleCollector.SAMPLE_KEY, new NetSampleCollector());
-    registry.put(ProcessSampleCollector.SAMPLE_KEY, new ProcessSampleCollector());
-    registry.put(SystemSampleCollector.SAMPLE_KEY, new SystemSampleCollector());
-    return registry;
-}
-\end{lstlisting}
-
-Java ProcessBuilder to create Dstat process and read output using an InputStreamReader provided by the Process object.
-\begin{lstlisting}[caption={ProcessBuilder in "DstatCollector"}, captionpos=b, label={lst:dstatprocessbuilder}]
-final ProcessBuilder processBuilder = new ProcessBuilder(DSTAT_COMMAND);
-processBuilder.redirectErrorStream(true);
-final Process process = processBuilder.start();
-try (BufferedReader processOutputReader =
-    new BufferedReader(new InputStreamReader(process.getInputStream()))) {
-        final String dstatResult = processOutputReader.lines()
-            .map(String::toString)
-            .collect(Collectors.joining(System.lineSeparator()));
-        final int exitCode = process.waitFor();
-}
-\end{lstlisting}
-
-The result will be splitted by System.lineSeparator in AbstractDstatSampleCollector. Implements Function<String, Map<String, Object>>,
-a functional interface that takes on input and creates a result on apply.
-\begin{lstlisting}[caption={Split Dstat input in "AbstractDstatSampleCollector"}, captionpos=b, label={lst:dstatsplitdat}]
-@Override
-public Map<String, Object> apply(final String dstatResult) {
-    final String[] lines = dstatResult.split(System.lineSeparator());
-        if (lines.length != 3) {
-            throw new DStatCollectorException();
-        }
-    return createResultMap(applyData(lines));
-}
-\end{lstlisting}
-
-DstatCollector iterates through sample registry and invokes "collect" for all registred sample collector implementations.
-Usage of futures for non-blocking code, block as less as possible to increase performance on source systems.
-\begin{lstlisting}[caption={Iterate sample registry in "DstatCollector"}, captionpos=b, label={lst:dstatiterate}]
-final List<CompletableFuture<Map<String, Object>>> dStatDataFuturesList =
-    sampleRegistry.values().stream()
-        .map(collector ->
-            CompletableFuture.supplyAsync(() ->
-                collector.apply(dstatResult))).collect(Collectors.toList());
-\end{lstlisting}
-
-All Dstat sample collectors are based on regular expressions, the third line of the result is splitted, and the data of interest
-extracted:
-\begin{lstlisting}[caption={Extract sample date in  "CpuSampleCollector"}, captionpos=b, label={lst:cpusamplecollector}]
-CPU_USAGE_PATTERN = Pattern.compile("" +
-    "(\\d+(\\.\\d+)?)(\\s*)" +
-    "(\\d+(\\.\\d+)?)(\\s*)" +
-    "(\\d+(\\.\\d+)?)(\\s*)" +
-    "(\\d+(\\.\\d+)?)(\\s*)" +
-    "(\\d+(\\.\\d+)?)(\\s*)" +
-    "(\\d+(\\.\\d+)?)");
-
-private static Map<String, Object> parseCpuUsage(final String rawData, final String cpuName) {
-    return Optional.ofNullable(rawData).map(raw -> {
-        final Matcher matcher = CPU_USAGE_PATTERN.matcher(raw.trim());
-        final Map<String, Object> cpuUsageMap = Maps.newLinkedHashMap();
-        if (!matcher.matches()) {
-            LOG.warn("Unable to parse 'CpuUsage'");
-        } else {
-            try {
-                cpuUsageMap.put(CPU_NAME_KEY, cpuName);
-                cpuUsageMap.put(CPU_USAGE_USER_KEY, Float.valueOf(matcher.group(1)));
-                cpuUsageMap.put(CPU_USAGE_SYSTEM_KEY, Float.valueOf(matcher.group(4)));
-                ...
-            } catch (NumberFormatException ex) {
-                LOG.warn("Unable to parse 'CpuUsage'");
-            }
-        }
-        return cpuUsageMap;
-    }).orElse(Maps.newHashMap());
-}
-\end{lstlisting}
-
-At the end of Dstat collection, the futures of the different sample collectors will be aggregated
-to one CollectorResult future, that will be returned to the caller of the collect() method of DstatCollector.
-\begin{lstlisting}[caption={Aggregation of sample results in "DstatCollector"}, captionpos=b, label={lst:dstatsampleaggregation}]
-dStatDataFuturesList
-    .stream()
-        .map(CompletableFuture::join)
-            .collect(Collectors.toList()))
-                .thenApply(dstatSamples -> {
-                    final Map<String, Object> data = Maps.newLinkedHashMap();
-                    dstatSamples.forEach(data::putAll);
-                    final CollectorResult dstatCollectorResult = new CollectorResult(CollectorType.DSTAT.name().toLowerCase(), data);
-                    LOG.debug("Finished {} collecting", CollectorType.DSTAT);
-                    return dstatCollectorResult;
-                    }).join();
-\end{lstlisting}
+%Collects data according to Table 3.2, standard set of management interfaces available for JVM data will be used.
 
 \subsection{FlinkRestCollector}
 

@@ -42,11 +42,25 @@ from data sources, installed on source systems, a small service that needs to be
 
 data layer
 
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1.0\textwidth]{../uml/sequence-scheduling.jpg}
+	\caption{Sequence diagram 'Client scheduling'}
+	\label{sequence-diagram-client-scheduling}
+\end{figure}
+
 \section{CollectorManager}
 
 Clients need to be scheduled -> management component for Collector clients, gives overview and enables start/stop of
 registred CollectorClients, uses Consulas client-discovery backend, why? First experiments with implementing a "client-registry",
 heartbeats, needed another db for storing clients, Consul because of registry for components in distributed systems
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1.0\textwidth]{../uml/sequence-discovery.jpg}
+	\caption{Sequence diagram 'Client discovery'}
+	\label{sequence-diagram-client-discovery}
+\end{figure}
 
 %\section{Client-Discovery}
 %
