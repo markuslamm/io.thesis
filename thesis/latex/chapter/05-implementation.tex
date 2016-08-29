@@ -7,8 +7,8 @@ details for all major components of the system architecture, including several
 collector implementations, as well as the "CollectorClient" and "CollectorManager" component.
 
 The system architecture of the collector platform consists two software components to
-be implemented, and the Elasticsearch database, Apache Kafka message broker and the Logstash indexer to be configured to fulfil the
-requirements discussed in Chapter 3 and to realize the proposed system architecture in Chapter 4.
+be implemented, and the Elasticsearch database, Apache Kafka message broker and the Logstash
+indexer to be configured to fulfil the requirements discussed in Chapter 3 and to realize the proposed system architecture in Chapter 4.
 
 The main component, the CollectorClient must provide a REST interface for starting/stopping the collection process
 on source systems. Furthermore, it must be possible to fetch metadata about each client. The CollectorManager,
@@ -47,41 +47,165 @@ public class SampleController {
 \end{lstlisting}
 
 The Spring framework provides usefull default configurations, thereby making it possible to create a simple Rest service
-with just a few annotations. The result is a completely self-contained executable jar. Executable jars (sometimes called
-“fat jars”) are archives containing the compiled classes along with all of the jar dependencies that the code needs to run.
-This produces the disadvantage that the memory requirement of the resulting executable increases. But this was ignored while
-making the decision for the framework because the presence of sufficient memory space on Apache Flink and Apache Kafka sources
-systems had been assumed.
+with just a few annotations. The result is a completely self-contained executable jar, created with the Maven
+Buildmanagement tool. Executable jars (sometimes called “fat jars”) are archives containing the compiled classes along with
+all of the jar dependencies that the code needs to run. This produces the disadvantage that the memory requirement of the
+resulting executable increases. But this was ignored while making the decision for the framework because the presence of
+sufficient memory space on Apache Flink and Apache Kafka sources systems had been assumed.
 
 For the implementation of the software components, Java in its version 8 had been chosen. In this current version,
 it supports more functional elements in form of lambda expressions, the processing of collections as Streams as well
 as an Optional type for handling optional values respectively null values, all features which were used often in the
-implementation of the CollectorClient and CollectorManager.
+implementation of the CollectorClient and CollectorManager. Java is the main programming language of Spring Boot, but also
+supports Groovy and Scala which did not come into consideration due to the authors lack of experience in these programming
+languages.
+
+The software-solution uses Maven as Build- and Dependencymanagement tool, and is divided into the main modules:
+
+\begin{itemize}
+	\item collectors
+	\item collector-client
+	\item collector-manager
+	\item collector-data-processor
+\end{itemize}
+
+The following sections explains the content and and discusses implementation details for each of these modules separately.
+
+\section{Collectors}
+
+The collector module contains the implementations for the required collectors based on Table 3.4 in
+Section 3.1 "Data Quality". It also defines a "collector-commons" module containing basic artifarcts
+of the collector domain, common classes and interfaces, that are used and required by the individual
+collector implementations
+
+\subsection{Base Domain}
+
+The next class diagramm shows the basic structure, that is equal to all collector implementations on the example
+of "JvmCollector":
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1.0\textwidth]{../uml/class-jvm-collector.jpg}
+	\caption{Class diagram 'JvmCollector'}
+	\label{class-diagram-jvm-collector}
+\end{figure}
+
+This overview describes the collector domain, that is equal to all implementations and consists of following parts:
+\begin{enumerate}
+    \item \textbf{CollectorType:}
+    Enumeration, meta information, that distinguishes collectors implementations
+    \item \textbf{CollectorResult:} Data container, the result of a single invocation of the collect() method from
+    the Collector interface. Describes a data event, an immutable fact" at a given time, containing the host and port
+    the client is running on, the type of collector and the requested data.
+    \item \textbf{Collector:} The main interface for implementations, defines the protocol for data collection.
+    \item \textbf{AbstractCollector:} Abstract class, provides the implementation of the main collect() method.
+    \item \textbf{SampleCollector:} An interface for all classes that collect samples defined by the group the data
+    belongs to.
+\end{enumerate}
+
+On the example of "JvmCollector", the following section explains the basic design principles that is common
+to the main collector domain more in detail wheras only relevant implementation details will be discussed in
+subsequent implementations, because the process of collecting data is similar in all.
+
+\subsection{JvmCollector}
+
+The implementation of the Collector interface for fetching "default" JVM data according to Table 3.2 in
+Section 3.1.2 "Application Data". This basic set of different management interfaces build the foundation
+for the implementation for collecting JVM related data like memory, garbage collector or thread information.
+
+The keep the main implementation as small as possible and following the "Separation Of Concerns" pattern,
+the data was divided into different "sample groups", which resulted in one implementation each for collecting
+memory, garbage collector or thread data.
+
+A these SampleCollector implementations provide a collectSample() method, that fetches data from a different data group, here
+on the example of the class "MemorySampleCollector".
+
+\begin{lstlisting}[caption={MemorySampleCollector collectSample()}, captionpos=b, label={lst:memory-sample-collect}]
+private static final String OBJECT_NAME = "java.lang:type=Memory";
+
+@Override
+public CompletableFuture<Map<String, Object>> collectSample() {
+    return CompletableFuture.supplyAsync(() -> {
+        final Map<String, Object> memoryResultMap = Maps.newLinkedHashMap();
+        memoryResultMap.put(SAMPLE_KEY, parseMemory(getMemoryMXBean(OBJECT_NAME)));
+        return memoryResultMap;
+    });
+}
+
+private Map<String, Object> parseMemory(final MemoryMXBean proxy) {
+    final Map<String, Object> memoryDataMap = Maps.newLinkedHashMap();
+    memoryDataMap.put(MEMORY_OPFC_KEY, proxy.getObjectPendingFinalizationCount());
+    return memoryDataMap;
+}
+
+private MemoryMXBean getMemoryMXBean(final String objectName) {
+    try {
+        return ManagementFactory.newPlatformMXBeanProxy(mBeanServerConnection(), objectName, MemoryMXBean.class);
+    } catch (IOException ex) {
+        throw ex;
+    }
+}
+\end{lstlisting}
+
+As one of the non functional requirements in Chapter 3, the client implementation may not cause a negative impact
+on source systems regarding system resources like cpu or disk usage. To make the code as "non-blocking" as possible,
+the implementation is based on the usage of CompletableFutures. It models an asynchronous computation and provides
+a reference to its results that will be available when the computation itself is completed. These computations like the JMX
+access in the example above, are potentially time-consuming \cite{TODO}. The CompletableFuture allows the caller thread to return immediately
+to perform other operations instead of waiting for the result of the computation of JMX memory data, by delegating to a
+separate thread performing the operations defined in the CompletableFuture.
+
+The code in line 1-8 wraps the computation of JMX memory data, which contains the data access via the MBeanServerConnection,
+introduced in Chapter 2 "Basic Concepts", and the preparation of result data in a separate thread performing the operations defined
+in the futures method body.
+
+The implementations for the other SampleCollectors are almost the same, it only differs in the JMX management bean the data will
+be queried from.
+
+Every collector implementation is based on an internal registry of SampleCollectors, every implementation must provide its
+own registry required for the main collector process, that delegates to its registered SampleCollectors,
+aggregates their results and creates the overall result of the collector. To split the collection into individual sample groups has
+the advantage, that it makes the implementation very flexible regarding the data to collect. To add further data sources, it
+will be enough to provide an implementation of the SampleCollector interface and to add an entry to the registry.
+
+\begin{lstlisting}[caption={Sample registry for "JvmCollector"}, captionpos=b, label={lst:jvmsampleregistry}]
+private static Map<String, SampleCollector> jvmSampleRegistry(final MBeanServerConnection mBeanServerConnection) {
+    final Map<String, SampleCollector> registry = Maps.newHashMap();
+    registry.put(MemorySampleCollector.SAMPLE_KEY, new MemorySampleCollector(mBeanServerConnection));
+    registry.put(ThreadSampleCollector.SAMPLE_KEY, new ThreadSampleCollector(mBeanServerConnection));
+    ...
+    return registry;
+}
+
+@Override
+public CollectorType getCollectorType() {
+    return CollectorType.JVM_JMX;
+}
+
+@Override
+protected void checkRegistry() {
+    if (getSampleRegistry().isEmpty()) {
+        throw new JmxCollectorException();
+    }
+}
+\end{lstlisting}
+
+The rest of the JvmCollector code consists of required method implementations of abstract methods defined in the class
+AbstractCollector. Due to the fact that a concrete collector implementation only require that less code
+
+
+
+
+
+
+
+
+
+\subsection{AbstractCollector}
+
+\subsection{FlinkRestCollector}
+
 %
-%
-%According to the functional requirements
-%discussed in Chapter 3 "Requirements and Specification", any other programming language could had been used, as long
-%it is possible to provide and consume a RESTfull API and integration for the Producer and Consumer API of Apache
-%Kafka is available.
-%
-%\section{Collectors}
-%
-%TODO: In artifarct "collectors-parent", explain SampleCollector concept :
-%
-%\begin{lstlisting}[caption={Sample registry for "JvmCollector"}, captionpos=b, label={lst:jvmsampleregistry}]
-%private static Map<String, SampleCollector> jvmSampleRegistry(final MBeanServerConnection mBeanServerConnection) {
-%    final Map<String, SampleCollector> registry = Maps.newHashMap();
-%    registry.put(ClassloadingSampleCollector.SAMPLE_KEY, new ClassloadingSampleCollector(mBeanServerConnection));
-%    registry.put(BufferPoolSampleCollector.SAMPLE_KEY, new BufferPoolSampleCollector(mBeanServerConnection));
-%    registry.put(GcSampleCollector.SAMPLE_KEY, new GcSampleCollector(mBeanServerConnection));
-%    registry.put(MemorySampleCollector.SAMPLE_KEY, new MemorySampleCollector(mBeanServerConnection));
-%    registry.put(MemoryPoolSampleCollector.SAMPLE_KEY, new MemoryPoolSampleCollector(mBeanServerConnection));
-%    registry.put(OsSampleCollector.SAMPLE_KEY, new OsSampleCollector(mBeanServerConnection));
-%    registry.put(RuntimeSampleCollector.SAMPLE_KEY, new RuntimeSampleCollector(mBeanServerConnection));
-%    registry.put(ThreadSampleCollector.SAMPLE_KEY, new ThreadSampleCollector(mBeanServerConnection));
-%    return registry;
-%}
-%\end{lstlisting}
+
 %
 %TODO: Collector results aggregated of sample collector results, extensibility for further sample sources
 %
@@ -115,7 +239,7 @@ implementation of the CollectorClient and CollectorManager.
 %}
 %\end{lstlisting}
 %
-%\subsection{CollectorType}
+\subsection{CollectorType}
 %
 %TODO: Distinguishes collectors, meta information not neccessarily required
 %
@@ -128,11 +252,6 @@ implementation of the CollectorClient and CollectorManager.
 %    KAFKA_BROKER_JMX
 %}
 %\end{lstlisting}
-%
-%\subsection{CollectorResult}
-%
-%Data events as "immutable facts" with state state of system at time, on host, at port, the type of collector and data.
-%Usage of Jackson for JSON serialization.
 %
 %\begin{lstlisting}[caption={CollectorResult}, captionpos=b, label={lst:collectortypesimpl}]
 %public class CollectorResult {
@@ -154,6 +273,7 @@ implementation of the CollectorClient and CollectorManager.
 %    private final Map<String, Object> data;
 %}
 %\end{lstlisting}
+
 %
 \subsection{DStatCollector}
 %
@@ -275,15 +395,11 @@ implementation of the CollectorClient and CollectorManager.
 %                    }).join();
 %\end{lstlisting}
 
-\subsection{JvmCollector}
 
-%Collects data according to Table 3.2, standard set of management interfaces available for JVM data will be used.
-
-\subsection{FlinkRestCollector}
 
 \subsection{KafkaBrokerJmxCollector}
 
-\subsection{AbstractCollector}
+
 
 \section{CollectorClient}
 
@@ -304,6 +420,11 @@ implementation of the CollectorClient and CollectorManager.
 \subsection{IndexController}
 
 \section{Summary}
+
+%According to the functional requirements
+%discussed in Chapter 3 "Requirements and Specification", any other programming language could had been used, as long
+%it is possible to provide and consume a RESTfull API and integration for the Producer and Consumer API of Apache
+%Kafka is available.
 
 Maybe Spring alternatives, Lagom, VertX, Play?
 
