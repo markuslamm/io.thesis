@@ -25,7 +25,7 @@ import java.util.Properties;
  */
 public class CollectorDataProcessor {
 
-    private static final String KAFKA_HOST = "192.168.2.105:9092";
+    private static final String KAFKA_HOST = "192.168.2.100:9092";
     private static final String INBOUND_TOPIC = "collector-outbound-topic";
     private static final String OUTBOUND_TOPIC = "flink-outbound-topic";
 
