@@ -19,7 +19,7 @@
 TODO:
 Distributed system -> distributed collection with clients, software solution is a streaming platform itself,
 cloud environments, client server architecture, client-management with service-discovery, explain", communication via REST,
-Publish(client) -> Topic <- Subscribe Logstash,
+Publish(client) -> Topic <- Subscribe Logstash, Data pipeline
 
 continuous, distributed, time-series "data feed", difference raw and aggregated\cite{Klepp16},
 events as "immutable facts", why? explain data samples (cpu, disk...)
@@ -54,7 +54,7 @@ data layer
 \section{CollectorManager}
 
 Clients need to be scheduled -> management component for Collector clients, gives overview and enables start/stop of
-registred CollectorClients, uses Consulas client-discovery backend, why? First experiments with implementing a "client-registry",
+registred CollectorClients, uses Consul as client-discovery backend, why? First experiments with implementing a "client-registry",
 heartbeats, needed another db for storing clients, Consul because of registry for components in distributed systems
 
 \begin{figure}[H]

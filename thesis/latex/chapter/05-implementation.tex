@@ -1,15 +1,15 @@
 \chapter{Implementation}
-%Eigenschaften des Algorithmus, Komplexität, Wie gehen Sie vor?, Beschreiben Sie was wann passiert
 
 After Chapter 4 "System Architecture" has shown an overview of the main components of
-the software solution and explained the interaction between them, this chapter explains implementation
+the system platform and explained the interaction between them, this chapter discusses implementation
 details for all major components of the system architecture, including several
 collector implementations, as well as the "CollectorClient" and "CollectorManager" component.
 
 The system architecture of the collector platform consists two software components to
 be implemented, the Elasticsearch database, Apache Kafka message broker and the Logstash
 indexer to be configured to fulfil the requirements discussed in Chapter 3 and to realize the
-proposed system architecture in Chapter 4.
+proposed system platform in Chapter 4. The required configurations for Kafka, Elasticsearch and Logstash
+will be explained in Chapter 6 "Test And Evaluation".
 
 The main component, the CollectorClient must provide a REST interface for starting/stopping the collection process
 on source systems. Furthermore, it must be possible to fetch metadata about each client. The CollectorManager,
@@ -47,7 +47,7 @@ public class SampleController {
 }
 \end{lstlisting}
 
-The Spring framework provides usefull default configurations, thereby making it possible to create a simple Rest service
+The Spring framework provides usefull default configurations, thereby making it possible to create a simple REST-based web service
 with just a few annotations. The result is a completely self-contained executable jar, created with the Maven
 Buildmanagement tool. Executable jars (sometimes called “fat jars”) are archives containing the compiled classes along with
 all of the jar dependencies that the code needs to run. This produces the disadvantage that the memory requirement of the
@@ -81,8 +81,8 @@ collector implementations
 
 \subsection{Base Domain}
 
-The next class diagramm shows the basic structure, that is equal to all collector implementations on the example
-of "JvmCollector":
+The next class diagramm shows the basic structure on the example of the class "JvmCollector" that will be introduced in
+the Section 5.1.2:
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=1.0\textwidth]{../uml/class-jvm-collector.jpg}
@@ -155,7 +155,7 @@ access in the example above, are potentially time-consuming \cite{TODO}. The Com
 to perform other operations instead of waiting for the result of the computation of JMX memory data, by delegating to a
 separate thread performing the operations defined in the CompletableFuture.
 
-The code in line 1-8 wraps the computation of JMX memory data, which contains the data access via the MBeanServerConnection,
+The code above wraps the computation of JMX memory data, which contains the data access via the MBeanServerConnection,
 introduced in Chapter 2 "Basic Concepts", and the preparation of result data in a separate thread performing the operations defined
 in the futures method body.
 
@@ -240,13 +240,20 @@ The implementations discussed in coming sections are all based on the concept, t
 to create an overall result by aggregating individual sample data. As a result of this approach, the implementations keeps flexible
 what makes it easy to add or remove sample data just by providing implementations of the SampleCollector interface or removing
 an item from the internal registry. In addition, as shown above in Code snippet 5.3, the collecting of sample data and the
-preparation of the CollectorResult can be realized with just a few lines of code,  which makes the integration of
-further data sources quite easy. This can be demonstrated in the comming section.
+preparation of the CollectorResult can be realized with just a few lines of code, which makes the integration of
+further data sources quite easy. This will be demonstrated in the comming section.
 
 \subsection{FlinkRestCollector}
 
 This collector implementation fetches data from the HTTP monitoring API that comes with Apache Flink and uses the endpoints
 introduced in Table 3.3 in Section 3.1.2 "Application data".
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1.0\textwidth]{../uml/class-flink-rest-collector.jpg}
+	\caption{Class diagram 'FlinkRestCollector'}
+	\label{class-diagram-flink-rest-collector}
+\end{figure}
 
 Following the sample approach described above, this collector provides its internal sample registry, containing the SampleCollector
 implementations based on the data that is desired and shall be collected. Because the monitoring API provides data concerning
@@ -359,33 +366,219 @@ more detailed set of JVM and job data.
 
 \section{CollectorClient}
 
-\subsection{CollectorWorker}
+After discussing the Collector implementations in the previous section, this section introduces the CollectorClient,
+the core software component representing the entry point for bringing data into the system. This is the component that needs be
+installed on Apache Flink and Apache Kafka source systems and has the following responsibilities:
 
-\subsection{KafkaOutboundWriter}
+\begin{enumerate}
+    \item Register itself on application start with client-discovery
+    \item Provide metadata for the "CollectorManager" component available via REST resource
+    \item Provide an interface to trigger data collection "on demand" from the CollectorManagers web UI
+    \item The main collection process, based on registered collector implementations
+    \item Transport data to the message broker
+\end{enumerate}
 
-\subsection{ScheduleController}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1.0\textwidth]{../uml/class-collector-client.jpg}
+	\caption{Class diagram 'CollectorClient'}
+	\label{class-diagram-collector-client}
+\end{figure}
 
-\subsection{ClientMetadataController}
+The CollectorClient is a small service, a self-containing jar-file containing an embedded Jetty servlet container realized using
+Spring Boot. To register the client with the Consul service discovery, Spring provides an annotation-based approach to accomplish
+this functionality within spring-cloud sub-project, a set of tools for the development of cloud-based applications following common patters
+of distributed systems like configuration management, cluster state, service-discovery, etc. .
+
+\begin{lstlisting}[caption={"CollectorClientApp", Client registration}, captionpos=b, label={lst:collector-client-registration}]
+@SpringBootApplication
+@EnableDiscoveryClient
+public class CollectorClientApp {
+
+    public static void main(String[] args) {
+        SpringApplication.run(CollectorClientApp.class, args);
+    }
+}
+\end{lstlisting}
+
+The @EnableDiscoveryClient annotation seen above requires a Maven dependency to the spring-cloud-starter-consul-all artefarct,
+which provides and implementation to register the annotated Spring Boot application within the Consul service discovery. Based
+on usefull default configurations, this application registers itself the default Consul host "localhost" and port 8500 and is
+available to be discovered by the "CollectorManager".
+
+The CollectorClient provides a Restful web service for fetching metadata for the respective client. This resource is required by
+the "CollectorManager" for displaying detailed client data in the web UI.
+
+\begin{lstlisting}[caption={"ClientMetadataController", Metadata REST endpoint}, captionpos=b, label={lst:metadata-endpoint}]
+@Async
+@RequestMapping(value="/client/metadata", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
+public CompletableFuture<ResponseEntity<CollectorMetadata>> getMetadata() {
+    LOG.debug("Entering getMetadata()");
+    final CompletableFuture<ResponseEntity<CollectorMetadata>> responseCP = collectorClient.getMetadata()
+        .thenApply(metadataMap -> {
+            LOG.debug("Fetched client metadata: {}", metadataMap);
+            return new ResponseEntity<>(metadataMap, HttpStatus.OK);
+        });
+        LOG.debug("Immediately return from getMetadata()");
+        return responseCP;
+    }
+\end{lstlisting}
+
+Both code snippets are a good examples for the "minimum of fuss" required to enable small web based services that registers itself
+with a service-discovery server. In addition, the last snippet enables a REST resource, localized by the API
+path "/client/metadata, listening for GET requests and delivering metadata of the client in JSON format. Furthermore, the capabilities
+of asynchronous computations is demonstrated, the @Async annotation in combination with the future implementation as the return
+value forces the framework to return immediately and not to block the caller thread, see Section "JvmCollector". Internally,
+Spring Boot uses an ExecutorPool for the execution of asyncronous computations in a different thread.
+
+In analogy to the metadata enpoint seen above, the client realizes a uniform REST interface that enables the scheduling
+of the data collection process. In this case, the servive expects POST requests, that contain a "ScheduleRequest" in their
+request body provided by the clients that use this service. This body must be JSON formatted and contains the action to
+trigger(start/stop data collection) and the time intervall between each collection process, five seconds for example. As result,
+a JSON response will be returned, containg a status of the schedule request and the status of the CollectorClient (running/stopped)
+
+\begin{lstlisting}[caption={"ScheduleController", REST endpoint}, captionpos=b, label={lst:schedule-endpoint}]
+@RequestMapping(value = "/client/schedule", method = RequestMethod.POST, consumes = APPLICATION_JSON_VALUE)
+public CompletableFuture<ResponseEntity<ScheduleResponse>> schedule(@RequestBody @Valid final ScheduleRequest request,
+    final BindingResult errors) {
+LOG.debug("Received schedule request, action={}, interval={}", request.getAction(), request.getInterval());
+    if (errors.hasErrors()) {
+        throw new CollectorClientException("Invalid schedule request");
+    }
+    return collectorClient.scheduleClient(request)
+        .thenApply(collectorScheduleResponse ->
+            new ResponseEntity<>(collectorScheduleResponse, HttpStatus.OK));
+}
+\end{lstlisting}
+
+Whereas the REST services seen above just take HTTP requests, the "CollectorClient" contains the implementation for
+collecting the data based on the concept of a registry of collector. In contrast to the sample registry explained in the
+"Collector" implementations above, the registry holds the collector implementations, and not any sample collectors which
+are part of the collectors. The decoupling of collector implementations from the "CollectorClient" by using a dynamic registry
+allows to add further collectors and to remove existing ones without changing the "CollectorClient" implementation.
+
+The scheduling of the client uses Spring's TaskScheduler interface that abstracts the scheduling of tasks based on different
+kinds of triggers, where a task is an implementation of the "Runnable" interface, defined in the Java core package "java.lang.thread".
+Based on a Stream of registred collector implementations, the client creates instances of the "CollectorWorker" class, that
+encapsulates the collection process for execution in a separate thread which will be provided to the task scheduler.
+
+\begin{lstlisting}[caption={"CollectorClient", collector registry}, captionpos=b, label={lst:collector-client-registry}]
+private List<ScheduledFuture<?>> collectorTaskFutures = null;
+...
+collectorTaskFutures = collectorRegistry.getCollectors()
+    .stream()
+    .map(collector -> new CollectorWorker(collector, clientPort, outboundWriter, instanceId))
+    .map(collectorWorker -> taskScheduler.scheduleWithFixedDelay(collectorWorker, interval))
+    .collect(Collectors.toList());
+\end{lstlisting}
+
+The "CollectorWorker" implements the "Runnable" interface, hence it must provide an implementation of the parameter-less
+run()-method. Within its implementation, it fetches the CompletableFuture containing collected data, creates a "CollectorResult and
+enriches it with client information, that makes the data set uniquely identifiable.
+
+\begin{lstlisting}[caption={"CollectorWorker", collector registry}, captionpos=b, label={lst:collector-worker}]
+private final Collector collector;
+private final OutboundWriter outboundWriter;
+...
+@Override
+public void run() {
+    LOG.debug("Collector worker starts...");
+    collector.collect()
+        .thenAccept(collectorResult -> {
+            try {
+                final CollectorResult result = new CollectorResult(collectorResult.getCollectorType(),
+                    collectorResult.getData(), now(), InetAddress.getLocalHost().getHostAddress(),
+                                clientPort, instanceId);
+                final String jsonData = JsonUtils.toJson(result);
+                outboundWriter.write(collector.getCollectorType().name().toLowerCase(), jsonData);
+            } catch (UnknownHostException ex) {
+                throw new CollectorClientException(ex.getMessage());
+            }
+    });
+    LOG.debug("Collector worker finished");
+}
+\end{lstlisting}
+
+After the result is created, it will be transfered into its JSON representation and written into a Apache Kafka topic, by using
+the OutboundWriter interface, whose implementation uses the class KafkaTemplate, provided by the Spring sub-project spring-kafka.
+
+\begin{lstlisting}[caption={"KafkaOutboundWriter", Send data}, captionpos=b, label={lst:outbound-writer}]
+private final KafkaTemplate<String, String> kafkaTemplate;
+private final String kafkaOutboundTopic;
+...
+@Override
+public void write(final String key, final String jsonData) {
+    LOG.debug("Trying to send data to Kafka");
+    final ListenableFuture<SendResult<String, String>> sendResultFuture =
+        kafkaTemplate.send(kafkaOutboundTopic, key, jsonData);
+    sendResultFuture.addCallback(new ListenableFutureCallback<SendResult<String, String>>() {
+        @Override
+        public void onSuccess(final SendResult<String, String> response) {
+                LOG.debug("Successfully send data to Kafka, topic={}, key={}", kafkaOutboundTopic, key);
+        }
+
+        @Override
+        public void onFailure(final Throwable ex) {
+            final OutboundWriterException exception = new OutboundWriterException(format("Error sending data to Kafka: %s", ex.getMessage()));
+            LOG.warn(exception.getMessage());
+            throw exception;
+        }
+    });
+}
+\end{lstlisting}
+At this point, the collection process is finished. After the collection interval elapsed, which is configured to be five seconds as
+default value, everything will be triggerd again by the task scheduler described above.
 
 \section{CollectorManager}
 
-\subsection{CollectorClientInstanceService}
+The "CollectorManager" is a small web appliction representing the management component in the system architecture, it
+realizes a basic HTML based user interface and provides an overview of all clients registred in the platform as well as a
+detailed view of individual clients. In addition, the data collection process can be triggered by using this interface.
 
-\subsection{MetadataRestClient}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1.0\textwidth]{../uml/class-collector-manager.jpg}
+	\caption{Class diagram 'CollectorManager'}
+	\label{class-diagram-collector-manager}
+\end{figure}
 
-\subsection{IndexController}
+To retrieve the required information of which clients exist and are registered in the system platform, the "CollectorManager"
+uses the "DiscoveryClient" implementation provided by spring-cloud.
+
+\begin{lstlisting}[caption={"CollectorClientInstanceService", Get client instances}, captionpos=b, label={lst:client-instance-service}]
+private final DiscoveryClient discoveryClient;
+private MetadataRestClient metadataRestClient;
+...
+final List<CollectorClientInstance> clients = discoveryClient.getInstances(clientAppName)
+    .stream()
+    .map(serviceInstance ->
+        CollectorClientInstance.of(serviceInstance.getHost(), serviceInstance.getPort(), serviceInstance.getServiceId(),
+        serviceInstance.isSecure(), serviceInstance.getUri())).collect(Collectors.toList());
+        LOG.debug("Fetched all client instances: {}", clients);
+        return clients;
+\end{lstlisting}
+
+The "DiscoveryClient" provides access to the Consul servive-discovery server and makes a list of all registered "CollectorClients"
+available that will be displayed in the user interface. In addition, it sends a REST request to the "CollectorClient" itself to enrich
+existing Consul data with metadata provided by client as seen in the "CollectorClient" implementation above.
 
 \section{Summary}
 
-%According to the functional requirements
-%discussed in Chapter 3 "Requirements and Specification", any other programming language could had been used, as long
-%it is possible to provide and consume a RESTfull API and integration for the Producer and Consumer API of Apache
-%Kafka is available.
+The last chapter discussed implementation details for existing data collectors available for Apache Flink and and Apache Kafka.
+It introduced the concept of a "sample registry", that divides the main data collection into separate units of work, represented
+by implementations of the "SampleCollector" interface. The "main" collectors, means classes that implement the "Collector"
+interface, aggregate an overall result based on individual data from multiple SampleCollectors.
 
-Maybe Spring alternatives, Lagom, VertX, Play?
+The "CollectorClient" is based on implementations of the "Collector" interface, which are also organized by an internal registry.
+It represents a small REST-based web service that manages the collection process based on registered collectors and provides a REST
+interface to enable the collection of data "on-demand".
 
-Maybe collector as agent, Instrumentation instead of separate service
+The "CollectorManager" acts a client for the web services provided by the "CollectorClient". It uses the REST resources discussed
+for listing registered clients, showing detailed client information and starting and stopping the collection process in a basic
+HTML-based user interface.
 
-Alternatives REST, maybe (Web-)Sockets
+Wheras the collector implementations do not depend on Spring Boot, the framework is used to realize the "CollectorClient" and
+"CollectorManager" applications. It enables the development of standalone, self-contained applications with less efford and makes
+the integration of 3rd party applications or frameworks, in this example Apache Kafka and Consul, very easy.
 
-Possible secururity risk because remote JMX, firewalls and dstat process
+The next chapter introduces the local test environment and explains the setup of the prototype application.
