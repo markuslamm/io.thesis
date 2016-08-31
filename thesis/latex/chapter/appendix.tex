@@ -3,7 +3,69 @@
 \chapter{}
 \addcontentsline{toc}{chapter}{Appendix A}
 
-\section{Diagrams}
+\section{Collectors JSON results}
+\subsection{JvmCollector}
+\subsection{DstatCollector}
+\subsection{FlinkRestCollector}
+\subsection{FlinkJmxCollector}
+\subsection{KafkaBrokerJmxCollector}
+
+\section{Apache Flink 1.1.0 API JSON responses}
+\verb|GET /jobs|
+%\begin{lstlisting}[caption={DStatCollector JSON payload}, captionpos=b, label={lst:dstat-payload}]
+%{
+%  "jobs-running": [],
+%  "jobs-finished": [
+%    "df399b48d225cda1a5c0a36ed9519b62",
+%    "2efc5e7c9a9f274efbb420a01e6b00cc"
+%  ],
+%  "jobs-cancelled": [],
+%  "jobs-failed": []
+%}
+%\end{lstlisting}
+
+\section{Apache Kafka 0.9.0.1 MBeans}
+\begin{table}[H]
+    \begin{tabular}{l}
+        \textbf{JMX ObjectName} \\
+        kafka.controller:type=ControllerStats,name=LeaderElectionRateAndTimeMs \\
+        kafka.controller:type=ControllerStats,name=UncleanLeaderElectionsPerSec \\
+        kafka.controller:type=KafkaController,name=ActiveControllerCount \\
+        kafka.controller:type=KafkaController,name=OfflinePartitionsCount \\
+        kafka.controller:type=KafkaController,name=PreferredReplicaImbalanceCount \\
+        kafka.network:type=Processor,name=IdlePercent,networkProcessor=* \\
+        kafka.server:type=socket-server-metrics,networkProcessor=* \\
+        kafka.server:type=controller-channel-metrics,broker-id=* \\
+        kafka.server:type=ReplicaManager,name=IsrExpandsPerSec \\
+        kafka.server:type=ReplicaManager,name=IsrShrinksPerSec \\
+        kafka.server:type=ReplicaManager,name=LeaderCount \\
+        kafka.server:type=ReplicaManager,name=PartitionCount \\
+        kafka.server:type=ReplicaManager,name=UnderReplicatedPartitions \\
+        kafka.server:type=KafkaRequestHandlerPool,name=RequestHandlerAvgIdlePercent \\
+        kafka.server:type=BrokerTopicMetrics,name=TotalProduceRequestsPerSec \\
+        kafka.server:type=BrokerTopicMetrics,name=TotalProduceRequestsPerSec,topic=* \\
+        kafka.server:type=BrokerTopicMetrics,name=TotalFetchRequestsPerSec \\
+        kafka.server:type=BrokerTopicMetrics,name=TotalFetchRequestsPerSec,topic=* \\
+        kafka.server:type=BrokerTopicMetrics,name=BytesInPerSec \\
+        kafka.server:type=BrokerTopicMetrics,name=BytesInPerSec,topic=* \\
+        kafka.server:type=BrokerTopicMetrics,name=BytesOutPerSec \\
+        kafka.server:type=BrokerTopicMetrics,name=BytesOutPerSec,topic=* \\
+        kafka.server:type=BrokerTopicMetrics,name=BytesRejectedPerSec \\
+        kafka.server:type=BrokerTopicMetrics,name=BytesRejectedPerSec,topic=* \\
+        kafka.server:type=BrokerTopicMetrics,name=FailedFetchRequestsPerSec \\
+        kafka.server:type=BrokerTopicMetrics,name=FailedFetchRequestsPerSec,topic=* \\
+        kafka.server:type=BrokerTopicMetrics,name=FailedProduceRequestsPerSec \\
+        kafka.server:type=BrokerTopicMetrics,name=FailedProduceRequestsPerSec,topic=* \\
+        kafka.server:type=BrokerTopicMetrics,name=MessagesInPerSec \\
+        kafka.server:type=BrokerTopicMetrics,name=MessagesInPerSec,topic=* \\
+        kafka.coordinator:type=GroupMetadataManager,name=NumGroups \\
+        kafka.coordinator:type=GroupMetadataManager,name=NumOffsets \\
+    \end{tabular}
+    \caption{Collected Kafka MBeans}
+    \label{tbl:kafka-controller}
+\end{table}
+
+%\section{Diagrams}
 %\subsection{Use Case diagram}
 %
 %\begin{figure}[H]
@@ -12,86 +74,28 @@
 %	\caption{Use Case Diagramm}
 %	\label{use-case-diagram}
 %\end{figure}
-%
-\subsection{Class diagrams}
+
 %\begin{figure}[H]
 %	\centering
-%	\includegraphics[width=1.0\textwidth]{../uml/class-jvm-collector.jpg}
-%	\caption{Class diagram 'JvmCollector'}
-%	\label{class-diagram-jvm-collector}
+%	\includegraphics[width=1.0\textwidth]{../uml/class-flink-jmx-collector.jpg}
+%	\caption{Class diagram 'FlinkJmxCollector'}
+%	\label{class-diagram-flink-jmx-collector}
 %\end{figure}
 %\begin{figure}[H]
 %	\centering
-%	\includegraphics[width=1.0\textwidth]{../uml/class-dstat-collector.jpg}
-%	\caption{Class diagram 'DStatCollector'}
-%	\label{class-diagram-dstat-collector}
-%\end{figure}
-%\begin{figure}[H]
-%	\centering
-%	\includegraphics[width=1.0\textwidth]{../uml/class-flink-rest-collector.jpg}
-%	\caption{Class diagram 'FlinkRestCollector'}
-%	\label{class-diagram-flink-rest-collector}
-%\end{figure}
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=1.0\textwidth]{../uml/class-flink-jmx-collector.jpg}
-	\caption{Class diagram 'FlinkJmxCollector'}
-	\label{class-diagram-flink-jmx-collector}
-\end{figure}
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=1.0\textwidth]{../uml/class-kafka-broker-jmx-collector.jpg}
-	\caption{Class diagram 'KafkaBrokerJmxCollector'}
-	\label{class-diagram-kafka-broker-jmx-collector}
-\end{figure}
-%\begin{figure}[H]
-%	\centering
-%	\includegraphics[width=1.0\textwidth]{../uml/class-collector-client.jpg}
-%	\caption{Class diagram 'CollectorClient'}
-%	\label{class-diagram-collector-client}
-%\end{figure}
-%\begin{figure}[H]
-%	\centering
-%	\includegraphics[width=1.0\textwidth]{../uml/class-collector-manager.jpg}
-%	\caption{Class diagram 'CollectorManager'}
-%	\label{class-diagram-collector-manager}
+%	\includegraphics[width=1.0\textwidth]{../uml/class-kafka-broker-jmx-collector.jpg}
+%	\caption{Class diagram 'KafkaBrokerJmxCollector'}
+%	\label{class-diagram-kafka-broker-jmx-collector}
 %\end{figure}
 
-%\subsection{Sequence diagrams}
-%\begin{figure}[H]
-%	\centering
-%	\includegraphics[width=1.0\textwidth]{../uml/sequence-discovery.jpg}
-%	\caption{Sequence diagram 'Client discovery'}
-%	\label{sequence-diagram-client-discovery}
-%\end{figure}
-%\begin{figure}[H]
-%	\centering
-%	\includegraphics[width=1.0\textwidth]{../uml/sequence-scheduling.jpg}
-%	\caption{Sequence diagram 'Client scheduling'}
-%	\label{sequence-diagram-client-scheduling}
-%\end{figure}
+%\subsection{Deployment diagram}
 
-%\subsection{Component diagram}
-%\begin{figure}[H]
-%	\centering
-%	\includegraphics[width=1.0\textwidth]{../uml/component-diagram.jpg}
-%	\caption{Component diagram}
-%	\label{component-diagram}
-%\end{figure}
 
-\subsection{Deployment diagram}
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=1.0\textwidth]{../uml/deployment-diagram.jpg}
-	\caption{Deployment diagram}
-	\label{deployment-diagram}
-\end{figure}
 
-%\section{Collector JSON payloads}
-%
-%\subsection{DStatCollector}
 
-%\begin{lstlisting}[caption={DStatCollector JSON payload}, captionpos=b, label={lst:dstatpayload}]
+
+
+%\begin{lstlisting}[language=json, caption={DStatCollector JSON payload}, captionpos=b, label={lst:dstat-payload}]
 %{
 %    "clientTimestamp": "2016-08-12T20:59:30.608",
 %    "clientHost": "127.0.1.1",
@@ -174,7 +178,7 @@
 %            "process-most-expensive": {
 %                "name": "upstart",
 %                "pid": 3210,
-%                "read": 502.0,
+%                "read": 502.0,{
 %                "write": 210.0,
 %                "cpuPercentage": 0.0
 %            },
@@ -261,47 +265,3 @@
 %    }
 %}
 %\end{lstlisting}
-
-%\section{Screenshot}
-
-\section{Apache Kafka MBeans version 0.9.0.2}
-
-\begin{table}[H]
-    \begin{tabular}{l}
-        \textbf{JMX ObjectName} \\
-        kafka.controller:type=ControllerStats,name=LeaderElectionRateAndTimeMs \\
-        kafka.controller:type=ControllerStats,name=UncleanLeaderElectionsPerSec \\
-        kafka.controller:type=KafkaController,name=ActiveControllerCount \\
-        kafka.controller:type=KafkaController,name=OfflinePartitionsCount \\
-        kafka.controller:type=KafkaController,name=PreferredReplicaImbalanceCount \\
-        kafka.network:type=Processor,name=IdlePercent,networkProcessor=* \\
-        kafka.server:type=socket-server-metrics,networkProcessor=* \\
-        kafka.server:type=controller-channel-metrics,broker-id=* \\
-        kafka.server:type=ReplicaManager,name=IsrExpandsPerSec \\
-        kafka.server:type=ReplicaManager,name=IsrShrinksPerSec \\
-        kafka.server:type=ReplicaManager,name=LeaderCount \\
-        kafka.server:type=ReplicaManager,name=PartitionCount \\
-        kafka.server:type=ReplicaManager,name=UnderReplicatedPartitions \\
-        kafka.server:type=KafkaRequestHandlerPool,name=RequestHandlerAvgIdlePercent \\
-        kafka.server:type=BrokerTopicMetrics,name=TotalProduceRequestsPerSec \\
-        kafka.server:type=BrokerTopicMetrics,name=TotalProduceRequestsPerSec,topic=* \\
-        kafka.server:type=BrokerTopicMetrics,name=TotalFetchRequestsPerSec \\
-        kafka.server:type=BrokerTopicMetrics,name=TotalFetchRequestsPerSec,topic=* \\
-        kafka.server:type=BrokerTopicMetrics,name=BytesInPerSec \\
-        kafka.server:type=BrokerTopicMetrics,name=BytesInPerSec,topic=* \\
-        kafka.server:type=BrokerTopicMetrics,name=BytesOutPerSec \\
-        kafka.server:type=BrokerTopicMetrics,name=BytesOutPerSec,topic=* \\
-        kafka.server:type=BrokerTopicMetrics,name=BytesRejectedPerSec \\
-        kafka.server:type=BrokerTopicMetrics,name=BytesRejectedPerSec,topic=* \\
-        kafka.server:type=BrokerTopicMetrics,name=FailedFetchRequestsPerSec \\
-        kafka.server:type=BrokerTopicMetrics,name=FailedFetchRequestsPerSec,topic=* \\
-        kafka.server:type=BrokerTopicMetrics,name=FailedProduceRequestsPerSec \\
-        kafka.server:type=BrokerTopicMetrics,name=FailedProduceRequestsPerSec,topic=* \\
-        kafka.server:type=BrokerTopicMetrics,name=MessagesInPerSec \\
-        kafka.server:type=BrokerTopicMetrics,name=MessagesInPerSec,topic=* \\
-        kafka.coordinator:type=GroupMetadataManager,name=NumGroups \\
-        kafka.coordinator:type=GroupMetadataManager,name=NumOffsets \\
-    \end{tabular}
-    \caption{Collected Kafka MBeans}
-    \label{tbl:kafka.controller}
-\end{table}

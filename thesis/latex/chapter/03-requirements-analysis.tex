@@ -1,15 +1,15 @@
 \chapter{Requirements and Specification}
 \label{ch:requirements}
 After a short introduction to the basic terms and Apache Flink and Apache Kafka in
-context of big data and stream processing, this chapter describes Data Quality and
+context of Big Data and Stream Processing in \autoref{ch:basic-concepts}, this chapter explains Data Quality and
 presents common criteria to measure the quality of data. Based on this criteria, available data
 for both of the systems will be inspected to build the foundation for the functional
-and non-functional requirements to be defined at the end of the chapter. The the main focus
+and non-functional requirements to be defined at the end of the chapter. The main focus
 of the coming section is the analysis of available data that will be collected by the software
 solution and not a deeper exploration according to the relevance and quality of data.
 
 \section{Data Analysis}
-
+\label{sec:data-analysis}
 \textit{"You can only control what you observe and measure."}\cite{Ebert07}. Even though logfiles, both
 provided by Apache Flink and Apache Kafka, are usefull for tracing problems in software
 systems, problems can be tracked and potential sources of error can be identified much
@@ -35,7 +35,7 @@ Runtime data to collect can be divided in three levels of abstraction:
     systems an application is running on such as cpu, memory, network, or system utilization.
 \end{enumerate}
 
-Based on Apache Flink and Apache Kafka, the following section discusses the data provided
+Based on Apache Flink and Apache Kafka, the following sections discuss the data provided
 by both of the systems and tries a classification based on the abtraction levels.
 
 \subsection{System data}
@@ -54,9 +54,8 @@ or troubleshooting. Dstat allows you to view all of your system resources in rea
 can eg. compare disk utilization in combination with interrupts from your IDE controller,
 or compare the network bandwidth numbers directly with the disk throughput (in the same
 interval)."}\cite{Wieers16}
-Apache Flink and Apache Kafka, where a system is
-composed of several interacting components
-Dstat is a command line tool, the following figure shows the immediate output of running
+
+Dstat is a command line tool, \autoref{fig:dstat-output} shows the immediate output of running
 the application with the argument "--full", which expands more detailed information about
 multiple cpus and network interfaces:
 
@@ -64,7 +63,7 @@ multiple cpus and network interfaces:
 	\centering
 	\includegraphics[width=1.0\textwidth]{../images/06-dstat-full.png}
 	\caption{Output "dstat --full"}
-	\label{dstat-output}
+	\label{fig:dstat-output}
 \end{figure}
 
 Additionally, Dstat provides multiple parameters to specify the data to be displayed, e.g.
@@ -86,9 +85,7 @@ following categories according to the parameters:
     \label{tbl:dstatcategories}
 \end{table}
 
-Although the parameters are mostly self-explanatory, a list containing short descriptions
-for each of the parameter used in Chapter 4 Architecture and Implementation is available in
-Appendix. TODO Based on the data in the extracted categories, Dstat can be considered
+Based on the data in the extracted categories, Dstat can be considered
 as a source that gives a fairly complete picture of the state of a system.
 
 Dstat is a tool only available for unix systems, and therefore not available for Windows or
@@ -99,22 +96,22 @@ the system state a certain point of time.
 \subsection{Application data}
 
 Every application running on the Java Virtual Machine, can be accessed via JMX as discussed
-in Chapter 2 Basic Concepts. According the specification, every implementation of the JVM contains
+in \autoref{sec:jmx}. According the specification, every implementation of the JVM contains
 implementations for a basic set of management interfaces, that enables the access separate parts of JVM related data,
 located in the package "java.lang.management" \cite{Javadoc16}.
 
 \begin{table}[H]
     \begin{tabular}{ll}
         \textbf{Management interface} & \textbf{JMX ObjectName} \\
-        ClassLoadingMXBean & java.lang:type=ClassLoading \\
-        OperatingSystemMXBean & java.lang:type=OperatingSystem \\
-        RuntimeMXBean & java.lang:type=Runtime \\
-        ThreadMXBean & java.lang:type=Threading \\
-        MemoryMXBean & java.lang:type=Memory \\
-        BufferPoolMXBean & java.nio:type=BufferPool,name=* \\
-        GarbageCollectorMXBean & java.lang:type=GarbageCollector,name=* \\
-        MemoryManagerMXBean & java.lang:type=MemoryManager,name=* \\
-        MemoryPoolMXBean & java.lang:type=MemoryPool,name=* \\
+        \verb|ClassLoadingMXBean| & java.lang:type=ClassLoading \\
+        \verb|OperatingSystemMXBean| & java.lang:type=OperatingSystem \\
+        \verb|RuntimeMXBean| & java.lang:type=Runtime \\
+        \verb|ThreadMXBean| & java.lang:type=Threading \\
+        \verb|MemoryMXBean| & java.lang:type=Memory \\
+        \verb|BufferPoolMXBean|& java.nio:type=BufferPool,name=* \\
+        \verb|GarbageCollectorMXBean| & java.lang:type=GarbageCollector,name=* \\
+        \verb|MemoryManagerMXBean| & java.lang:type=MemoryManager,name=* \\
+        \verb|MemoryPoolMXBean| & java.lang:type=MemoryPool,name=* \\
     \end{tabular}
     \caption{"Default" JMX JVM data}
     \label{tbl:jmxjvmdata}
@@ -125,43 +122,42 @@ and the one the ones that doesn't. The asterisk indicates the existence of multi
 the result of a query for the object name "java.lang:type=GarbageCollector,name=*" results in multiple data sets according
 to existing garbage collector names.
 
-This "default" set of management interfaces provides a deep insight into JVM data, is
+This "default" set of management interfaces provides a deep insight into JVM-related data of the underlying application, is
 available for Apache Flink and Apache Kafka and will be included in the software solution
-in Chapter 4.
+in discussed in \autoref{ch:implementation}.
 
 \subsubsection{Apache Flink}
 
-Apache Flink provides application data via its monitoring API, a RESTful API, see
-Chapter 2 Basic Concepts, that delivers JSON data based on HTTP
+Apache Flink provides application data via its monitoring API, a RESTful API following the principles introduced in \autoref{sec:rest},
+ that delivers JSON data based on HTTP
 GET requests. It can be used to query general cluster information and status and
 statistics of running and completed jobs. The dashboard that comes with Apache Flink
 uses this monitoring API, but is designed to be used also by custom monitoring tools. The
 monitoring API runs as part of the JobManager and listens at post 8081 by default. All requests
-are of the sample form http://hostname:8081/jobs, below a list of available REST resources that
-will be used to fetch cluster- and job-related data for Apache Flink in Chapter 6 Implementation,
-see Appendix A for the corresponding JSON responses.
+are of the sample form \verb|http://hostname:8081/jobs|, below a list of available REST resources that
+will be used to fetch cluster- and job-related data for Apache Flink in \autoref{ch:implementation}.
 
 \begin{table}[H]
     \begin{tabular}{ll}
         \textbf{API path} & \textbf{Description} \\
-        /config & Server setup \\
-        /overview & Cluster status \\
-        /jobs & Job ids by status running, finished, failed, canceled. \\
-        /jobs/{jobId} & Job details, dataflow plan, status, timestamps of state transitions \\
-        /jobs/{jobId}/exceptions &  Exceptions that have been observed by the job \\
-        /jobs/{jobId}/config & User-defined execution config used by the job \\
+        \verb|/config| & Server setup \\
+        \verb|/overview| & Cluster status \\
+        \verb|/jobs| & Job ids by status running, finished, failed, canceled. \\
+        \verb|/jobs/{jobId}| & Job details, dataflow plan, status, timestamps of state transitions \\
+        \verb|/jobs/{jobId}/exceptions| &  Exceptions that have been observed by the job \\
+        \verb|/jobs/{jobId}/config| & User-defined execution config used by the job \\
     \end{tabular}
     \caption{HTTP monitoring endpoints Apache Flink}
     \label{tbl:http-api-flink}
 \end{table}
 
-Appendix A provides a list with sample JSON response according to this REST endpoints. TODO
+Appendix A provides a list with sample JSON responses according to this REST endpoints. TODO
 
 Since version 1.1.0, Apache Flink also provides a rudimentary metrics system that exposes
 basic data for the Java Virtual Machine, the JobManagers and TaskManagers are running
 on. This data includes inter alia cpu usage or memory consumption, as well as basic
-information about running jobs. According to the "default" JVM data described in Table 3.2
-and the data provided by the monitoring REST api, the metrics system in its current version
+information about running jobs. According to the "default" JVM data described in \autoref{tbl:jmxjvmdata}
+and the data provided by the monitoring API in \autoref{tbl:http-api-flink}, the metrics system in its current version
 represents just an excerpt of the data that will be collected anyway.
 
 \subsubsection{Apache Kafka}
@@ -213,8 +209,6 @@ previously described on their quality:
     in the real world.
 \end{enumerate}
 
-\subsection{Results}
-
 According to the examinations of system and application data available for Apache Flink and Apache Kafka,
 the following matrix of data sources results for both of the systems:
 
@@ -227,7 +221,7 @@ the following matrix of data sources results for both of the systems:
 \textbf{Application data (REST)} & X & - \\
 \end{tabular}
 \caption{Data source matrix}
-\label{data-source-matrix}
+\label{tbl:data-source-matrix}
 \end{table}
 
 Regarding the criteria of Data Quality, the following statements can be made:
@@ -243,9 +237,9 @@ Regarding the criteria of Data Quality, the following statements can be made:
     \item The data is \textbf{timely}. Dstat, JMX and REST data describe the state at the point when the data is
     queried.
     \item The data is not redundancy-free! The "default" JMX data provided by the implementation of the JVM and the
-    application data for Apache Flink available since version 1.1.0 both contain cpu, memory, garbage-collector, et al,
-    data based on the management interfaces listed in Table 3.2. The same applies for the data available via Apache Flink's
-    monitoring API and the application metrics regarding jobs and Job-/TaskManager information.
+    application data for Apache Flink available since version 1.1.0 both contain cpu, memory, garbage-collector, et al.
+    data based on the management interfaces listed in \autoref{tbl:jmxjvmdata}. The same applies for the data available
+    via Apache Flink's monitoring API in \autoref{tbl:http-api-flink} and the application metrics regarding jobs and Job-/TaskManager information.
 \end{enumerate}
 
 To summarise the results of the data analysis, there're three different sources for collecting system and application
@@ -258,9 +252,9 @@ Apache Flink. The full set of Flink related application data is exposed via its 
 monitoring API.
 
 According to the criteria introduced above, a certain level of Data Quality can be assumed, because the data sufficiently
-matches these criteria except. The only exception is the criterion that requires data to be free of redundancies. The metrics
+matches these criteria. The only exception is the criterion that requires data to be free of redundancies. The metrics
 for Apache Flink are just a very small excerpt of the JVM and application related data that will be collected anyway according
-to Table 3.2 and Table 3.3.
+to \autoref{tbl:jmxjvmdata} and \autoref{tbl:http-api-flink}.
 
 \section{Functional Requirements}
 
@@ -270,7 +264,7 @@ persistence system to become available for possible consumers like visualization
 analytical processes or as a data source for applications from the context of Machine Learning
 for example.
 
-From this, three main functional requirements derive:
+From this, two main functional requirements derive:
 \begin{enumerate}
     \item Collection of data from Apache Flink and Apache Kafka source systems.
     \item Storage of collected data in a persistent medium.
@@ -280,12 +274,12 @@ In preparation of this thesis my supervisor Prof. Dr. Stefan Edlich once said \t
 alles, was nicht bei drei auf dem Baum ist"}, which leads to the requirement to collect as much data
 as possible. As a result, available data sources for has been inspected in the previous secion and the
 software solution must provide a mechanism to collect data from the sources discussed in the data source
-matrix shown in Table 3.4.
+matrix shown in \autoref{tbl:data-source-matrix}.
 
 The collected data must be brought into format, that enables transmitting and storing structured data.
 Because nowadays usually the JavaScript Object Notation (JSON) is used for transmitting and storing
 structured data, the data collected on Apache Flink and Apache Kafka must be transformed into its JSON
-representation, before the data will be transmitted to the storage system. Another advantage of JSON is
+representation, before the data will be send to the storage system. Another advantage of JSON is
 that it independent of any programming language, parsers for any language are available.
 
 At the time of this thesis, the concrete usage scenarios of the collected data are not yet known.
@@ -325,7 +319,7 @@ constraints upon the systems behaviour.
     it arrives in the storage system is set as a criterion.
 
     \item \textbf{Extensibility:} The collector architecture should be easy to adapt for other source systems
-    like Apache Spark,independent of programming languages used for the collection and storage of data.
+    like Apache Spark, independent of programming languages used for the collection and storage of data.
 
     \item \textbf{Scalability:} Apache Flink and Apache Kafka systems are composed of several interacting components, they
     operate in clustered environments. The software must be scallable in a way, where it does not matter whether to collect
