@@ -2,45 +2,52 @@
 
 \section{Motivation}
 
-In preparation of this thesis, I first got in contact with Prof. Dr. Stefan Edlich on January 29th
-this year and presented an own idea for a topic of a bachelor's thesis. At this time, I was
-visiting my last course at Beuth University, the software-project which is spread over two semesters
-aiming to design and implement a software application in cooperation with software related companies
-based in Berlin, which was Lieferando in my case, an online food order service. During this project,
-I got in touch with a lot of technologies like Apache Kafka, Apache Spark, Cassandra, Elasticsearch
-and Consul, all together well known to me as 'buzzwords' from technology-blogs and magazines.
+In preparation of this thesis, I first got in contact with Prof. Dr. Stefan Edlich on January
+29th this year and presented an own idea for a topic of a bachelor's thesis. At this time,
+I was visiting my last course at Beuth University, the software-project which is spread
+over two semesters aiming to design and implement a software application in cooperation
+with software related companies based in Berlin, which was Lieferando in my case, an
+online food order service. During this project, I got in touch with a lot of technologies
+like Apache Kafka, Apache Spark, Cassandra, Elasticsearch and Consul, all together well
+known to me as 'buzzwords' from technology-blogs and magazines.
 
-Because I was interested to learn a bit more about that "big-data-streaming-thing" and especially how
-to build software using stream processing frameworks, I decided my thesis to be in this big data context
-and created a working title "Design And Implementation Of A 'Data Processing Pipeline'” To Transform
-Continous Monititoring Data Streams". The basic idea was to aggregate data from REST RabbitMQ endpoints,
-send this raw data to a stream processor and create a model which fits the monitoring domain and store
-this data in a storage system which enables further data analytics.
+Because I was interested to learn a bit more about that "big-data-streaming-thing" and
+especially how to build software using stream processing frameworks, I decided my thesis
+to be in this big data context and created a working title "Design And Implementation Of
+A Data Processing Pipeline” To Transform Continous Monititoring Data Streams". The
+basic idea was to aggregate data from REST RabbitMQ endpoints, send this raw data
+to a stream processor and create a model which fits the monitoring domain and store this
+data in a storage system which enables further data analytics.
 
-During the following email correspondence, Prof. Dr. Stefan Edlich he suggested me to get the data
-from the the streaming platforms components itself, instead of a RabbitMQ queue as my idea suggested.
-So he presented one of his own topics which was quite congruent to my own idea with the given title
-\textit{Design and Implementation of a Tool to Collect Execution- and Service-Data of Big Data Analytics
-Applications}, which I finally choosed to be the one to work out.
+During the following email correspondence, Prof. Dr. Stefan Edlich he suggested me to
+fetch the data from the the streaming platforms components itself, instead of a RabbitMQ
+queue as my idea suggested. So he presented one of his own topics which was quite
+similar to my own idea with the given title \textit{"Design and Implementation of a Tool to
+Collect Execution- and Service-Data of Big Data Analytics Applications"}, which I choosed to
+be the one to work out at last.
 
-This topic is located on germans biggest big data research project "Berlin Big Data Center", which
-Prof. Dr. Stefan Edlich is a member of. Within the project, a program will be developed, which collects
-and stores relevant data of streaming platforms like Apache Flink, Apache Kafka or Apache Spark,
-with the overall aim to build a software that is able to "learn", based on the data that
-will be collected by the system that is proposed in this thesis.
+This topic is located on germans biggest big data research project "Berlin Big Data Center",
+which Prof. Dr. Stefan Edlich is a member of. Within the project, a program will be
+developed, which collects and stores relevant data of streaming platforms like Apache
+Flink, Apache Kafka or Apache Spark, with the overall aim to build a software that will be
+able to "learn" based on the data that will be collected by the system that is proposed in
+this thesis.
 
-Apache Flink is a "new player" in the plurality of stream processing frameworks. It was
-initialized by researchers of the Technische Universität Berlin, Humboldt Universität
-Berlin and Hasso-Plattner Institut Potsdam in 2008 and has emerged from the research project described
-above.  On the 12th of January 2015 Flink became a top level project of the Apache Foundation. In the
-meantime, the development of Flink is driven by a grown community (216 contributers, 22.08.2016) and
-a wide range of companies that are actively using it.
+Apache Flink is a "new player" in the plurality of stream processing frameworks. It
+was initialized by researchers of the Technische Universität Berlin, Humboldt Universität
+Berlin and Hasso-Plattner Institut Potsdam in 2008 and has emerged from the research
+project described above.  On the 12th of January 2015 Flink became a top level project
+of the Apache Foundation. In the meantime, the development of Flink is driven by a
+grown community (218 contributers, August 29th 2016, see \cite{FlinkG16}) and a wide range of
+companies that are actively using it.
 
 \section{Objective}
 
-The main goal of the thesis is a working software system to ingest and store data that can be collected
-from Apache Flink and Apache Kafka. It will be examined, which data is available and can be collected
-at all, what data is relevant and how to collect from source systems.
+The main goal of the thesis is the design and implementation of a working software system
+to ingest and store data that can be collected from Apache Flink and Apache Kafka and
+represents the potential data providing component for the self-learning system described
+above. It will be examined, which data is available and can be collected at all, what data
+is relevant and how to collect from source systems.
 
 Furhermore, the collected data must be stored in a persistence system to become available
 for possible consumers like visualization applications, analytical processes or as a data
@@ -52,23 +59,26 @@ frameworks are located in, the underlying concepts will be explained only briefl
 
 \section{Structure of thesis}
 
-After a short introduction to the topics and the main goals of the present thesis in this
-chapter, Chapter 2  discusses basic concepts of big data, stream processing, introduces Apache Flink and
-Apache Kafka as representatives of widely used stream processing frameworks. In preparation of
-Chapter 3, both Representational State Transfer (REST) and the Java Management Extensions (JMX)
-as possibilities of remote data access in distributed systems will be discussed.
+After a short introduction to the topic and the main goals of the present thesis in this
+chapter, \autoref{ch:basic-concepts} discusses basic concepts of big data, stream processing and introduces
+Apache Flink and Apache Kafka as representatives of widely used stream
+processing frameworks. In preparation of \autoref{ch:requirements}, both Representational State Transfer (REST)
+and the Java Management Extensions (JMX) as possibilities of remote data access in
+distributed systems will be discussed.
 
-Chapter 3 examines Apache Flink and Apache Kafka regarding to the provided data both of the systems.
-The different sources for the data collection will be described, as well what data should be collected
-and stored in a persistence system regarding to its relevance and data quality. According to the results
-of the data analysis, the functional and non-functional requirements of the system being developed will
-be introduced at the end of the chapter.
+\autoref{ch:requirements} examines Apache Flink and Apache Kafka regarding to the provided data
+both of the systems. The different sources for the data collection will be described, as
+well what data should be collected and stored in a persistence system regarding to its
+relevance and data quality. According to the results of the data analysis, the functional
+and non-functional requirements of the system being developed will be introduced at the
+end of the chapter.
 
-Based on the requirements elaborated in Chapter 3, Chapter 4 introduces the system architecture by
-giving a detailed conceptional overview of the components involved, whereas Chapter 5 describes
-implementation of the details for selected items.
+Based on the elaborated requirements, \autoref{ch:architecture} introduces the system architecture by
+giving a detailed conceptional overview of the components involved, whereas \autoref{ch:implementation}
+discusses implementation details for selected items.
 
-In chapter 6 we'll see how to setup the technical environment for the usage of the prototype
-to verify the correct functionality related to the requirements defined in Chapter 4.
+\autoref{ch:evaluation} introduces the local test environment and gives an detailed introduction to setup
+the technical environment for and the usage of the prototype to verify the correct functionality
+related to the requirements defined in \autoref{ch:requirements}.
 
-The last Chapter 7 covers a conclusion and gives a resumee of the present work.
+The last \autoref{ch:conclusion} covers a conclusion and gives a resumee of the present work.

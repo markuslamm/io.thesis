@@ -90,7 +90,11 @@
 \usepackage{wrapfig}
 
 %Ermöglicht Verknüpfungen innerhalb des Dokumentes (e.g. for PDF), Links werden durch "hidelink" nicht explizit hervorgehoben
-\usepackage[hidelinks,german]{hyperref}
+\usepackage[english]{hyperref}
+
+\addto\extrasenglish{%
+  \renewcommand{\chapterautorefname}{Chapter}%
+}
 
 %Einbindung und Verwaltung von Literaturverzeichnissen
 \usepackage{csquotes} %wird von biber benötigt

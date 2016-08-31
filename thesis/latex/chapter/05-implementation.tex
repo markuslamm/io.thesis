@@ -1,5 +1,5 @@
 \chapter{Implementation}
-
+\label{ch:implementation}
 After Chapter 4 "System Architecture" has shown an overview of the main components of
 the system platform and explained the interaction between them, this chapter discusses implementation
 details for all major components of the system architecture, including several
@@ -150,7 +150,7 @@ As one of the non functional requirements in Chapter 3, the client implementatio
 on source systems regarding system resources like cpu or disk usage. To make the code as "non-blocking" as possible,
 the implementation is based on the usage of CompletableFutures. It models an asynchronous computation and provides
 a reference to its results that will be available when the computation itself is completed. These computations like the JMX
-access in the example above, are potentially time-consuming \cite{TODO}. The CompletableFuture allows the caller thread to return immediately
+access in the example above, are potentially time-consuming \cite{Java8}. The CompletableFuture allows the caller thread to return immediately
 to perform other operations instead of waiting for the result of the computation of JMX memory data, by delegating to a
 separate thread performing the operations defined in the CompletableFuture.
 
