@@ -1,7 +1,5 @@
 \chapter{Introduction}
-
 \section{Motivation}
-
 In preparation of this thesis, I first got in contact with Prof. Dr. Stefan Edlich on January
 29th this year and presented an own idea for a topic of a bachelor's thesis. At this time,
 I was visiting my last course at Beuth University, the software-project which is spread
@@ -12,8 +10,8 @@ like Apache Kafka, Apache Spark, Cassandra, Elasticsearch and Consul, all togeth
 known to me as 'buzzwords' from technology-blogs and magazines.
 
 Because I was interested to learn a bit more about that "big-data-streaming-thing" and
-especially how to build software using stream processing frameworks, I decided my thesis
-to be in this big data context and created a working title "Design And Implementation Of
+especially how to build software using Stream Processing frameworks, I decided my thesis
+to be in this Big Data context and created a working title "Design And Implementation Of
 A Data Processing Pipeline” To Transform Continous Monititoring Data Streams". The
 basic idea was to aggregate data from REST RabbitMQ endpoints, send this raw data
 to a stream processor and create a model which fits the monitoring domain and store this
@@ -26,14 +24,14 @@ similar to my own idea with the given title \textit{"Design and Implementation o
 Collect Execution- and Service-Data of Big Data Analytics Applications"}, which I choosed to
 be the one to work out at last.
 
-This topic is located on germans biggest big data research project "Berlin Big Data Center",
+This topic is located on germans biggest Big Data research project "Berlin Big Data Center",
 which Prof. Dr. Stefan Edlich is a member of. Within the project, a program will be
 developed, which collects and stores relevant data of streaming platforms like Apache
 Flink, Apache Kafka or Apache Spark, with the overall aim to build a software that will be
 able to "learn" based on the data that will be collected by the system that is proposed in
 this thesis.
 
-Apache Flink is a "new player" in the plurality of stream processing frameworks. It
+Apache Flink is a "new player" in the plurality of Stream Processing frameworks. It
 was initialized by researchers of the Technische Universität Berlin, Humboldt Universität
 Berlin and Hasso-Plattner Institut Potsdam in 2008 and has emerged from the research
 project described above.  On the 12th of January 2015 Flink became a top level project
@@ -42,7 +40,6 @@ grown community (218 contributers, August 29th 2016, see \cite{FlinkG16}) and a 
 companies that are actively using it.
 
 \section{Objective}
-
 The main goal of the thesis is the design and implementation of a working software system
 to ingest and store data that can be collected from Apache Flink and Apache Kafka and
 represents the potential data providing component for the self-learning system described
@@ -53,17 +50,15 @@ Furhermore, the collected data must be stored in a persistence system to become 
 for possible consumers like visualization applications, analytical processes or as a data
 source for applications from the context of Machine Learning for example.
 
-This thesis will not be a deep introduction into big data, stream processing or covers deeper
+This thesis will not be a deep introduction into Big Data, Stream Processing or covers deeper
 details of the internals of Apache Flink and Apache Kafka. To understand the context this
 frameworks are located in, the underlying concepts will be explained only briefly.
 
 \section{Structure of thesis}
-
 After a short introduction to the topic and the main goals of the present thesis in this
-chapter, \autoref{ch:basic-concepts} discusses basic concepts of big data, stream processing and introduces
-Apache Flink and Apache Kafka as representatives of widely used stream
-processing frameworks. In preparation of \autoref{ch:requirements}, both Representational State Transfer (REST)
-and the Java Management Extensions (JMX) as possibilities of remote data access in
+chapter, \autoref{ch:basic-concepts} discusses basic concepts of Big Data, Stream Processing and introduces
+Apache Flink and Apache Kafka as representatives of widely used streaming frameworks. In preparation of \autoref{ch:requirements},
+both Representational State Transfer (REST) and the Java Management Extensions (JMX) as possibilities of remote data access in
 distributed systems will be discussed.
 
 \autoref{ch:requirements} examines Apache Flink and Apache Kafka regarding to the provided data
