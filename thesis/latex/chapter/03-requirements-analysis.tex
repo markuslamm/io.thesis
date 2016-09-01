@@ -39,7 +39,7 @@ Based on Apache Flink and Apache Kafka, the following sections discuss the data 
 by both of the systems and tries a classification based on the abtraction levels.
 
 \subsection{System data}
-
+\label{sec:system-data}
 System data refers to the data provided by the computer system on the lowest level of
 abstraction and allows observation of system-related data. On unix-based systems, a
 variety of system tools is well known to system administrators to monitor the performance
@@ -94,7 +94,7 @@ cases, this fact can be neglected because this tool offers a wide range of data 
 the system state a certain point of time.
 
 \subsection{Application data}
-
+\label{sec:application-data}
 Every application running on the Java Virtual Machine, can be accessed via JMX as discussed
 in \autoref{sec:jmx}. According the specification, every implementation of the JVM contains
 implementations for a basic set of management interfaces, that enables the access separate parts of JVM related data,
@@ -172,7 +172,7 @@ Appendix A.
 
 \subsection{Data Quality}
 
-The following introduces to the basics of the term "Data Quality" for inspection the data sources
+The following introduces to the basics of the term "Data Quality" for inspection of the data sources
 described above based on common quality criteria.
 
 Data quality refers to the quality of data as it is provided by measurements and describes the
@@ -209,8 +209,9 @@ previously described on their quality:
     in the real world.
 \end{enumerate}
 
-According to the examinations of system and application data available for Apache Flink and Apache Kafka,
-the following matrix of data sources results for both of the systems:
+According to the examinations of system and application data available for Apache Flink and Apache Kafka in
+\autoref{sec:system-data} and \autoref{sec:application-data}, the following matrix of data sources results
+for both of the systems:
 
 \begin{table}[H]
 \begin{tabular}{lll}
@@ -232,8 +233,8 @@ Regarding the criteria of Data Quality, the following statements can be made:
     \item The data sources are well known and trusted, therefore they are \textbf{reliable}.
     \item The Consistency of data needs to be evaluated be comparing data sets over a period of time,
     but will be assumed because the data sources are based on known applications and specifications.
-    \item The data is \textbf{accurate}, they represent the "real world" with a description of the state of the
-    underlying system.
+    \item The data is \textbf{accurate}, they represent the "real world" with a description of the system and application
+    state of the underlying system.
     \item The data is \textbf{timely}. Dstat, JMX and REST data describe the state at the point when the data is
     queried.
     \item The data is not redundancy-free! The "default" JMX data provided by the implementation of the JVM and the
@@ -259,15 +260,16 @@ to \autoref{tbl:jmxjvmdata} and \autoref{tbl:http-api-flink}.
 \section{Functional Requirements}
 
 The main goal of the thesis is a working software system to collect system and application data available
-for Apache Flink and Apache Kafka. Furhermore, the collected data must be stored in a
+for Apache Flink and Apache Kafka. Furhermore, the collected data must be tansferred and stored in a
 persistence system to become available for possible consumers like visualization applications,
 analytical processes or as a data source for applications from the context of Machine Learning
 for example.
 
-From this, two main functional requirements derive:
+From this, the following three main functional requirements derive:
 \begin{enumerate}
     \item Collection of data from Apache Flink and Apache Kafka source systems.
-    \item Storage of collected data in a persistent medium.
+    \item Transport of collected data to the storage system.
+    \item Storage of collected data in a database.
 \end{enumerate}
 
 In preparation of this thesis my supervisor Prof. Dr. Stefan Edlich once said \textit{"Sie sammeln
@@ -276,11 +278,11 @@ as possible. As a result, available data sources for has been inspected in the p
 software solution must provide a mechanism to collect data from the sources discussed in the data source
 matrix shown in \autoref{tbl:data-source-matrix}.
 
-The collected data must be brought into format, that enables transmitting and storing structured data.
+The collected data must be brought into format, that enables the transport and storage of structured data.
 Because nowadays usually the JavaScript Object Notation (JSON) is used for transmitting and storing
 structured data, the data collected on Apache Flink and Apache Kafka must be transformed into its JSON
 representation, before the data will be send to the storage system. Another advantage of JSON is
-that it independent of any programming language, parsers for any language are available.
+that it independent of any programming language, parsers for any languages are available.
 
 At the time of this thesis, the concrete usage scenarios of the collected data are not yet known.
 As is not yet known when the data is needed, the process of data collection must provide a mechanism
@@ -301,7 +303,9 @@ This results in the following functional requirements:
 	\item Collect "default" JVM data using JMX for both systems
 	\item Collect application data using JMX for both systems
 	\item Collect application data using REST for Apache Flink
-	\item Data must be transfered into a JSON model
+	\item The collection process must be able to be started/stopped
+	\item Data must be converted into a JSON model
+	\item Data must be transfered to the storage system
 	\item Data must be stored in JSON format
 \end{itemize}
 
@@ -313,8 +317,8 @@ to accomplish, the next section introduces the non-functional requirements, some
 constraints upon the systems behaviour.
 
 \begin{enumerate}
-    \item \textbf{Performance:} the data collection implementation doesn't cause a negative impact regarding
-    system resources like cpu or disk usage on the systems. On architectural level, the collected data should be
+    \item \textbf{Performance:} The data collection implementation doesn't cause a negative impact regarding
+    system resources like cpu or disk usage on source systems. On architectural level, the collected data should be
     available in the database in real-time / near real-time. A duration of 2 seconds from leaving the source system until
     it arrives in the storage system is set as a criterion.
 
@@ -333,9 +337,12 @@ constraints upon the systems behaviour.
 
     \item \textbf{Simplicity:} Data consumers and producers should be independent in the way that no specialized operations
     for interchanging data are required.
-
 \end{enumerate}
 
 \section{Summary}
 
-Summarize results, demarcation criteria
+In preparation for the software platform that will be introduced in \autoref{ch:architecture}, this chapter discussed
+data sources available for Apache Flink and Apache Kafka, which led to the conclusion to collect system data using the Dstat
+system tool to gather data related to cpu, disk, memory resources and so on. The Java Management Extensions (JMX) will be used,
+to access application data for both of the systems. In addition, Apache Flink provides a monitoring API, which will be
+queried to gain access to detailed information regarding cluster status and jobs.
