@@ -243,7 +243,7 @@ for storing the received JSON data Elasticsearch.
 
 \section{Elasticsearch Index}
 
-Elasticsearch is distributed, scalable, and highly available full-text search engine based on Apache Lucene.
+Elasticsearch is distributed, scalable, and highly available full-text search engine based on the Apache Lucene search index.
 It provides an HTTP web interface for managing, storing and quering schema-free JSON documents and is a widely used storage system
 of Big Data Analytics Applications. The search engine, the Logstash-Indexer and the Kibana visualization tool in combination are
 often refered to as "ELK" and provides a an end-to-end stack for central data collection and analysis as well as a graphical
@@ -256,9 +256,19 @@ are unknown at the time of the thesis, the JSON format provides an universal str
 \section{Summary}
 
 This chapter introduced the \textit{"Collector-Platform"} as data pipeline for collecting and storing system and application data
-on Apache Flink and Apache source systems.
+on Apache Flink and Apache source systems. The pipeline starts on the \textit{CollectorClient} instances, small web services that need
+to be installed on source systems, the data that will be collected depends on the \verb|Collector| implementations registered
+in the client. Each \verb|Collector| implementation produces its own custom result formatted in JSON that will be published to a
+\textit{Kafka Message-Broker}. The \textit{Logstash-Processor} is a subcriber to the \verb|collector-outbound-topic|, thus it receives
+collected data, creates required indexes and transforms the data to be stored in Elasticsearch.
 
-open jmx port
-Summarize architecture, discuss benefits and disadvantages.
+To enable the scheduling of the data collection process, the \textit{CollectorManager} provides an access point to start and stop
+\textit{CollectorClients} using a REST resource available for each client. The REST paradigma, discussed in \autoref{sec:rest} provides
+an uniform interface for machine-to-machine communication and the exchange of data
+between participants in a distributed software system based on the existing HTTP infrastructure.
 
-software solution is a streaming platform itself
+A centralized \textit{Consul Client-Registry} as mechanism to discover \textit{CollectorClient}s independently of concrete network locations
+has been discusssed.
+
+Whereas this chapter just introduced an architectural overview of the components involved, the next \autoref{ch:implementation} discusses
+details of the implementation and the technologies used for the realization of the \textit{Collector-Platform}.
