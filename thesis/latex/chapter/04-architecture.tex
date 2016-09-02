@@ -1,45 +1,9 @@
 \chapter{System Architecture}
 \label{ch:architecture}
 
-%Welche Teilprobleme leiten sich aus der Zielstellung weiter ab?
-%Was sind die Rahmenbedingungen für die Probleme und wie können wir diese lösen.
-%Wie können wir die Probleme formalisieren? Und daraus schlussfolgern, ob sich
-%existierende Lösungen ableiten lassen.
-%Methodik/Vorgehen (diesmal ausführlich)
-%●
-%Bauen Sie auf der Methodik aus der Einführung auf.
-%Ein System bauen und dann beobachten (machen Sie wohl meistens)
-%Analytisch (sie prüfen ein mathematisches Gerüst/Algorithmus/ Theorem)
-%Jemanden aktiv Fragen (wahrscheinlich eher in den meisten Fällen nicht)
-%Übersicht bzw. Architektur
-%●
-%z.B. wenn Sie ein System bauen. Wie sieht Ihre Architektur aus? Was sind die Resultate des
-%Entwurfs? Welche Alternativen gibt es zu Ihrem Entwurf? Warum haben Sie sich gerade für
-%Ihre Lösung entschieden? Was sind deren Vor­ und Nachteile?
-%Welche Prozesse unterstützt die Architektur?
-%Datenquellen?
-%Transformationen?
-%Datenverarbeitung? ●
-%Anfrage­Schnittstellen
-%Oder aber: Der xxx Algorithmus
-%●
-%Eigenschaften des Algorithmus, Komplexität
-%Wie gehen Sie vor?
-%Beschreiben Sie was wann passiert
-%Optional: Der yyyy Algorithmus
-%●
-%Eigenschaften des Algorithmus, Komplexität
-%Wie gehen Sie vor?
-%Beschreiben Sie was wann passiert
-%Zusammenfassung (ca. 0,5 Seiten)
-%●
-%Was haben wir in diesem Kapitel gelernt?
-%Wie passt das zur Zielstellung der Arbeit
-%Wie passt das zum nächsten Kapitel?
-
 After the context in which the solution is settled has been described in \autoref{ch:basic-concepts}, \autoref{ch:requirements}
-inspected Apache Flink and Apache Kafka according available sources of data and evaluated the data based on the quality. As
-a result, the functional and non-functional requirements had been defined. According to the main goals of this thesis,
+inspected Apache Flink and Apache Kafka according available sources of data and evaluated the data based on defined criteria
+of data quality. As a result, the functional and non-functional requirements had been defined. According to the main goals of this thesis,
 the collection of system and application data from Apache Flink and Apache Kafka and storage of collected data in a
 centralized persistence system, the following sub-problems had been identified:
 
@@ -64,8 +28,8 @@ as fast as possible. The components will be discussed at architectural level, wh
 
 According to the requirements in \autoref{ch:requirements}, the \textit{"Collector-Platform"} is responsible to perform the
 following operations, which describe the pipeline the data in running throught on each source system. Irrespective of the source system,
-the sequence remains the same for Apache Flink and Kafka or any other source system observed, it just differs in the implementation of
-data collection processes:
+the sequence remains the same for Apache Flink and Kafka or any other source system the \textit{CollectorClient} is installed on,
+it just differs in the implementations of data collection:
 
 \begin{figure}[H]
 	\centering
@@ -170,7 +134,7 @@ Besides the scheduling REST resource, the client contains an endpoint \newline \
 that provides metatdata for the individual client and is required for displaying more detailed information about the client in the
 \textit{CollectorManager}.
 
-Accourding on the \verb|Collector| implementations registered in an internal registry, the client creates a continous stream
+Corresponding to the \verb|Collector| implementations registered in an internal registry, the client creates a continous stream
 of \verb|Collector| data, a stream of "immutable facts" concerning the the system and application state of the underlying source
 system at a given point of time. Every data event created by the client contains the client's timestamp, the IP address and the port thus the
 origin of the data can identified. Appendix A contains the full JSON results for all available \textit{Collector} implementations.
@@ -189,7 +153,7 @@ a performance impact, that can be avoided by separation of collection in an indi
 \section{CollectorManager}
 \label{sec:arch-collector-manager}
 Due to the fact that Apache Flink and Apache Kafka are composed of several interacting components and thus building
-a distributed system, the \textit{"Collector-Platform"} itself builds a distributed system. Based on the requirement to provide a
+a distributed system, the \textit{"Collector-Platform"} builds a distributed system as well. Based on the requirement to provide a
 mechanism to schedule the collection process in distributed \textit{CollectorClient}s, the \textit{CollectorManager} represents the management
 component for the distributed system of clients by providing an overview of registered clients in the platform and
 the possibility to start/stop individual clients using an HTML based user interface.
@@ -207,9 +171,9 @@ correct, the client starts data collection as discussed above.
 
 \section{Consul Client-Registry}
 
-The \textit{Client-Registry} is a dedicated web service and acts as a central registry for all \textit{CollectorClient}
-in the platform and makes the information about registered clientss available for the \textit{CollectorManager} instances.
-For the realization of an public registry for distributed clients, the platform uses Consul, a service-registry, that enables the discovery
+The \textit{Client-Registry} is a dedicated web service and acts as a central registry for all \textit{CollectorClient} instances
+in the platform and makes the information about registered clients available for the \textit{CollectorManager}.
+For the realization of a public registry for distributed clients, the platform uses Consul, a service-registry, that enables the discovery
 of web services based on unique identifiers instead of host address and port information. Since the \textit{CollectorClient} is a web service itself,
 clients register with the service name \verb|collector-client| when the client application is started. The \textit{CollectorManager}
 queries the Consul node for existing instances of services named \verb|collector-client| which results in a list of registred client instances,
@@ -229,17 +193,17 @@ a scalable and flexible way to discover the providers of a given service name, \
 
 \section{Kafka Message-Broker}
 
-The Apache Kafka Message-Broker integrates distributed \textit{CollectorClient}s to an overall system by providing a
-message queue for transporting data from clients to the Logstash-Processor. The \textit{CollectorClient}s can publish
+The \textit{Kafka Message-Broker} integrates distributed \textit{CollectorClient}s to an overall system by providing a
+message queue for transporting data from clients to the \textit{Logstash-Processor}. The \textit{CollectorClient}s can publish
 its data to the queue and the other applications can asynchronously read it from the queue at any time.
 The usage of Apache Kafka as a publish-subscribe queuing service allows a separation of \textit{CollectorClient}s as publishers and the
-Logstash-Processor and other potential as subcribers by buffering messages between stream producing and consuming systems.
+\textit{Logstash-Processor} and other potential as subcribers by buffering messages between stream producing and consuming systems.
 
 \section{Logstash-Processor}
-The Logstash-Processor receives the messages that arrive in the \verb|collector-outbound-topic|. Although is is often thougth that
-Logstash is capable of processing log data only, it is a data pipeline that enable the processing and transformation of log and other
+The \textit{Logstash-Processor} receives the messages that arrive in the \verb|collector-outbound-topic|. Although is is often thougth that
+Logstash is only capable of processing log files, it is more a data pipeline that enable the processing and transformation of log and other
 event data from a variety of systems. According to this thesis, it receives custom JSON data from clients and creates the indexes
-for storing the received JSON data Elasticsearch.
+for storing the received JSON data in the \textit{Elasticsearch Index}.
 
 \section{Elasticsearch Index}
 
@@ -259,7 +223,11 @@ This chapter introduced the \textit{"Collector-Platform"} as data pipeline for c
 on Apache Flink and Apache source systems. The pipeline starts on the \textit{CollectorClient} instances, small web services that need
 to be installed on source systems, the data that will be collected depends on the \verb|Collector| implementations registered
 in the client. Each \verb|Collector| implementation produces its own custom result formatted in JSON that will be published to a
-\textit{Kafka Message-Broker}. The \textit{Logstash-Processor} is a subcriber to the \verb|collector-outbound-topic|, thus it receives
+\textit{Kafka Message-Broker}. The broker provides a data queue that decouples data producers and consumers. Moreover using
+a queing system prevents the requirement of specialized operations for exchanging data and helps to decrease the performance impact on
+Apache Flink and Apache Kafka source systems.
+
+The \textit{Logstash-Processor} is a subcriber to the \verb|collector-outbound-topic|, thus it receives
 collected data, creates required indexes and transforms the data to be stored in Elasticsearch.
 
 To enable the scheduling of the data collection process, the \textit{CollectorManager} provides an access point to start and stop
@@ -268,7 +236,7 @@ an uniform interface for machine-to-machine communication and the exchange of da
 between participants in a distributed software system based on the existing HTTP infrastructure.
 
 A centralized \textit{Consul Client-Registry} as mechanism to discover \textit{CollectorClient}s independently of concrete network locations
-has been discusssed.
+has been discussed in the context of the platform.
 
 Whereas this chapter just introduced an architectural overview of the components involved, the next \autoref{ch:implementation} discusses
 details of the implementation and the technologies used for the realization of the \textit{Collector-Platform}.
