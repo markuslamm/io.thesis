@@ -207,11 +207,11 @@ correct, the client starts data collection as discussed above.
 
 \section{Consul Client-Registry}
 
-The \textit{Client-Registry} is a dedicated web service and acts as a central registry for all data collecting components
-in the platform and makes the information about registered \textit{CollectorClient}s available for the \textit{CollectorManager} instances.
+The \textit{Client-Registry} is a dedicated web service and acts as a central registry for all \textit{CollectorClient}
+in the platform and makes the information about registered clientss available for the \textit{CollectorManager} instances.
 For the realization of an public registry for distributed clients, the platform uses Consul, a service-registry, that enables the discovery
 of web services based on unique identifiers instead of host address and port information. Since the \textit{CollectorClient} is a web service itself,
-clients register itself under the service name \verb|collector-client| when the client application is started. The \textit{CollectorManager}
+clients register with the service name \verb|collector-client| when the client application is started. The \textit{CollectorManager}
 queries the Consul node for existing instances of services named \verb|collector-client| which results in a list of registred client instances,
 that contains the required information like host and port for using the scheduling and metadata endpoints in the managers user interface.
 
@@ -225,98 +225,40 @@ that contains the required information like host and port for using the scheduli
 Using an central registry instance for discovering \textit{CollectorClient} instances decouples the \textit{CollectorManager} from the
 need to know detailed client information required for the localization of the service. Due to the fact that
 client addresses and ports are dynamically assigned and may change in distributed cloud environments, the service registry provides
-a scalable and flexible way to discover the providers of a given service name.
+a scalable and flexible way to discover the providers of a given service name, \verb|collector-client| in this case.
 
 \section{Kafka Message-Broker}
 
 The Apache Kafka Message-Broker integrates distributed \textit{CollectorClient}s to an overall system by providing a
-message queue for transporting data from clients to the Logstash-Processor. The CollectorClients can publish
+message queue for transporting data from clients to the Logstash-Processor. The \textit{CollectorClient}s can publish
 its data to the queue and the other applications can asynchronously read it from the queue at any time.
 The usage of Apache Kafka as a publish-subscribe queuing service allows a separation of \textit{CollectorClient}s as publishers and the
-Logstash-Processor and other potential as subcribers by buffering messages between stream producing systems.
+Logstash-Processor and other potential as subcribers by buffering messages between stream producing and consuming systems.
 
 \section{Logstash-Processor}
-%
+The Logstash-Processor receives the messages that arrive in the \verb|collector-outbound-topic|. Although is is often thougth that
+Logstash is capable of processing log data only, it is a data pipeline that enable the processing and transformation of log and other
+event data from a variety of systems. According to this thesis, it receives custom JSON data from clients and creates the indexes
+for storing the received JSON data Elasticsearch.
 
-TODO
-Receive messages from Message-Broker, route data, create ES index, why, describe context BDAA, compute layer
-%
 \section{Elasticsearch Index}
-TODO
-ES as search index for time-series based data, easy visualization with Kibana, why?, searchable, common in BDA, storage layer
+
+Elasticsearch is distributed, scalable, and highly available full-text search engine based on Apache Lucene.
+It provides an HTTP web interface for managing, storing and quering schema-free JSON documents and is a widely used storage system
+of Big Data Analytics Applications. The search engine, the Logstash-Indexer and the Kibana visualization tool in combination are
+often refered to as "ELK" and provides a an end-to-end stack for central data collection and analysis as well as a graphical
+presentation of raw and analyzed data.
+
+Elasticsearch allows the storage of collected data in its raw JSON format, what was a decisive criterion in the process of choosing an
+appropriate database for the \textit{"Collector-Platform"}. Due to the fact that potential consumers of data produced by \textit{CollectorClient}s
+are unknown at the time of the thesis, the JSON format provides an universal structure that can be processed by any application.
 
 \section{Summary}
+
+This chapter introduced the \textit{"Collector-Platform"} as data pipeline for collecting and storing system and application data
+on Apache Flink and Apache source systems.
 
 open jmx port
 Summarize architecture, discuss benefits and disadvantages.
 
-%software solution is a streaming platform itself
-
-%READ
-%Messaging is the art of moving message across the producer and consumer
-%group. It integrates distributed applications to an overall system by providing
-%message queues for communication between them. One application can publish
-%its messages to the queue and the other application can asynchronously read it
-%from the queue at any time. Message Broker systems persist incoming
-%messages in an enhanced type of a message queue, named topic. Sending
-%messages to the broker in the form of publishing to a specific topic and on the
-%other hand receiving messages only for the specified topic, is called publish /
-%subscribe and this therefore classifies Kafka as a publish subscribe system.
-
-%3.3 What is a Topic in Kafka?
-%Kafka provides a high-level abstraction called Topic. Users define a new Topic
-%(file) for each new category of messages (documents) and the messages are
-%published to a category or stream name. A topic allows the message broker to
-%deliver messages to multiple independent consumers.
-%Kafka has a very simple storage layout. Each partition of a topic (file)
-%corresponds to a logical log. Each time a producer publishes a message to a
-%topic, the broker appends the message to the last segment file. The message is
-%exposed to the consumers after it is flushed.
-%
-%3.4 Who are Producers in Kafka?
-%Producers are the clients publishing messages to a Topic. Producers are diverse
-%in nature and publish varied messages to different topics. A producer can
-%publish data to a topic of its choice and is responsible for choosing which
-%message will be assigned to which partition within a topic. Kafka producer client
-%is configured to send messages in either a synchronous or asynchronous
-%fashion to the topics. The asynchronous mode allows the client to batch small
-%messages into larger data chunks before sending them over the network.
-%
-%3.5 What is a Message Broker?
-%A Message Broker is a key element of the solution. It is a dedicated component
-%which decouples the source and target systems by assuming full responsibility
-%for coordinating communication between all the connected nodes. The
-%published messages are stored at a set of servers called Brokers. Each Kafka
-%cluster consists of one or more Brokers. The partitions of a Topic are distributed
-%over the Brokers of the Kafka cluster with each Broker handling data and
-%requests for a share of the partitions. Each partition is replicated across a
-%configurable number of Brokers for fault tolerance. The main tasks of a message
-%broker are the dynamic registration of endpoints, determining the location of a
-%target system, and performing the communication as well as the transformation
-%of a message from one format to another.
-%A consumer can subscribe to one or more topics from the brokers and consume
-%the subscribed messages by pulling data from the Brokers. The Broker locates
-%the requested message by searching the list and sends the data back to the
-%consumer. After a consumer receives a message it computes the location of the
-%next message to consume and uses it in the next pull request.
-%
-%3.6 Who are Consumers in Kafka?
-%The term consumer describes the clients that consume messages from a Topic.
-%Producers and Consumers can simultaneously write to and read from multiple
-%topics. A consumer always consumes messages from a particular partition
-%sequentially. If the consumer acknowledges a particular message it implies that
-%the consumer has received all the messages prior to that message. This leads to
-%the fact that Kafka relies on the pull-model to reach maximum performance on
-%the consumption side.
-%Apache Kafka does not keep track of what messages have been consumed on
-%the Broker and therefore does not rely on any acknowledgments from the
-%consumer. Instead, the position of a consumer is just a single integer on a
-%partition which defines the offset of the next message to consume. As a side
-%benefit, it permits the consumer to rewind back to an old offset and re-consume
-%data. Each consumer is represented as a process and these processes are
-%organized within groups called consumer groups as Kafka supports the concept
-%of consumer groups. Each consumer group consists of one or more consumers
-%that jointly consume a set of subscribed topics.
-
-
-
+software solution is a streaming platform itself
