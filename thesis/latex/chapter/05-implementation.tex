@@ -72,6 +72,7 @@ The software-solution uses Maven as Build- and Dependencymanagement tool, and is
 The following sections explains the content and and discusses implementation details for each of these modules separately.
 
 \section{Collectors}
+\label{sec:impl-collectors}
 
 The collector module contains the implementations for the required collectors based on Table 3.4 in
 Section 3.1 "Data Quality". It also defines a "collector-commons" module containing basic artifarcts
@@ -364,6 +365,7 @@ of Apache Flink. Furthermore the data is redundant, because the implementation o
 more detailed set of JVM and job data.
 
 \section{CollectorClient}
+\label{sec:impl-collector-client}
 
 After discussing the Collector implementations in the previous section, this section introduces the CollectorClient,
 the core software component representing the entry point for bringing data into the system. This is the component that needs be

@@ -57,7 +57,7 @@ centralized persistence system, the following sub-problems had been identified:
 \end{enumerate}
 
 The following chapter introduces the \textit{"Collector-Platform"} as a pipeline of data collection, transport and storage with the purpose
-to collect data of distributed Apache Flink and Kafka and make it available for consumers that are potentially unknown at present
+to collect data of distributed Apache Flink and Kafka systems and make it available for consumers that are potentially unknown at present
 as fast as possible. The components will be discussed at architectural level, whereas implementation details follow in \autoref{ch:implementation}.
 
 \section{The "Collector-Platform"}
@@ -104,12 +104,40 @@ source systems.
 	\label{fig:collector-platform}
 \end{figure}
 
-For a deeper understanding, the following sections introduce the components and their corresponding functions defined above.
+The \textit{CollectorClient}s installed on source systems, registers itself on application start with a central client registry, using
+an unique identifier \verb|collector-client| \textbf{(1)}. This registry manages all registred clients and provides an interface
+that allows the \textit{CollectorManager} to fetch network location (IP address and port) data for all clients that is required
+to address the individual clients. The \textit{CollectorManager} uses this interface to display a list of all registred
+\textit{CollectorClients} in a basic HTML user interface \textbf{(2,3)}. In addition, \textit{CollectorManager} fetches additional
+meta information of the client \textbf{(4)}, like its host name and registered \textit{Collector}s, provided by the implementation
+of the \textit{CollectorClient}.
+
+In the next step, the process of data collection can be triggered using the \textit{CollectorManager}s user interface \textbf{(5)}.
+Therefore, the \textit{CollectorManager} sends a HTTP \verb|POST| request with an appropriate JSON request body and receives a
+status response that containing the status of the \textit{CollectorClient} that can be \verb|RUNNING| or \verb|STOPPED|,
+according to the action that is triggered by the web user interface.
+
+Now, the \textit{CollectorClient} is active and collects data corresponding the \textit{Collector} implementations registered in
+the clients internal registry, see \autoref{sec:impl-collector-client}. Once all data of a single
+\textit{Collector} implementation has been collected and transformed into a structured JSON format, the result will be enriched
+with a client timestamp and the clients identification given by the IP address and the port the client is availabe at, and published to the
+\textit{Kafka Message-Broker} \textbf{(6)}.
+
+The \textit{Kafka Message-Broker} is the next step in the data pipeline and is the integration point for possible consumers
+of data received by distributed \textit{CollectorClient}s. Due to the publish-subscribe principle Apache Kafka is based on,
+potential consumers just need to subscribe to the \verb|collector-outbound-topic| for the data to become accessible.
+
+The Logstash-Processor is the primary consumer of the data produced by \textit{CollectorClient}s. It receives outgoing \textit{CollectorClient}
+data by subscribing to the \verb|collector-outbound-topic| topic, the clients publish the data into \textbf{(7)}. The Logstash-Processor performs
+two essential tasks: it creates the required indexes for storing the data in Elasticserach and converts incoming data into an internal
+message format that allows the data to be stored in Elasticsearch.
+
+The Elasticsearch Index ist the last step in the \textit{"Collector-Platform"} \textbf{(8)}. It is the data sink where all collected data will be stored at.
+The data is now available for querying or visualization.
+
+For a deeper understanding, the following sections introduce the components and their corresponding functions described above.
 Chosen frameworks and technologies will not be discussed in much detail, but it will be explained why each technology or
 approach has been chosen.
-%TODO:
-%Distributed system -> distributed collection with clients,
-
 
 \section{The "Collector" implementations}
 
@@ -124,37 +152,44 @@ and Apache Kafka using the JMX interface (\autoref{tbl:jmxjvmdata}) and via REST
 The CollectorClient is main entry point for bringing data into the platform and belongs to the "Data" layer according to
 \autoref{img:taxonomy-bigdata-applications}. It is a simple Java application and will have to be installed on source systems.
 The module uses the concrete \textit{Collector} implementations described above, according to the source system and
-depending on which \textit{Collector}s are registered in the client. The client contains and internal registration, used for the
-aggregation of an overall data result based on the data retrieved of the collectors registred.
+depending on which \textit{Collector}s are registered in the client. The client contains and internal registration to enable
+a mechanism to add or remove \verb|Collector| implementations without the need to change the implementation of the
+\textit{CollectorClient}.
 
 For the scheduling purposes of the collection process, the client provides a REST resource that enables the start and stop of data
-collection from the HTML user interface provided by the \textit{CollectorManager} component following in \autoref{sec:arch-collector-manager}.
-This endpoint available under the location \verb|http://{client-host}:{client-port}/client/schedule| expects HTTP \verb|POST| requests
+collection from the HTML user interface provided by the \textit{CollectorManager} component.
+This endpoint is available under the location \verb|http://{client-host}:{client-port}/client/schedule| and expects HTTP \verb|POST| requests
 with a request body containing JSON data with an appropriate \textit{ScheduleRequest} for starting/stopping the data collection process.
 
 Once started, the collection process that will be triggered by the client itself in a configurable interval, which is 5 seconds by default,
 the resulted data will be send to an Apache Kafka topic called \verb|collector-outbound-topic|. The name of the topic explains the
-purpose of the topic, it acts as the data sink for \textit{CollectorClients} and separates the clients as the producing compontent
+purpose of the topic, it acts as the data sink for \textit{CollectorClient}s and separates the clients as the producing compontent
 from data consumers.
 
 Besides the scheduling REST resource, the client contains an endpoint \newline \verb|http://{client-host}:{client-port}/client/metadata|
-that provides metatdata for the individual client and is required
-for displaying more detailed information about the client in the \textit{CollectorManager}.
+that provides metatdata for the individual client and is required for displaying more detailed information about the client in the
+\textit{CollectorManager}.
 
-%continuous, distributed, time-series "data feed",
-%events as "immutable facts", why? explain data samples (cpu, disk...)
-%state state of system at time, on host, at port, the type of collector and data.
+Accourding on the \verb|Collector| implementations registered in an internal registry, the client creates a continous stream
+of \verb|Collector| data, a stream of "immutable facts" concerning the the system and application state of the underlying source
+system at a given point of time. Every data event created by the client contains the client's timestamp, the IP address and the port thus the
+origin of the data can identified. Appendix A contains the full JSON results for all available \textit{Collector} implementations.
 
-%Publish(client) -> Topic <- Subscribe Logstash, Data Processing Pipeline
-%
-%continuous, distributed, time-series "data feed", difference raw and aggregated\cite{Klepp16},
-%arch uses both, raw because of unknown data consumers, flink-job-index for demonstration
-%of SP.
+The client follows the approach to operate in a process that is separated to the JVM process the source system is running in.
+To enable the \textit{CollectorClient}s to access to the management interfaces introduced in \autoref{tbl:jmxjvmdata} on the remote JVM
+of Apache Flink and Apache Kafka, the source system must to be configured to allow the connection from a remote JMX client. \autoref{ch:evaluation}
+explains the adjustments that had been made on the example of Apache Flink. This in turn brings the disadvantage of potential
+security risks that occur by allowing remote connections on a given port.
+
+An alternative would have been to use the capabilities of dynamic bytecode intrumentation provided by the core of Java. Because
+Apache Flink and Apache Kafka both are based on the JVM, it would have been possible to instrument the Flink or Kafka process itself,
+to perform the data collection in the same process. This approach was not pursued in this thesis, because the instrumentation causes
+a performance impact, that can be avoided by separation of collection in an individual process.
 
 \section{CollectorManager}
 \label{sec:arch-collector-manager}
-Due to the fact that Big Data Analytics Applications are composed of several interacting components and thus building
-a distributed system, the "Collector-Platform" builds a distributed system itself. Based on the requirement to provide a
+Due to the fact that Apache Flink and Apache Kafka are composed of several interacting components and thus building
+a distributed system, the \textit{"Collector-Platform"} itself builds a distributed system. Based on the requirement to provide a
 mechanism to schedule the collection process in distributed \textit{CollectorClient}s, the \textit{CollectorManager} represents the management
 component for the distributed system of clients by providing an overview of registered clients in the platform and
 the possibility to start/stop individual clients using an HTML based user interface.
@@ -165,6 +200,10 @@ the possibility to start/stop individual clients using an HTML based user interf
  	\caption{Sequence diagram 'Client scheduling'}
  	\label{fig:sequence-client-scheduling}
  \end{figure}
+
+The sequence diagram above presents the process of starting an individual \textit{CollectorClient}. The client receives a HTTP
+\verb|POST| request that contains an appropriate \textit{ScheduleRequest} for starting the client. If the request is syntactically
+correct, the client starts data collection as discussed above.
 
 \section{Consul Client-Registry}
 
@@ -208,6 +247,7 @@ ES as search index for time-series based data, easy visualization with Kibana, w
 
 \section{Summary}
 
+open jmx port
 Summarize architecture, discuss benefits and disadvantages.
 
 %software solution is a streaming platform itself
