@@ -51,24 +51,35 @@ defined in \autoref{sec:fr} and \autoref{sec:nfr}.
 
 A significant approach for testing software products are automated tests that will be executed in the building process.
 In Java, unit tests are used for this purpose. The \textit{Collector-Platform} uses Maven as Build-Managemement solution,
-that mean the provided test implementations in form of JUnit test classes will be triggered automatically and the sucessfull passing
+means the provided test implementations in form of JUnit test classes will be triggered automatically and the sucessfull passing
 all existing test cases is a requirement for a successfull building process.
 
-The \textit{"Collector-Platform"}
+The test classes are divided into pure unit tests for testing the functionality of a separate class without its dependencies.
+Unit tests describe the testing of program components in isolation from other related contributing program components whereas
+integration tests refer to the overall system and often require infrastructure components like databases to be started before
+the functionality can be tested.
 
-test
-it
-coverage
+Based on the requirement collect data from different data sources, it was required to provide running instances of Apache Flink and Apache Kafka
+for testing the implementations of the respective collectors, it means most of the test in the \textit{"Collector-Platform"} are represented by
+integration tests.
 
+The Maven Failsafe-Plugin procvides a mechanism to distinguish unit and integration tests by a naming convention that unit tests
+have the ending "Test" and "IT" for integration test what allows the integration tests to be excluded from the Maven \verb|test|
+phase. The integration tests can by triggered by using the \verb|mvn verify| command, after the required infrastructure components
+had been provided, what will be explained in the next section.
 
+The build process of the \textit{"Collector-Platform"} was supported by the public build server provided by \verb|https://travis-ci.org|.
+It allows the automated software-build in form of build jobs and provides a basic build pipeline. Described by pushing to the public code
+repository on GitHub and triggering the build job automatically via webhook, the pipeline provided direct feedback of the code that has been
+implemented just now.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1.0\textwidth]{../images/07-travis.png}
+	\caption{Travis CI}
+	\label{fig:travis}
+\end{figure}
 
-%Prerequisites:
-%
-%* [java 8](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
-%* [maven](https://maven.apache.org/install.html)
-%* [docker](https://docs.docker.com/engine/installation/)
-%* [docker-compose](https://docs.docker.com/compose/install/
-%
+\section{Docker environment}
 %The application was developed and is working with the following software components:
 %
 %* ubuntu 16.04 LTS
@@ -76,27 +87,6 @@ coverage
 %* maven 3.3.3
 %* docker 1.11.2
 %* docker-compose 1.7.1
-
-Unit- and Integration tests, IT needs docker infrastructure, usually mocked JMX, REST data,
-lack of time, test separation via naming *Test and *IT via Maven Failsafe, check test coverage,
-%
-%5.4 Automatic Tests
-%Another significant approach to testing software products are automatic tests. In java, unit tests
-%are used for this purpose. We have implemented automatic tests in our solution using maven
-%project management tool and TestNG framework, which provides similar functionality as
-%JUnit framework with several new features.
-%Scenarios in automatic tests are not that different from scenarios used in automatic
-%testing. Main difference is, that in manual tests, living person needed to use applications GUI to
-%perform actions defined in test scenarios, while in automatic tests, these test scenarios are
-%written as standard java methods with corresponding annotations and no interaction with GUI is
-%needed, we simply call specific methods to complete test scenarios (same methods are called in
-%manual testing, except they are invoked by user interaction with GUI). For automatic tests, we
-%also need to prepare set of test data, for example create necessary profiling objects. We can
-%create them programmatically in code of current test code, or prepare them in form of XML and
-%parse them during test execution.
-
-\section{Docker environment}
-
 local cluster
 Short Docker intro, benefits in microservice environments, describe setup for components (docker-compose.yml),
 describe modifications made for Apache Flink and Apache Kafka to enable JMX remote access

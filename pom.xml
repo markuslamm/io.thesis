@@ -31,11 +31,6 @@
         <java.version>1.8</java.version>
     </properties>
 
-    <scm>
-        <connection>scm:git:git@bitbucket.org:markuse1501/io.thesis.git</connection>
-        <developerConnection>scm:git:git@bitbucket.org:markuse1501/io.thesis.git</developerConnection>
-    </scm>
-
     <build>
         <finalName>${project.artifactId}</finalName>
         <pluginManagement>
