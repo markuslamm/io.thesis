@@ -45,7 +45,8 @@ For its realization, Java 8 as programming language head been chosen in combinat
 the rapid implementation of self-containing, distributed applications.
 
 In this section, the focus will be on testing and evaluating the proposed system solution to ensure compliance with the criteria
-defined in \autoref{sec:fr} and \autoref{sec:nfr}.
+defined in \autoref{sec:fr} and \autoref{sec:nfr} and explains the setup of a \textit{"Collector-Platform" Cluster} for the manual
+testing of the system architecture define in \autoref{ch:architecture}.
 
 \section{Automated Tests}
 
@@ -79,18 +80,89 @@ implemented just now.
 	\label{fig:travis}
 \end{figure}
 
-\section{Docker environment}
-%The application was developed and is working with the following software components:
-%
-%* ubuntu 16.04 LTS
-%* oracle java 8
-%* maven 3.3.3
-%* docker 1.11.2
-%* docker-compose 1.7.1
-local cluster
-Short Docker intro, benefits in microservice environments, describe setup for components (docker-compose.yml),
-describe modifications made for Apache Flink and Apache Kafka to enable JMX remote access
+\section{"Collector-Platform" Cluster}
 
+According to the proposed architecture in \autoref{ch:architecture}, \textit{"Collector-Platform" Cluster} consists of the
+mandatory infrastructure components \textit{Kafka Message-Broker}, \textit{Consul Client-Registry}, \textit{Logstash-Processor} and
+\textit{Elasticserach} to fulfill the requirements discussed in \autoref{ch:requirements}. In addition one instance of
+Apache Flink's Job- and TaskManager each will be required, to create a basic Flink cluster acting as data source for the collecting client,
+as well as the \textit{Collector-Manager} componenent for managing the distributed \textit{CollectorClient} instances.
+
+One main challenge of the technical realization of the system solution was to create a cluster of application nodes operating in an
+own network distinguishable by their IP addresses. The \textit{"Collector-Platform"} uses Docker to achieve this goal.
+Docker provides a "software containerization platform" that allows to wrap applications in a complete filesystem that contains everything
+needed to run in form of a container. This container provides an isolated platform for applications to run on Docker host systems
+and contains an unix operation system and all required software components reuired by the application.
+Docker uses the resource isolation features of the Linux kernel such as cgroups and kernel namespaces and allow independent containers
+to run within a single host instance, avoiding the overhead of starting and maintaining virtual machines.
+
+The applications to be "containerized" will be defined in by a Dockerfile that defines the intructions to build the application container.
+The Docker file contains the the behavior of the application when it is started by the \verb|docker-engine|. The following
+example show the definition for the \textit{CollectorManager} component:
+
+\begin{lstlisting}[caption={Dockerfile "CollectorManager"}, captionpos=b, label={lst:dockerfile}]
+FROM anapsix/alpine-java
+MAINTAINER markus.lamm@googlemail.com
+ADD collector-manager-app/target/collector-manager-app.jar /apps/collector-manager-app.jar
+ENTRYPOINT ["java","-jar","/apps/collector-manager-app.jar"]
+\end{lstlisting}
+
+The resulting container is based on the Docker image \verb|anapsix/alpine-java| which provides an unix operating system and a Java
+installation as a base system, the \textit{CollectorManager} will be installed on. In line 3, the \verb|collector-manager-app.jar|
+will be copied from the local file system to a virtual path inside the Docker container. The last command in line 4 defines the entry point
+for the \verb|docker-engine|, this commmand will be executed on container startup, means the \textit{CollectorManager} jar file will
+be executed by the JVM provided by the \verb|anapsix/alpine-java| base image.
+
+Based on the required components discussed above the application needs the following Docker containers:
+
+\begin{itemize}
+	\item One Apache Kafka container as message broker and source system for data collection. The Kafka container depends on
+	another container for Apache Zookeper as a centralized service for configuration and distributed synchronization and is mandatory
+	for the Kafka container to work.
+	\item One Consul container as client discovery service
+	\item Two Apache Flink containers, one Job- and TaskManager as source systems
+	\item One container conatining Logstash, Elasticserach and Kibana
+	\item One container for the \textit{CollectorManager} component
+\end{itemize}
+
+For the orchestration of the container infrastructure, Docker provides a file format that allows the definion of required containers
+and their dependencies in a custom \verb|docker-compose.yml| file. The next section covers main configuration details for the containers
+of the \textit{"Collector-Platform"} cluster.
+
+\subsection{Configuration}
+
+The Apache Kafka is a core component of the platform and operates as a buffer between the data producing \textit{CollectorClient}s.
+The following excerpt from the \verb|docker-compose.yml| file defines the container for Kafka:
+\begin{lstlisting}[caption={Container definition "kafka"}, captionpos=b, label={lst:docker-kafka}]
+  kafka:
+    container_name: kafka
+    image: wurstmeister/kafka
+    ports:
+      - "9092:9092"
+      - "9997:9999"   # jmx
+      - "9097:9091"   # collector-client
+    environment:
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_HOST_NAME: 192.168.2.100
+      KAFKA_CREATE_TOPICS: "collector-outbound-topic:1:1,flink-outbound-topic:1:1"
+      JMX_PORT: 9999
+      SPRING_PROFILES_ACTIVE: kafka-broker-jmx
+      SPRING_CLOUD_CONSUL_HOST: consul
+      SPRING_CLOUD_CONSUL_PORT: 8500
+      CLIENT_PORT: 9091
+      KAFKA_BROKER_ADDRESS: kafka:9092
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      - zookeeper
+      - consul
+\end{lstlisting}
+
+
+
+%describe setup for components (docker-compose.yml),
+%describe modifications made for Apache Flink and Apache Kafka to enable JMX remote access
+\section{Docker Deployment}
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=1.0\textwidth]{../uml/deployment-diagram.jpg}
