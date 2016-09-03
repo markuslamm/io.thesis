@@ -349,24 +349,117 @@ indexes for the storage of collected data can be verified.
 To access collected data, Elasticsearch provides rich REST interface for quering the data stored in a given index, but the the ELK-Stack
 comes with Kibana, a visualization tool for time-series based data. On the example of the index created for storing data of the
 \verb|FlinkRestCollector|, the following figure shows an overview of existing data in this index:
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1.0\textwidth]{../images/13-kibana.png}
+	\caption{FlinkRestCollector data overview}
+	\label{fig:kibana}
+\end{figure}
 
+As shown above, the collected is available, it contains the client timestamp, the timestamp the data received in Elasticsearch, clients
+identification data in form of IP address and port as well as the data produced by the \textit{Collector} implementation like
+This is the end of the data pipeline in the \textit{Collector-Platform}. The same process will be repeated in the configurable interval
+of 5 seconds per default until it will be stopped performing the appropriate REST request on the \textit{CollectorClient}.
 
-%
-%CollectorDataProcessor: module to analyze the data streams creating derived streams and persist flat
-%data -> data transformation, analytics layer
-%
-%Kibana dashboard, show visualization of CollectorDataProcessor data
+The section above refers to the usage of the Apache Flink JobManager source system. The same examination can be made concerning
+the listed clients in \autoref{fig:cm-start} located on the TaskManager container and Kafka Message-Broker respectively.
+
+\section{Consumer Integration}
+
+To demonstrate the flexibility of the proposed architecture for the integration of potential data consumers, the prototype application
+provides an additional Maven module named \verb|collector-data-processor|, a stream processing component based on Apache Flink.
+
+\begin{lstlisting}[caption={Apache Flink raw data stream processor}, captionpos=b, label={lst:flink-processor},language=Java]
+...
+private static final String INBOUND_TOPIC = "collector-outbound-topic";
+private static final String OUTBOUND_TOPIC = "flink-outbound-topic";
+
+final DataStream<CollectorResult> mappedStream =
+    env.addSource(new FlinkKafkaConsumer09<>(INBOUND_TOPIC, new SimpleStringSchema(), properties))
+        .flatMap((rawJsonInput, out) -> {
+            final CollectorResult collectorResult = JsonUtils.readObject(CollectorResult.class, rawJsonInput);
+            out.collect(collectorResult);
+        });  ## (1)
+
+final DataStream<CollectorResult> collectorFlinkJmxStream = mappedStream.filter(collectorResult ->
+    collectorResult.getCollectorType().equals("flink_jmx")); ## (2)
+
+final DataStream<String> resultStream = collectorFlinkJmxStream.map(flinkJmxResult -> {
+    final Map<String, Object> dataMap = new LinkedHashMap<>(); ## (3,4)
+    dataMap.put("client-timestamp", extractOrUnknown(flinkJmxResult.getClientTimestamp()));
+    dataMap.put("client-host", extractOrUnknown(flinkJmxResult.getClientHost()));
+    dataMap.put("client-port", extractOrUnknown(flinkJmxResult.getClientPort()));
+    dataMap.put("client-instance-id", extractOrUnknown(flinkJmxResult.getInstanceId()));
+    final Map<String, Object> jvmMap = Optional.ofNullable(flinkJmxResult.getData())
+        .map(CollectorDataProcessor::extractJvmData)
+        .orElse(new LinkedHashMap<>());
+    dataMap.putAll(jvmMap);
+    return JsonUtils.toJson(dataMap);
+    });
+    resultStream.addSink(new FlinkKafkaProducer09<>(KAFKA_HOST, OUTBOUND_TOPIC, new SimpleStringSchema())); ## (5)
+    env.execute();
+\end{lstlisting}
+
+This Apache Flink component receives the raw data of distributed \textit{CollectorClients} by subscribing to the \verb|collector-outbound-topic|,
+which is the same the clients publish the data to. The data comes in its JSON representation and will be converted into a \verb|CollectorResult|
+object (1). The next step in the data flow is the filtering of incoming messages, the stream processor is just interested in data
+produced by the \textit{Collector} implementation of the type \verb|flink_jmx| (2). This data collected by the  \verb|FlinkJmxCollector| class contains
+inter alia basic infos concerning cpu load and time of the source system. The raw data that matches this criterion will be parsed and
+the client identification data as well as the values for cpu load and time will be extracted (3,4). The last step is to publish the
+extracted data into the \verb|flink-outbound-topic|, which the \textit{Logstash-Processor} is a subscriber of, hence the "flattened"
+cpu metrics will be written in a corresponding \verb|flink_job_index| in Elasticsearch. The processed data can now be discovered using approriate Kibana visualization.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1.0\textwidth]{../images/14-kibana-cpu.png}
+	\caption{Kibana cpu load visualization}
+	\label{fig:kibana-cpu}
+\end{figure}
 
 \section{Discussion}
 
-platform independent of clients, scalable
-%Wurden Sie überrascht? Stimmten Ihre Hypothesen? Sind Sie besser, anders als das andere System?
-%Wichtigster Erkenntnisgewinn 1
-%Wichtigster Erkenntnisgewinn 2
-%Wichtigster Erkenntnisgewinn N
-%Anwendbarkeit? Szenario?
+Based on the evaluation of the \textit{"Collector-Platform} above, following statements can be made regarding to the functional and
+non-funtional requirements defined in \autoref{sec:fr} and \autoref{sec:nfr}:
+
+The proposed system solution meets all functional requirements. The \textit{CollectorClient} allows the data collection on
+Apache Flink and Apache Kafka source system wherein the client uses a configurable and internal registration of \textit{Collector} implementations.
+The clients create a stream of collected data, that represents the system and application state of the underlying source systems at
+a given point of time. Resulting data will be stored in its raw JSON structure in appropriate Elasticsearch indexes where it is available
+for analyzing, querying and visualization.
+
+The non-functional requirements contain the criterion \textit{Performance} which includes the impact on source systems as well as the elapsed time
+from data collection until it becomes becomes available for potential consumers, a period of two seconds was defined. \autoref{fig:kibana}
+show the data of the \verb|FlinkRestCollector|. The example shows that based on the value for \verb|clientTimestamp|, the value the data has left the client,
+and \verb|@timestamp|, the time the data arrived the \textit{Logstash-Processor}, all messages arrive within a period of 10 ms maximum,
+which definitely meets the criterion and and demonstrates the "real-time" capabilities of the chosen system architecture.
+
+A negative impact on source systems wasn't examined on the local cluster, but should be done for "real" applications. The implementation
+of as much "non-blocking" code as possible was introduced to in \autoref{ch:implementation} and forces a more effective utilization
+of existing resources by implementing a asynchronous interaction using the multithreading environment.
+
+The platform also meets the criterion of \textit{Extensibility}. The pipelined architecture can be easy adapted for other source systems
+like Apache Spark, the approach to decouple the \textit{CollectorClient} implementation from concrete \textit{Collector} implementations
+allows a lightweight registration for other collectors. On architectural level, the system becomes very flexible by using a \textit{Kafka Message-Broker}
+as a data buffer between data consumers and producers. As shown in \autoref{lst:flink-processor}, potential consumers can be plugged in easily
+by subscribing to the topics they are interested in. Additionally, the \textit{"Collector-Platform"} doesn't depend on Elasticsearch
+for storing raw and/or processed data. As long a the storage system allows to persist streaming data from Apache Kafka, the system can be changed.
+For example, a Cassandra cluster would be possible because integration for Kafka exist. In addition, this approach makes the architecture portable
+and simple, produces and consumers doesn't require any special operation for exchanging data.
+
+The \textit{"Collector-Platform"} is very scalable. The streaming architecture doesn't care whether to collect from a single system
+or multiple nodes in a cluster. More data sources can be integrated into the cluster introduced in \autoref{fig:deployment-diagram} easily
+by providing more source containers in the configuration of the cluster.
+
 \section{Summary}
 
-TODO
+The last chapter introduced the concept of automated unit and integration tests to ensure the functinality of produced application code and their
+interaction with dependent components. The separation of unit tests that will be executed in the Maven \verb|test| phase and integration
+tests that require a running infrastructure for collecting data from led to the introduction of the \textit{"Collector-Platform} Cluster,
+the overall, Docker based system containing the required components defined in \autoref{ch:architecture}.
 
-%Beschreibung  der Ergebnisse, Diagramme, Darstellen von Zusammenhängen
+Based on the cluster setup, the main process of data collection, transport and storage had been demonstrated evaluated on the example of
+an Apache Flink source system, which was also used to demonstrate the integration capabilities of data consumers, by using a simple
+stream processing application for extracting cpu metrics dataa and their visualization in Kibana.
+
+The platform for collecting data of streaming applications became a streaming platform itself! The streaming approach using Kafka,
+Logstash and Elasticsearch provides a very flexible and scalable solution mets all functional and non-functional requirements defined in \autoref{ch:requirements}.
