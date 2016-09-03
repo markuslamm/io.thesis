@@ -263,14 +263,94 @@ The \textit{CollectorManager} is configured to provide the client listing on \ve
 	\label{fig:cm-start}
 \end{figure}
 
-In correspondence to \autoref{fig:consul-web}, the \textit{CollectorManager} is able to fetch required client data using the the \textit{Consul Client-Registry}.
-This figure shows a very nice feature of Spring Boot, which provides a basic \verb|/health| endpoint for web applications and enables the
+In correspondence to \autoref{fig:consul-web}, the \textit{CollectorManager} is able to fetch required client data using the the
+\textit{Consul Client-Registry}. This figure shows a very nice feature of Spring Boot, which provides a basic \verb|/health| endpoint for web applications and enables the
 \textit{CollectorManager} to link to this endpoint of all \textit{CollectorClient} instances. Because of that, the user interface
 of the managing component provides basic monitoring capabilities of registered client instances.
 
-The detailed view of a \textit{CollectorClient} instance provides additinal metadata, fetched from the clients \verb|/client/metadata|
+The detailed view of a \textit{CollectorClient} instance provides additinal metadata fetched from the clients \verb|/client/metadata| endpoint.
+In addition, the data collection process of the selected client can be started:
 
-the current
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1.0\textwidth]{../images/10-cm-detail.png}
+	\caption{CollectorManager client details}
+	\label{fig:cm-details}
+\end{figure}
+
+The details page for \textit{CollectorClient} shows the unique instance id the client is registred with in the \verb|Consul Client-Registry|,
+details about the network location and the \textit{Collector} implementations, that are registered in the client as discussed in
+\autoref{ch:implementation}. This example shows the \textit{CollectorClient} instance installed on Apache Flink's JobManager,
+with registred \textit{Collector} implementations corresponding to the available data sources for Apache Flink introduced in
+\autoref{ch:requirements}.
+
+The \verb|"Start client"| button is used to trigger the collection process in the corresponding \textit{CollectorClient} instance and
+must start the dataflow of the \textit{Collector-Platform}. Data must be collected, published to the \textit{Kafka Message-Broker} and will
+be retrieved by the \textit{Logstash-Processor}, which creates the required indexes in Elasticsearch on the first run.
+\begin{verbatim}
+[tp1485891705-13] ScheduleController : Received schedule request, action=start
+[tp1485891705-13] CollectorClient    : Entering scheduleClient()
+[      Thread-14] CollectorClient    : Start collector-client, action='start'
+[      Thread-14] CollectorClient    : Entering startCollect()
+[      Thread-14] CollectorClient    : Immediately return from startCollect()
+[      Thread-15] CollectorClient    : Starting data collection, interval='5000'
+[lector-thread-3] CollectorWorker    : Collector worker starts...
+[lector-thread-1] CollectorWorker    : Collector worker starts...
+[lector-thread-1] DstatCollector     : Entering DSTAT collect()
+[lector-thread-1] DstatCollector     : Immediately return from DSTAT collect()
+[lector-thread-1] CollectorWorker    : Collector worker finished
+[lector-thread-1] CollectorWorker    : Collector worker starts...
+[lector-thread-3] CollectorWorker    : Collector worker finished
+[lector-thread-3] CollectorWorker    : Collector worker starts...
+...
+[      Thread-18] KafkaOutboundWriter: Trying to send data to Kafka
+...
+[ad | producer-1] KafkaOutboundWriter : Successfully send to Kafka, key=flink_rest
+[ad | producer-1] KafkaOutboundWriter : Successfully send to Kafka, key=jvm_jmx
+[ad | producer-1] KafkaOutboundWriter : Successfully send to Kafka, key=jvm_jmx
+[ad | producer-1] KafkaOutboundWriter : Successfully send to Kafka, key=flink_rest
+[ad | producer-1] KafkaOutboundWriter : Successfully send to Kafka, key=flink_jmx
+...
+[cluster.metadata] [flink_rest_collector_raw_index]
+[cluster.metadata] [jvm_jmx_collector_raw_index]
+[cluster.metadata] [flink_jmx_collector_raw_index]
+...
+\end{verbatim}
+
+The logs produced by individual containers will be aggregated in the terminal the cluster is started in and, the example shows the
+abbreviated output after starting data collection by pressing the "Start client" button, which results the the alert based on the response data:
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.5\textwidth]{../images/11-alert.png}
+	\caption{Client response}
+	\label{fig:alert}
+\end{figure}
+
+To list existing indexes in Elasticsearch to verify that required indexex are created correctly, the search engine provides a
+REST resource for this purpose, the request for \verb|http://localhost:9200/_cat/indices?v| produces the following output and verifies
+that the indexes for registered \textit{Collector} implementations are created.
+
+The attentive reader will notice that there is no index created for the Dstat collector source implementation! This is caused, because
+it was not possible to read the output of the Dstat process if the process is started in a Docker container, the result was always empty
+and the problem couldn't be fixed in time! \autoref{subsec:dstat-result} contains the result of the \verb|DstatCollector| produced
+on the local machine in a non-Docker environment.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1.0\textwidth]{../images/12-indexes.png}
+	\caption{Elasticsearch indexes}
+	\label{fig:indexes}
+\end{figure}
+
+At this point, the architectural requirements of a central registry for \textit{CollectorClient} instances, the data collection on the
+Apache Flink source system, the transport of data to the \textit{Logstash-Processor} via \textit{Kafka Message-Broker} and creating required
+indexes for the storage of collected data can be verified.
+
+To access collected data, Elasticsearch provides rich REST interface for quering the data stored in a given index, but the the ELK-Stack
+comes with Kibana, a visualization tool for time-series based data. On the example of the index created for storing data of the
+\verb|FlinkRestCollector|, the following figure shows an overview of existing data in this index:
+
+
 %
 %CollectorDataProcessor: module to analyze the data streams creating derived streams and persist flat
 %data -> data transformation, analytics layer
