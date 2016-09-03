@@ -65,6 +65,121 @@
     \label{tbl:kafka-controller}
 \end{table}
 
+\section{Docker Configuration}
+\label{app:docker-config}
+
+\begin{lstlisting}[caption={"Collector-Platform" cluster configuration}, captionpos=b, label={lst:docker-config-all}]
+version: '2'
+services:
+
+  consul:
+    image: "progrium/consul:latest"
+    container_name: "consul"
+    hostname: "consul"
+    ports:
+      - "8400:8400"
+      - "8500:8500"
+      - "8600:53"
+    command: "-server -bootstrap-expect 1 -ui-dir /ui"
+
+  zookeeper:
+    container_name: zookeeper
+    image: wurstmeister/zookeeper
+    ports:
+      - "2181:2181"
+
+  kafka:
+    container_name: kafka
+    image: wurstmeister/kafka
+    ports:
+      - "9092:9092"
+      - "9997:9999"   # jmx
+      - "9097:9091"   # collector-client
+    environment:
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_HOST_NAME: 192.168.2.100
+      KAFKA_CREATE_TOPICS: "collector-outbound-topic:1:1,flink-outbound-topic:1:1"
+      JMX_PORT: 9999
+      SPRING_PROFILES_ACTIVE: kafka-broker-jmx
+      SPRING_CLOUD_CONSUL_HOST: consul
+      SPRING_CLOUD_CONSUL_PORT: 8500
+      CLIENT_PORT: 9091
+      KAFKA_BROKER_ADDRESS: kafka:9092
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      - zookeeper
+      - consul
+
+  flink-jobmanager:
+    image: flink
+    container_name: flink-jobmanager
+    ports:
+      - "8081:8081"   # webui
+      - "9999:9999"   # jmx
+      - "9099:9091"   # collector-client
+    command: jobmanager
+    volumes:
+      - /usr/local/flink/conf
+    depends_on:
+      - consul
+      - kafka
+      - elk
+    environment:
+      SPRING_PROFILES_ACTIVE: dstat,jvm-jmx,flink-jmx,flink-rest
+      SPRING_CLOUD_CONSUL_HOST: consul
+      SPRING_CLOUD_CONSUL_PORT: 8500
+      CLIENT_PORT: 9091
+      KAFKA_BROKER_ADDRESS: kafka:9092
+
+  flink-taskmanager:
+    image: flink
+    container_name: flink-taskmanager
+    ports:
+      - "9998:9999"   # jmx
+      - "9098:9091"   # collector-client
+    command: taskmanager
+    volumes_from:
+      - flink-jobmanager
+    depends_on:
+      - flink-jobmanager
+      - consul
+      - kafka
+      - elk
+    environment:
+      SPRING_PROFILES_ACTIVE: flink-rest #,jvm-jmx
+      SPRING_CLOUD_CONSUL_HOST: consul
+      SPRING_CLOUD_CONSUL_PORT: 8500
+      CLIENT_PORT: 9091
+      KAFKA_BROKER_ADDRESS: kafka:9092
+      FLINK_REST_HOST: flink-jobmanager
+      FLINK_REST_PORT: 8081
+
+  elk:
+    container_name: elk
+    image: sebp/elk
+    ports:
+      - "5601:5601"
+      - "9200:9200"
+      - "5044:5044"
+      - "5000:5000"
+    depends_on:
+      - zookeeper
+      - kafka
+
+  collector-manager:
+    container_name: collector-manager
+    image: io.thesis/collector-manager
+    ports:
+      - "9090:9090"
+    depends_on:
+      - consul
+    environment:
+      SERVER_PORT: 9090
+      SPRING_CLOUD_CONSUL_HOST: consul
+      SPRING_CLOUD_CONSUL_PORT: 8500
+\end{lstlisting}
+
 %\section{Diagrams}
 %\subsection{Use Case diagram}
 %

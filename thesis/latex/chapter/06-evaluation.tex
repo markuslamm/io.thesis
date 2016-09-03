@@ -67,7 +67,7 @@ integration tests.
 The Maven Failsafe-Plugin procvides a mechanism to distinguish unit and integration tests by a naming convention that unit tests
 have the ending "Test" and "IT" for integration test what allows the integration tests to be excluded from the Maven \verb|test|
 phase. The integration tests can by triggered by using the \verb|mvn verify| command, after the required infrastructure components
-had been provided, what will be explained in the next section.
+had been provided, what will be explained in \autoref{sec:collector-platform-cluster}.
 
 The build process of the \textit{"Collector-Platform"} was supported by the public build server provided by \verb|https://travis-ci.org|.
 It allows the automated software-build in form of build jobs and provides a basic build pipeline. Described by pushing to the public code
@@ -81,24 +81,25 @@ implemented just now.
 \end{figure}
 
 \section{"Collector-Platform" Cluster}
+\label{sec:collector-platform-cluster}
 
 According to the proposed architecture in \autoref{ch:architecture}, \textit{"Collector-Platform" Cluster} consists of the
 mandatory infrastructure components \textit{Kafka Message-Broker}, \textit{Consul Client-Registry}, \textit{Logstash-Processor} and
-\textit{Elasticserach} to fulfill the requirements discussed in \autoref{ch:requirements}. In addition one instance of
+\textit{Elasticserach} to fulfill the requirements discussed in \autoref{ch:requirements}. In addition, one instance of
 Apache Flink's Job- and TaskManager each will be required, to create a basic Flink cluster acting as data source for the collecting client,
-as well as the \textit{Collector-Manager} componenent for managing the distributed \textit{CollectorClient} instances.
+as well as the \textit{Collector-Manager} component for managing the distributed \textit{CollectorClient} instances.
 
 One main challenge of the technical realization of the system solution was to create a cluster of application nodes operating in an
 own network distinguishable by their IP addresses. The \textit{"Collector-Platform"} uses Docker to achieve this goal.
 Docker provides a "software containerization platform" that allows to wrap applications in a complete filesystem that contains everything
 needed to run in form of a container. This container provides an isolated platform for applications to run on Docker host systems
-and contains an unix operation system and all required software components reuired by the application.
+and contains an unix operation system and all required software components required by the application.
 Docker uses the resource isolation features of the Linux kernel such as cgroups and kernel namespaces and allow independent containers
 to run within a single host instance, avoiding the overhead of starting and maintaining virtual machines.
 
 The applications to be "containerized" will be defined in by a Dockerfile that defines the intructions to build the application container.
 The Docker file contains the the behavior of the application when it is started by the \verb|docker-engine|. The following
-example show the definition for the \textit{CollectorManager} component:
+example shows the definition for the \textit{CollectorManager} component:
 
 \begin{lstlisting}[caption={Dockerfile "CollectorManager"}, captionpos=b, label={lst:dockerfile}]
 FROM anapsix/alpine-java
@@ -133,7 +134,7 @@ of the \textit{"Collector-Platform"} cluster.
 
 The Apache Kafka is a core component of the platform and operates as a buffer between the data producing \textit{CollectorClient}s.
 The following excerpt from the \verb|docker-compose.yml| file defines the container for Kafka:
-\begin{lstlisting}[caption={Container definition "kafka"}, captionpos=b, label={lst:docker-kafka}]
+\begin{lstlisting}[caption={Container definition Kafka}, captionpos=b, label={lst:docker-kafka}]
   kafka:
     container_name: kafka
     image: wurstmeister/kafka
@@ -143,7 +144,7 @@ The following excerpt from the \verb|docker-compose.yml| file defines the contai
       - "9097:9091"   # collector-client
     environment:
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_HOST_NAME: 192.168.2.100
+      KAFKA_ADVERTISED_HOST_NAME: 192.168.2.100 //THIS NEEDS TO BE ADJUSTED ON LOCAL EVALUATION
       KAFKA_CREATE_TOPICS: "collector-outbound-topic:1:1,flink-outbound-topic:1:1"
       JMX_PORT: 9999
       SPRING_PROFILES_ACTIVE: kafka-broker-jmx
@@ -158,23 +159,50 @@ The following excerpt from the \verb|docker-compose.yml| file defines the contai
       - consul
 \end{lstlisting}
 
+This configuration defines the required information for running this container. It defines the required ports and dependencies to other containers,
+\verb|zookeeper| and \verb|consul| in this example. Furhermore it creates a set of environment variables, containing
+connection infos for zookeeper and the kafka address, that needs to be adjusted to the local IP address. Due to the fact that
+this container will also be a source system for the \textit{CollectorClient}s, the JMX port is specified to allow the client to access
+the remote JVM of Apache Kafka. Other variables contain information
+required by the \textit{CollectorClient} Spring Boot application, that needs to be copied to the Docker description of Apache Kafka.
 
+\begin{lstlisting}[caption={CollectorManager copy in Apache Kafka conatiner}, captionpos=b, label={lst:docker-copy-client}]
+echo "Start collector client for Apache Kafka..."
+java -Djava.security.egd=file:/dev/./urandom -jar /usr/local/collector/collector-client-app.jar
+\end{lstlisting}
 
-%describe setup for components (docker-compose.yml),
-%describe modifications made for Apache Flink and Apache Kafka to enable JMX remote access
-\section{Docker Deployment}
+Another configuration for the definition of the container \textit{CollectorManager}, that defines the required port for the managers user
+interface, the dependency to the Consul container as well as environment variables required by the Spring Boot application.
+
+\begin{lstlisting}[caption={CollectorManager container configuration}, captionpos=b, label={lst:docker-manager}]
+  collector-manager:
+    container_name: collector-manager
+    image: io.thesis/collector-manager
+    ports:
+      - "9090:9090"
+    depends_on:
+      - consul
+    environment:
+      SERVER_PORT: 9090
+      SPRING_CLOUD_CONSUL_HOST: consul
+      SPRING_CLOUD_CONSUL_PORT: 8500
+\end{lstlisting}
+
+For the complete configuration of the \textit{"Collector-Platform"} cluster, please refer to Appendix A in \autoref{app:docker-config}
+
+The \verb|docker-compose| file format provides a mechanism to build the \textit{"Collector-Platform"} cluster shown in
+\autoref{fig:deployment-diagram} using the single command \verb|docker-compose run|, which starts all defined in the discussed configuration
+file.
+
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=1.0\textwidth]{../uml/deployment-diagram.jpg}
-	\caption{Docker Deployment diagram}
-	\label{img:deployment-diagram}
+	\caption{Docker Deployment Diagram}
+	\label{fig:deployment-diagram}
 \end{figure}
 
-Build images
+\section{Manual Tests}
 
-
-
-%\section{Observations}
 %
 %CollectorDataProcessor: module to analyze the data streams creating derived streams and persist flat
 %data -> data transformation, analytics layer

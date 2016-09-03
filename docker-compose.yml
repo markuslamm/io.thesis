@@ -50,7 +50,6 @@ services:
     command: jobmanager
     volumes:
       - /usr/local/flink/conf
-#      - ./infrastructure/logs/flink-jobmanager:/usr/local/flink/log
     depends_on:
       - consul
       - kafka
@@ -93,10 +92,6 @@ services:
       - "9200:9200"
       - "5044:5044"
       - "5000:5000"
-#    volumes:
-#      - ./infrastructure/logs/elk/elasticsearch:/var/log/elasticsearch
-#      - ./infrastructure/logs/elk/logstash:/var/log/logstash
-#      - ./infrastructure/logs/elk/kibana:/var/log/kibana
     depends_on:
       - zookeeper
       - kafka
