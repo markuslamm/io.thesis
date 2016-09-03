@@ -1,11 +1,6 @@
 ## Run the application:
 
-###### Build the application sources:
-
-`mvn clean install -Dmaven.test.skip=true -DskipTests` 
-//TODO exclude IT on install
-
-###### Build required Docker images:
+###### Build application sources and required Docker images:
 
 `./build-docker-images.sh`
 

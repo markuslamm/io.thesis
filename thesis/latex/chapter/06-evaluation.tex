@@ -191,8 +191,7 @@ interface, the dependency to the Consul container as well as environment variabl
 For the complete configuration of the \textit{"Collector-Platform"} cluster, please refer to Appendix A in \autoref{app:docker-config}
 
 The \verb|docker-compose| file format provides a mechanism to build the \textit{"Collector-Platform"} cluster shown in
-\autoref{fig:deployment-diagram} using the single command \verb|docker-compose run|, which starts all defined in the discussed configuration
-file.
+\autoref{fig:deployment-diagram}:
 
 \begin{figure}[H]
 	\centering
@@ -201,8 +200,77 @@ file.
 	\label{fig:deployment-diagram}
 \end{figure}
 
+To build all required software components and Docker images, and to copy the \verb|collector-client.jar| into the containers of source systems,
+the following shell script is used:
+
+\begin{lstlisting}[caption={build-docker-images-sh}, captionpos=b, label={lst:docker-build-images}]
+echo "building sources..."
+mvn install -DskipTests -DskipITs
+
+echo "cleanup containers..."
+docker rm -f $(docker ps -a -q)
+
+echo "building collector-manager-app..."
+docker build -t io.thesis/collector-manager collector-manager
+
+echo "building docker-base..."
+docker build -t wurstmeister/base infrastructure/docker-base
+
+echo "building docker-zookeeper..."
+docker build -t wurstmeister/zookeeper infrastructure/docker-zookeeper
+
+echo "building docker-kafka..."
+cp collector-client/collector-client-app/target/collector-client-app.jar infrastructure/docker-kafka/collector-client-app.jar
+docker build -t wurstmeister/kafka infrastructure/docker-kafka
+
+echo "building docker-elk..."
+docker build -t sebp/elk infrastructure/docker-elk
+
+echo "building docker-flink..."
+cp collector-client/collector-client-app/target/collector-client-app.jar infrastructure/docker-flink/collector-client-app.jar
+cd infrastructure/docker-flink
+./build.sh
+\end{lstlisting}
+
+After a successfull building the required software and Docker artefarcts the single command \verb|docker-compose run| starts all
+defined containers in the discussed configuration file.
+
 \section{Manual Tests}
 
+The main goal the \textit{Collector-Platform} is to collect system and application data from Apache Flink and Apache Kafka source systems.
+Therefore, the system architecture in \autoref{ch:architecture} introduced the \textit{CollectorManager} as the managing component
+of distributed \textit{CollectorClient} instances. Hence the \textit{CollectorManager} depends on the Consul Client-Registry,
+the Consul container must be up an running. According to the cluster configutation, the Consul container provides a REST endpoint
+for listing registered client instances:
+\verb|http://localhost:8500|:
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1.0\textwidth]{../images/08-consul.png}
+	\caption{Consul web interface}
+	\label{fig:consul-web}
+\end{figure}
+
+The figure shows three \textit{CollectorClient} instances installed on the \textit{Kafka Message-Broker} as well as the \textit{CollectorClient} instances installed
+on the Docker container for Flink's Job- and TaskManager. The presence of the clients in the Consul user interface verifies the
+correct functionality of client's self-registrion in the central central registry, that is required to list existing clients in
+the user interface with the purpose to schedule the data collection process for individual client instances.
+
+The \textit{CollectorManager} is configured to provide the client listing on \verb|http://localhost:9090|:
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1.0\textwidth]{../images/09-cm-start.png}
+	\caption{CollectorManager client listing}
+	\label{fig:cm-start}
+\end{figure}
+
+In correspondence to \autoref{fig:consul-web}, the \textit{CollectorManager} is able to fetch required client data using the the \textit{Consul Client-Registry}.
+This figure shows a very nice feature of Spring Boot, which provides a basic \verb|/health| endpoint for web applications and enables the
+\textit{CollectorManager} to link to this endpoint of all \textit{CollectorClient} instances. Because of that, the user interface
+of the managing component provides basic monitoring capabilities of registered client instances.
+
+The detailed view of a \textit{CollectorClient} instance provides additinal metadata, fetched from the clients \verb|/client/metadata|
+
+the current
 %
 %CollectorDataProcessor: module to analyze the data streams creating derived streams and persist flat
 %data -> data transformation, analytics layer
@@ -210,6 +278,8 @@ file.
 %Kibana dashboard, show visualization of CollectorDataProcessor data
 
 \section{Discussion}
+
+platform independent of clients, scalable
 %Wurden Sie überrascht? Stimmten Ihre Hypothesen? Sind Sie besser, anders als das andere System?
 %Wichtigster Erkenntnisgewinn 1
 %Wichtigster Erkenntnisgewinn 2
