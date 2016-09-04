@@ -126,11 +126,6 @@ this container will also be a source system for the \textit{CollectorClient}s, t
 the remote JVM of Apache Kafka. Other variables contain information
 required by the \textit{CollectorClient} Spring Boot application, that needs to be copied to the Docker description of Apache Kafka.
 
-\begin{lstlisting}[caption={CollectorManager copy in Apache Kafka conatiner}, captionpos=b, label={lst:docker-copy-client}]
-echo "Start collector client for Apache Kafka..."
-java -Djava.security.egd=file:/dev/./urandom -jar /usr/local/collector/collector-client-app.jar
-\end{lstlisting}
-
 Another configuration for the definition of the container \textit{CollectorManager}, that defines the required port for the managers user
 interface, the dependency to the Consul container as well as environment variables required by the Spring Boot application.
 
@@ -212,7 +207,7 @@ for listing registered client instances:
 
 The figure shows three \textit{CollectorClient} instances installed on the \textit{Kafka Message-Broker} as well as the \textit{CollectorClient} instances installed
 on the Docker container for Flink's Job- and TaskManager. The presence of the clients in the Consul user interface verifies the
-correct functionality of client's self-registrion in the central central registry, that is required to list existing clients in
+correct functionality of client's self-registrion in the central registry, that is required to list existing clients in
 the user interface with the purpose to schedule the data collection process for individual client instances.
 
 The \textit{CollectorManager} is configured to provide the client listing on \verb|http://localhost:9090|:
@@ -238,7 +233,7 @@ In addition, the data collection process of the selected client can be started:
 	\label{fig:cm-details}
 \end{figure}
 
-The details page for \textit{CollectorClient} shows the unique instance id the client is registred with in the \verb|Consul Client-Registry|,
+The details page for \textit{CollectorClient} shows the unique instance id the client is registred with in the \textit{Consul Client-Registry},
 details about the network location and the \textit{Collector} implementations, that are registered in the client as discussed in
 \autoref{ch:implementation}. This example shows the \textit{CollectorClient} instance installed on Apache Flink's JobManager,
 with registred \textit{Collector} implementations corresponding to the available data sources for Apache Flink introduced in
@@ -290,17 +285,18 @@ abbreviated output after starting data collection by pressing the "Start client"
 To list existing indexes in Elasticsearch to verify that required indexex are created correctly, the search engine provides a
 REST resource for this purpose, the request for \verb|http://localhost:9200/_cat/indices?v| produces the following output and verifies
 that the indexes for registered \textit{Collector} implementations are created.
-
-The attentive reader will notice that there is no index created for the Dstat collector source implementation! This is caused, because
-it was not possible to read the output of the Dstat process if the process is started in a Docker container, the result was always empty
-and the problem couldn't be fixed in time! \autoref{subsec:dstat-result} contains the result of the \verb|DstatCollector| produced
-on the local machine in a non-Docker environment.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=1.0\textwidth]{../images/12-indexes.png}
 	\caption{Elasticsearch indexes}
 	\label{fig:indexes}
 \end{figure}
+
+The attentive reader will notice that there is no index created for the Dstat collector source implementation! This is caused, because
+it was not possible to read the output of the Dstat process if the process is started in a Docker container, the result was always empty
+and the problem couldn't be fixed in time! \autoref{subsec:dstat-result} contains the result of the \verb|DstatCollector| produced
+on the local machine in a non-Docker environment.
+
 
 At this point, the architectural requirements of a central registry for \textit{CollectorClient} instances, the data collection on the
 Apache Flink source system, the transport of data to the \textit{Logstash-Processor} via \textit{Kafka Message-Broker} and creating required
@@ -317,7 +313,7 @@ comes with Kibana, a visualization tool for time-series based data. On the examp
 \end{figure}
 
 As shown above, the collected is available, it contains the client timestamp, the timestamp the data received in Elasticsearch, clients
-identification data in form of IP address and port as well as the data produced by the \textit{Collector} implementation like
+identification data in form of IP address and port as well as the data produced by the \textit{Collector} implementation.
 This is the end of the data pipeline in the \textit{Collector-Platform}. The same process will be repeated in the configurable interval
 of 5 seconds per default until it will be stopped performing the appropriate REST request on the \textit{CollectorClient}.
 
@@ -382,18 +378,18 @@ Based on the evaluation of the \textit{"Collector-Platform} above, following sta
 non-funtional requirements defined in \autoref{sec:fr} and \autoref{sec:nfr}:
 
 The proposed system solution meets all functional requirements. The \textit{CollectorClient} allows the data collection on
-Apache Flink and Apache Kafka source system wherein the client uses a configurable and internal registration of \textit{Collector} implementations.
+Apache Flink and Apache Kafka source systems wherein the client uses a configurable and internal registration of \textit{Collector} implementations.
 The clients create a stream of collected data, that represents the system and application state of the underlying source systems at
 a given point of time. Resulting data will be stored in its raw JSON structure in appropriate Elasticsearch indexes where it is available
 for analyzing, querying and visualization.
 
 The non-functional requirements contain the criterion \textit{Performance} which includes the impact on source systems as well as the elapsed time
 from data collection until it becomes becomes available for potential consumers, a period of two seconds was defined. \autoref{fig:kibana}
-show the data of the \verb|FlinkRestCollector|. The example shows that based on the value for \verb|clientTimestamp|, the value the data has left the client,
+shows the data of the \verb|FlinkRestCollector|. The example shows that based on the value for \verb|clientTimestamp|, the value the data has left the client,
 and \verb|@timestamp|, the time the data arrived the \textit{Logstash-Processor}, all messages arrive within a period of 10 ms maximum,
 which definitely meets the criterion and and demonstrates the "real-time" capabilities of the chosen system architecture.
 
-A negative impact on source systems wasn't examined on the local cluster, but should be done for "real" applications. The implementation
+A negative impact on source systems wasn't examined on the local cluster, but should be considered for "real" applications. The implementation
 of as much "non-blocking" code as possible was introduced to in \autoref{ch:implementation} and forces a more effective utilization
 of existing resources by implementing a asynchronous interaction using the multithreading environment.
 
@@ -406,7 +402,7 @@ for storing raw and/or processed data. As long a the storage system allows to pe
 For example, a Cassandra cluster would be possible because integration for Kafka exist. In addition, this approach makes the architecture portable
 and simple, produces and consumers doesn't require any special operation for exchanging data.
 
-The \textit{"Collector-Platform"} is very scalable. The streaming architecture doesn't care whether to collect from a single system
+The \textit{"Collector-Platform"} is very scalable, the streaming architecture doesn't care whether to collect from a single system
 or multiple nodes in a cluster. More data sources can be integrated into the cluster introduced in \autoref{fig:deployment-diagram} easily
 by providing more source containers in the configuration of the cluster.
 
@@ -417,9 +413,9 @@ interaction with dependent components. The separation of unit tests that will be
 tests that require a running infrastructure for collecting data from led to the introduction of the \textit{"Collector-Platform} Cluster,
 the overall, Docker based system containing the required components defined in \autoref{ch:architecture}.
 
-Based on the cluster setup, the main process of data collection, transport and storage had been demonstrated evaluated on the example of
+Based on the cluster setup, the main process of data collection, transport and storage had been demonstrated and evaluated on the example of
 an Apache Flink source system, which was also used to demonstrate the integration capabilities of data consumers, by using a simple
-stream processing application for extracting cpu metrics dataa and their visualization in Kibana.
+stream processing application for extracting cpu metrics data and their visualization in Kibana.
 
 The platform for collecting data of streaming applications became a streaming platform itself! The streaming approach using Kafka,
-Logstash and Elasticsearch provides a very flexible and scalable solution mets all functional and non-functional requirements defined in \autoref{ch:requirements}.
+Logstash and Elasticsearch provides a very flexible and scalable solution that mets all functional and non-functional requirements defined in \autoref{ch:requirements}.
