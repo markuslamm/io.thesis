@@ -361,7 +361,7 @@ if (!matcher.matches()) {
 
 The collection of application data using JMX for Apache Flink and Apache Kafka is working in the
 same way as discussed in the previous sections. The implementations both provide \verb|SampleCollector|s for collecting data
-from the managed resources which are listed for Apache Kafka in Appendix A by using a \verb|MBeanServerConnection| and querying the resources by their JMX ObjectName,
+from the managed resources which are listed for Apache Kafka in \autoref{app:kafka-mbeans} by using a \verb|MBeanServerConnection| and querying the resources by their JMX ObjectName,
 see \autoref{ch:basic-concepts}. Since Apache Flink is just providing a very basic set
 of application data in its current version, containing rudimentary JVM data like cpu load and basic information about current
 jobs and their state, this data will be collected nevertheless. It will be assumed to the metric system will be improved in upcoming versions
