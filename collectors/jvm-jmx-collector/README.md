@@ -456,5 +456,4 @@ Collects default JVM data provided by JMX and exports the result:
         ]
     }
 }
-
 ```

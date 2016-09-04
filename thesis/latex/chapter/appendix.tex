@@ -5,11 +5,594 @@
 
 \section{Collectors JSON results}
 \subsection{JvmCollector}
+\begin{lstlisting}[caption={"JvmCollector" JSON result, abbreviated}, captionpos=b, label={lst:json-jvm}]
+{
+    "clientTimestamp": "2016-08-12T20:00:11.294",
+    "clientHost": "127.0.1.1",
+    "clientPort": 9091,
+    "instanceId": "collector-client:42670a21f012e4b178678fd9eba76eed",
+    "collectorType": "jvm_jmx",
+    "data": {
+        "nio-buffer-pools": [
+            {
+                "name": "mapped",
+                "count": 0,
+                "memoryUsed": 0,
+                "totalCapacity": 0
+            },
+            {
+                "name": "direct",
+                "count": 13,
+                "memoryUsed": 267272,
+                "totalCapacity": 267271
+            }
+        ],
+        "memory": {
+            "objectPendingFinalizationCount": 0,
+            "heapMemoryUsage": {
+                "committed": 257425408,
+                "init": 268435456,
+                "max": 257425408,
+                "used": 82003104
+            },
+            "nonHeapMemoryUsage": {
+                "committed": 50724864,
+                "init": 2555904,
+                "max": -1,
+                "used": 49611960
+            }
+        },
+        "memory-pools": [
+            {
+                "name": "Metaspace",
+                "type": "NON_HEAP",
+                "valid": true,
+                "collectionUsage": null,
+                "usage": {
+                    "committed": 33685504,
+                    "init": 0,
+                    "max": -1,
+                    "used": 32946576
+                },
+                "peakUsage": {
+                    "committed": 33685504,
+                    "init": 0,
+                    "max": -1,
+                    "used": 32946576
+                },
+                "memoryManagerNames": [
+                    "Metaspace Manager"
+                ],
+                "usageThreshold": 0,
+                "usageCount": 0,
+                "usageExceeded": false
+            },
+            ...
+        ],
+        "operating-system": {
+            "arch": "amd64",
+            "availableProcessors": 2,
+            "name": "Linux",
+            "systemLoadAvg": 1.5654296875,
+            "version": "4.4.0-34-generic",
+            "processCpuLoad": 0.054600606673407485,
+            "processCpuTime": 41140000000,
+            "committedVirtualMemorySize": 1794162688,
+            "systemCpuLoad": 0.22267206477732793,
+            "totalPhysicalMemorySize": 8280924160,
+            "freePhysicalMemorySize": 944017408,
+            "totalSwapSpaceSize": 8498704384,
+            "freeSwapSpaceSize": 8273494016,
+            "maxFileDescriptorCount": 65536,
+            "openFileDescriptorCount": 68
+        },
+        "runtime": {
+            "startTime": 1471022078735,
+            "uptime": 2732538,
+            "specName": "Java Virtual Machine Specification",
+            "specVendor": "Oracle Corporation",
+            "specVersion": "1.8",
+            "vmName": "OpenJDK 64-Bit Server VM",
+            "vmVendor": "Oracle Corporation",
+            "vmVersion": "25.92-b14"
+        },
+        "threads": {
+            "threadCount": 39,
+            "daemonThreadCount": 33,
+            "peakThreadCount": 48,
+            "totalStartedThreadCount": 93,
+            "currentThreadUserTime": 0,
+            "currentThreadCpuTime": 7828358
+        },
+        "classloading": {
+            "loaded": 5700,
+            "totalLoaded": 5700,
+            "unloaded": 0
+        },
+        "garbage-collectors": [
+            {
+                "name": "PS MarkSweep",
+                "collectionCount": 1,
+                "collectionTime": 71,
+                "memoryPoolNames": [
+                    "PS Eden Space",
+                    "PS Survivor Space",
+                    "PS Old Gen"
+                ],
+                "valid": true,
+                "lastGcInfo": {
+                    "starttime": 7761,
+                    "endtime": 7832,
+                    "duration": 71,
+                    "memoryUsageBeforeGc": [
+                        {
+                            "name": "PS Eden Space",
+                            "committed": 67108864,
+                            "init": 67108864,
+                            "max": 67108864,
+                            "used": 0
+                        },
+                        ...
+                    ],
+                    "memoryUsageAfterGc": [
+                        {
+                            "name": "PS Eden Space",
+                            "committed": 67108864,
+                            "init": 67108864,
+                            "max": 67108864,
+                            "used": 0
+                        },
+                        ...
+                    ]
+                }
+            },
+            ...
+        ]
+    }
+}
+\end{lstlisting}
+
 \subsection{DstatCollector}
-\label{subsec:dstat-result}
+\label{app:dstat-result}
+\begin{lstlisting}[caption={"DstatCollector" JSON result}, captionpos=b, label={lst:json-dstat}]
+{
+    "clientTimestamp": "2016-08-12T20:59:30.608",
+    "clientHost": "127.0.1.1",
+    "clientPort": 9091,
+    "instanceId": "collector-client:25ba074a0d81dd5c8e2c7b4c73152dd2",
+    "collectorType": "dstat",
+    "data": {
+        "disk": {
+            "read": 112.0,
+            "write": 436.0,
+            "utilization": 6.49,
+            "transactions": {
+                "read": 5.72,
+                "write": 8.9
+            }
+        },
+        "process": {
+            "runnable": 0.0,
+            "uninterruptible": 0.0,
+            "new": 1.4,
+            "count": 271,
+            "latency-highest-total": {
+                "name": "compiz",
+                "value": 8475.0
+            },
+            "latency-highest-avg": {
+                "name": "cat",
+                "value": 101.0
+            }
+        },
+        "memory": {
+            "usage": {
+                "used": 5548032.0,
+                "buffer": 217088.0,
+                "cache": 1626112.0,
+                "free": 695296.0
+            },
+            "process-most-expensive": {
+                "name": "java",
+                "value": 1510400.0
+            },
+            "paging": {
+                "in": 1.22265625,
+                "out": 10.8
+            },
+            "swap": {
+                "used": 312320.0,
+                "free": 7987200.0
+            },
+            "vm": {
+                "hardPageFaults": 0.5,
+                "softPageFaults": 990.0,
+                "allocated": 1476.0,
+                "free": 1500.0
+            }
+        },
+        "system": {
+            "load-avg": {
+                "1m": 1.16,
+                "5m": 1.28,
+                "15m": 1.17
+            },
+            "interrupts": 1225.0,
+            "contextSwitches": 3178.0,
+            "ipc": {
+                "messageQueue": 0.0,
+                "semaphores": 0.0,
+                "sharedMemory": 29.0
+            },
+            "unix-sockets": {
+                "datagram": 38,
+                "stream": 799,
+                "listen": 38,
+                "active": 761
+            }
+        },
+        "io": {
+            "read": 5.72,
+            "write": 8.9,
+            "process-most-expensive": {
+                "name": "upstart",
+                "pid": 3210,
+                "read": 502.0,
+                "write": 210.0,
+                "cpuPercentage": 0.0
+            },
+            "filelocks": {
+                "posix": 33.0,
+                "flock": 4.0,
+                "read": 13.0,
+                "write": 25.0
+            },
+            "filesystem": {
+                "openFiles": 13344,
+                "inodes": 48582.0
+            }
+        },
+        "cpu": {
+            "usage": [
+                {
+                    "name": "cpu0",
+                    "user": 17.0,
+                    "system": 3.3,
+                    "idle": 77.0,
+                    "wait": 2.6,
+                    "hwInterrupt": 0.0,
+                    "swInterrupt": 0.0
+                },
+                {
+                    "name": "cpu1",
+                    "user": 17.0,
+                    "system": 3.4,
+                    "idle": 77.0,
+                    "wait": 2.7,
+                    "hwInterrupt": 0.0,
+                    "swInterrupt": 0.4
+                }
+            ],
+            "process-most-expensive": {
+                "name": "java",
+                "pid": 32528,
+                "cpuPercentage": 5.8,
+                "read": 102.0,
+                "write": 272.0
+            },
+            "process-cpu-time-highest-total": {
+                "name": "Xorg",
+                "time": 40.1
+            },
+            "process-cpu-time-highest-avg": {
+                "name": "docker-compos",
+                "time": 225.0
+            }
+        },
+        "net": {
+            "traffic": [
+                {
+                    "name": "docker0",
+                    "send": 0.0,
+                    "received": 0.0
+                },
+                {
+                    "name": "wlp2s0",
+                    "send": 0.0,
+                    "received": 0.0
+                }
+            ],
+            "sockets": {
+                "total": 1.0,
+                "tcp": 19.0,
+                "udp": 8.0,
+                "raw": 0.0,
+                "ipFragments": 0.0
+            },
+            "tcp-sockets": {
+                "listen": 20.0,
+                "established": 43.0,
+                "syn": 0.0,
+                "timeWait": 5.0,
+                "close": 0.0
+            },
+            "udp": {
+                "listen": 17.0,
+                "active": 0.0
+            }
+        }
+    }
+}
+\end{lstlisting}
+
 \subsection{FlinkRestCollector}
-\subsection{FlinkJmxCollector}
+\begin{lstlisting}[caption={"FlinkRestCollector" JSON result, abbreviated}, captionpos=b, label={lst:json-flink-rest}]
+{
+    "clientTimestamp": "2016-08-12T20:02:53.15",
+    "clientHost": "127.0.1.1",
+    "clientPort": 9091,
+    "instanceId": "collector-client:3ef6658ea9219cd0c4185c6512b8e356",
+    "collectorType": "flink_rest",
+    "data": {
+        "cluster": {
+            "timezone-name": "Greenwich Mean Time",
+            "timezone-offset": 0,
+            "version": "1.1.0",
+            "revision": "45f7825 @ 02.08.2016 @ 18:30:53 UTC",
+            "taskManagers": 1,
+            "slots-total": 2,
+            "slots-available": 2,
+            "jobs-running": 0,
+            "jobs-finished": 1,
+            "jobs-cancelled": 0,
+            "jobs-failed": 0
+        },
+        "jobs": [
+            {
+                "duration": 2074,
+                "endTime": 1471024935012,
+                "exceptions": {
+                    "truncated": false,
+                    "rootException": null,
+                    "allExceptions": []
+                },
+                "executionMode": "PIPELINED",
+                "isStoppable": false,
+                "jobParallelism": 1,
+                "name": "Flink Java Job at Fri Aug 12 18:02:12 GMT 2016",
+                "now": 1471024973138,
+                "objectReuseMode": false,
+                "plan": {
+                    ...
+                },
+                "restartStrategy": "default",
+                "startTime": 1471024932938,
+                "state": "FINISHED",
+                "statusCounts": {
+                    "CREATED": 0,
+                    "SCHEDULED": 0,
+                    "DEPLOYING": 0,
+                    "RUNNING": 0,
+                    "FINISHED": 3,
+                    "CANCELING": 0,
+                    "CANCELED": 0,
+                    "FAILED": 0
+                },
+                "timestamps": {
+                    "CREATED": 1471024932938,
+                    "RUNNING": 1471024933051,
+                    "FAILING": 0,
+                    "FAILED": 0,
+                    "CANCELLING": 0,
+                    "CANCELED": 0,
+                    "FINISHED": 1471024935012,
+                    "RESTARTING": 0,
+                    "SUSPENDED": 0
+                },
+                "vertices": [
+                    {
+                        "id": "acdb73c5f4dd53d60b11c814b1512900",
+                        "name": "CHAIN DataSource (at main(WordCount.java:52)...",
+                        "parallelism": 1,
+                        "status": "FINISHED",
+                        "duration": 1488,
+                        "tasks": {
+                            "CREATED": 0,
+                            "SCHEDULED": 0,
+                            "DEPLOYING": 0,
+                            "RUNNING": 0,
+                            "FINISHED": 1,
+                            "CANCELING": 0,
+                            "CANCELED": 0,
+                            "FAILED": 0
+                        },
+                        "metrics": {
+                            "read-bytes": 0,
+                            "write-bytes": 245,
+                            "read-records": 0,
+                            "write-records": 26
+                        },
+                        "startTime": 1471024933092,
+                        "endTime": 1471024934580
+                    },
+                    {
+                        "id": "65c08171f8232e197e0cca1da43c4968",
+                        "name": "Reduce (SUM(1), at main(WordCount.java:64)",
+                        "parallelism": 1,
+                        "status": "FINISHED",
+                        "duration": 316,
+                        "tasks": {
+                            "CREATED": 0,
+                            "SCHEDULED": 0,
+                            "DEPLOYING": 0,
+                            "RUNNING": 0,
+                            "FINISHED": 1,
+                            "CANCELING": 0,
+                            "CANCELED": 0,
+                            "FAILED": 0
+                        },
+                        "metrics": {
+                            "read-bytes": 245,
+                            "write-bytes": 245,
+                            "read-records": 26,
+                            "write-records": 26
+                        },
+                        "startTime": 1471024934571,
+                        "endTime": 1471024934887
+                    },
+                    {
+                        "id": "656fc1e6b1806fc45f7453fd4323e6bf",
+                        "name": "DataSink (collect())",
+                        "parallelism": 1,
+                        "status": "FINISHED",
+                        "duration": 134,
+                        "tasks": {
+                            "CREATED": 0,
+                            "SCHEDULED": 0,
+                            "DEPLOYING": 0,
+                            "RUNNING": 0,
+                            "FINISHED": 1,
+                            "CANCELING": 0,
+                            "CANCELED": 0,
+                            "FAILED": 0
+                        },
+                        "metrics": {
+                            "read-bytes": 245,
+                            "write-bytes": 0,
+                            "read-records": 26,
+                            "write-records": 0
+                        },
+                        "startTime": 1471024934875,
+                        "endTime": 1471024935009
+                    }
+                ]
+            }
+        ]
+    }
+}
+\end{lstlisting}
+
+%\subsection{FlinkJmxCollector}
+%\begin{lstlisting}[caption={"FlinkJmxCollector" JSON result}, captionpos=b, label={lst:json-flink-jmx}]
+%{
+%    "clientTimestamp": "2016-08-12T20:14:01.485",
+%    "clientHost": "127.0.1.1",
+%    "clientPort": 9091,
+%    "instanceId": "collector-client:2a8251cdb3ba6cab9ec631a7b0d0683e",
+%    "collectorType": "flink_jmx",
+%    "data": {
+%        "jobmanager": [
+%            {
+%                "host": "172.18.0.3",
+%                "taskSlotsTotal": 2,
+%                "numRegisteredTaskManagers": 1,
+%                "numRunningJobs": 0,
+%                "taskSlotsAvailable": 2,
+%                "jvm": {
+%                    "cpu": {
+%                        "Load": 0.375,
+%                        "Time": 56010000000
+%                    },
+%                    "classLoader": {
+%                        "ClassesUnloaded": 36,
+%                        "ClassesLoaded": 6518
+%                    },
+%                    "threads": {
+%                        "Count": 41
+%                    },
+%                    "memory": [
+%                        {
+%                            "name": "Mapped",
+%                            "Count": 0,
+%                            "TotalCapacity": 0,
+%                            "MemoryUsed": 0
+%                        },
+%                        {
+%                            "name": "NonHeap",
+%                            "Committed": 59006976,
+%                            "Max": -1,
+%                            "Used": 57767976
+%                        },
+%                        {
+%                            "name": "Heap",
+%                            "Committed": 253231104,
+%                            "Max": 253231104,
+%                            "Used": 74061488
+%                        },
+%                        {
+%                            "name": "Direct",
+%                            "MemoryUsed": 307464,
+%                            "TotalCapacity": 307463,
+%                            "Count": 15
+%                        }
+%                    ],
+%                    "garbageCollector": [
+%                        {
+%                            "name": "PS_Scavenge",
+%                            "Count": 5,
+%                            "Time": 229
+%                        },
+%                        {
+%                            "name": "PS_MarkSweep",
+%                            "Time": 166,
+%                            "Count": 2
+%                        }
+%                    ]
+%                }
+%            }
+%        ]
+%    }
+%}
+%\end{lstlisting}
+
 \subsection{KafkaBrokerJmxCollector}
+\begin{lstlisting}[caption={"KafkaBrokerJmxCollector" JSON result, abbreviated}, captionpos=b, label={lst:json-kafka}]
+{
+    "client-timestamp": "2016-08-14T16:28:41.55",
+    "client-host": "172.19.0.5",
+    "client-port": 9091,
+    "instance-id": "collector-client:2aaab984e6b0facee4c4c0a209ecadda",
+    "collector-type": "kafka_broker_jmx",
+    "data": {
+        "kafka-server": {
+            "brokerTopicMetrics": {
+                "bytesInPerSec": {
+                    "Count": 16951,
+                    "EventType": "bytes",
+                    "RateUnit": "SECONDS",
+                    "MeanRate": 25.369407069044808,
+                    "OneMinuteRate": 260.6334984314235,
+                    "FifteenMinuteRate": 18.732137992757657,
+                    "FiveMinuteRate": 55.58928117964598,
+                    "topics": [
+                        {
+                            "Count": 16951,
+                            "EventType": "bytes",
+                            "RateUnit": "SECONDS",
+                            "MeanRate": 27.28382749183684,
+                            "OneMinuteRate": 260.6334984314235,
+                            "FifteenMinuteRate": 18.732137992757657,
+                            "FiveMinuteRate": 55.58928117964598,
+                            "name": "collector-outbound-topic"
+                        },
+                        {
+                            "Count": 0,
+                            "EventType": "bytes",
+                            "RateUnit": "SECONDS",
+                            "MeanRate": 0.0,
+                            "OneMinuteRate": 0.0,
+                            "FifteenMinuteRate": 0.0,
+                            "FiveMinuteRate": 0.0,
+                            "name": "flink-outbound-topic"
+                        }
+                    ]
+                },
+                ...
+            ]
+        }
+    }
+}
+\end{lstlisting}
 
 \section{Apache Kafka 0.9.0.1 MBeans}
 \begin{table}[H]
@@ -54,7 +637,6 @@
 
 \section{Docker Configuration}
 \label{app:docker-config}
-
 \begin{lstlisting}[caption={"Collector-Platform" cluster configuration}, captionpos=b, label={lst:docker-config-all}]
 version: '2'
 services:
@@ -166,206 +748,5 @@ services:
       SPRING_CLOUD_CONSUL_HOST: consul
       SPRING_CLOUD_CONSUL_PORT: 8500
 \end{lstlisting}
-
-%\section{Diagrams}
-%\subsection{Use Case diagram}
-%
-%\begin{figure}[H]
-%	\centering
-%	\includegraphics[width=1.0\textwidth]{../uml/usecase-collector-process.jpg}
-%	\caption{Use Case Diagramm}
-%	\label{use-case-diagram}
-%\end{figure}
-
-%\begin{figure}[H]
-%	\centering
-%	\includegraphics[width=1.0\textwidth]{../uml/class-flink-jmx-collector.jpg}
-%	\caption{Class diagram 'FlinkJmxCollector'}
-%	\label{class-diagram-flink-jmx-collector}
-%\end{figure}
-%\begin{figure}[H]
-%	\centering
-%	\includegraphics[width=1.0\textwidth]{../uml/class-kafka-broker-jmx-collector.jpg}
-%	\caption{Class diagram 'KafkaBrokerJmxCollector'}
-%	\label{class-diagram-kafka-broker-jmx-collector}
-%\end{figure}
-
-%\subsection{Deployment diagram}
-
-
-
-
-
-
-%\begin{lstlisting}[language=json, caption={DStatCollector JSON payload}, captionpos=b, label={lst:dstat-payload}]
-%{
-%    "clientTimestamp": "2016-08-12T20:59:30.608",
-%    "clientHost": "127.0.1.1",
-%    "clientPort": 9091,
-%    "instanceId": "collector-client:25ba074a0d81dd5c8e2c7b4c73152dd2",
-%    "collectorType": "dstat",
-%    "data": {
-%        "disk": {
-%            "read": 112.0,
-%            "write": 436.0,
-%            "utilization": 6.49,
-%            "transactions": {
-%                "read": 5.72,
-%                "write": 8.9
-%            }
-%        },
-%        "process": {
-%            "runnable": 0.0,
-%            "uninterruptible": 0.0,
-%            "new": 1.4,
-%            "count": 271,
-%            "latency-highest-total": {
-%                "name": "compiz",
-%                "value": 8475.0
-%            },
-%            "latency-highest-avg": {
-%                "name": "cat",
-%                "value": 101.0
-%            }
-%        },
-%        "memory": {
-%            "usage": {
-%                "used": 5548032.0,
-%                "buffer": 217088.0,
-%                "cache": 1626112.0,
-%                "free": 695296.0
-%            },
-%            "process-most-expensive": {
-%                "name": "java",
-%                "value": 1510400.0
-%            },
-%            "paging": {
-%                "in": 1.22265625,
-%                "out": 10.8
-%            },
-%            "swap": {
-%                "used": 312320.0,
-%                "free": 7987200.0
-%            },
-%            "vm": {
-%                "hardPageFaults": 0.5,
-%                "softPageFaults": 990.0,
-%                "allocated": 1476.0,
-%                "free": 1500.0
-%            }
-%        },
-%        "system": {
-%            "load-avg": {
-%                "1m": 1.16,
-%                "5m": 1.28,
-%                "15m": 1.17
-%            },
-%            "interrupts": 1225.0,
-%            "contextSwitches": 3178.0,
-%            "ipc": {
-%                "messageQueue": 0.0,
-%                "semaphores": 0.0,
-%                "sharedMemory": 29.0
-%            },
-%            "unix-sockets": {
-%                "datagram": 38,
-%                "stream": 799,
-%                "listen": 38,
-%                "active": 761
-%            }
-%        },
-%        "io": {
-%            "read": 5.72,
-%            "write": 8.9,
-%            "process-most-expensive": {
-%                "name": "upstart",
-%                "pid": 3210,
-%                "read": 502.0,{
-%                "write": 210.0,
-%                "cpuPercentage": 0.0
-%            },
-%            "filelocks": {
-%                "posix": 33.0,
-%                "flock": 4.0,
-%                "read": 13.0,
-%                "write": 25.0
-%            },
-%            "filesystem": {
-%                "openFiles": 13344,
-%                "inodes": 48582.0
-%            }
-%        },
-%        "cpu": {
-%            "usage": [
-%                {
-%                    "name": "cpu0",
-%                    "user": 17.0,
-%                    "system": 3.3,
-%                    "idle": 77.0,
-%                    "wait": 2.6,
-%                    "hwInterrupt": 0.0,
-%                    "swInterrupt": 0.0
-%                },
-%                {
-%                    "name": "cpu1",
-%                    "user": 17.0,
-%                    "system": 3.4,
-%                    "idle": 77.0,
-%                    "wait": 2.7,
-%                    "hwInterrupt": 0.0,
-%                    "swInterrupt": 0.4
-%                }
-%            ],
-%            "process-most-expensive": {
-%                "name": "java",
-%                "pid": 32528,
-%                "cpuPercentage": 5.8,
-%                "read": 102.0,
-%                "write": 272.0
-%            },
-%            "process-cpu-time-highest-total": {
-%                "name": "Xorg",
-%                "time": 40.1
-%            },
-%            "process-cpu-time-highest-avg": {
-%                "name": "docker-compos",
-%                "time": 225.0
-%            }
-%        },
-%        "net": {
-%            "traffic": [
-%                {
-%                    "name": "docker0",
-%                    "send": 0.0,
-%                    "received": 0.0
-%                },
-%                {
-%                    "name": "wlp2s0",
-%                    "send": 0.0,
-%                    "received": 0.0
-%                }
-%            ],
-%            "sockets": {
-%                "total": 1.0,
-%                "tcp": 19.0,
-%                "udp": 8.0,
-%                "raw": 0.0,
-%                "ipFragments": 0.0
-%            },
-%            "tcp-sockets": {
-%                "listen": 20.0,
-%                "established": 43.0,
-%                "syn": 0.0,
-%                "timeWait": 5.0,
-%                "close": 0.0
-%            },
-%            "udp": {
-%                "listen": 17.0,
-%                "active": 0.0
-%            }
-%        }
-%    }
-%}
-%\end{lstlisting}
 
 \section{DVD Content}
