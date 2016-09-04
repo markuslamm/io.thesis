@@ -11,20 +11,6 @@
 \subsection{FlinkJmxCollector}
 \subsection{KafkaBrokerJmxCollector}
 
-\section{Apache Flink 1.1.0 API JSON responses}
-\verb|GET /jobs|
-%\begin{lstlisting}[caption={DStatCollector JSON payload}, captionpos=b, label={lst:dstat-payload}]
-%{
-%  "jobs-running": [],
-%  "jobs-finished": [
-%    "df399b48d225cda1a5c0a36ed9519b62",
-%    "2efc5e7c9a9f274efbb420a01e6b00cc"
-%  ],
-%  "jobs-cancelled": [],
-%  "jobs-failed": []
-%}
-%\end{lstlisting}
-
 \section{Apache Kafka 0.9.0.1 MBeans}
 \begin{table}[H]
     \begin{tabular}{l}
@@ -63,7 +49,7 @@
         kafka.coordinator:type=GroupMetadataManager,name=NumOffsets \\
     \end{tabular}
     \caption{Collected Kafka MBeans}
-    \label{tbl:kafka-controller}
+    \label{app:kafka-mbeans}
 \end{table}
 
 \section{Docker Configuration}

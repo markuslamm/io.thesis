@@ -130,7 +130,7 @@ in discussed in \autoref{ch:implementation}.
 
 Apache Flink provides application data via its monitoring API, a RESTful API following the principles introduced in \autoref{sec:rest},
  that delivers JSON data based on HTTP
-GET requests. It can be used to query general cluster information and status and
+GET requests. It can be used to query general cluster information, status and
 statistics of running and completed jobs. The dashboard that comes with Apache Flink
 uses this monitoring API, but is designed to be used also by custom monitoring tools. The
 monitoring API runs as part of the JobManager and listens at post 8081 by default. All requests
@@ -151,8 +151,6 @@ will be used to fetch cluster- and job-related data for Apache Flink in \autoref
     \label{tbl:http-api-flink}
 \end{table}
 
-Appendix A provides a list with sample JSON responses according to this REST endpoints. TODO
-
 Since version 1.1.0, Apache Flink also provides a rudimentary metrics system that exposes
 basic data for the Java Virtual Machine, the JobManagers and TaskManagers are running
 on. This data includes inter alia cpu usage or memory consumption, as well as basic
@@ -162,17 +160,17 @@ represents just an excerpt of the data that will be collected anyway.
 
 \subsubsection{Apache Kafka}
 
-In addition to the standard interfaces and MBeans that come with the implementation
+In addition to the standard interfaces and MBeans that come with every implementation
 of the JVM, Apache Kafka provides a set of managed resources providing application
 specific metrics concerning the Kafka domain, reaching from global broker metrics, global
 connection metrics to metrics per topic like in- and outgoing byte rates for example. Based
 on the requirement to collect as much data as possible, the data of all provided resources
 will be collected, the complete list of MBeans observed for Apache Kafka is available in
-Appendix A.
+\autoref{app:kafka-mbeans}
 
 \subsection{Data Quality}
 
-The following introduces to the basics of the term "Data Quality" for inspection of the data sources
+The following section introduces the basics of the term "Data Quality" for inspection of the data sources
 described above based on common quality criteria.
 
 Data quality refers to the quality of data as it is provided by measurements and describes the
@@ -260,7 +258,7 @@ to \autoref{tbl:jmxjvmdata} and \autoref{tbl:http-api-flink}.
 \section{Functional Requirements}
 \label{sec:fr}
 The main goal of the thesis is a working software system to collect system and application data available
-for Apache Flink and Apache Kafka. Furhermore, the collected data must be tansferred and stored in a
+for Apache Flink and Apache Kafka. Furhermore, the collected data must be transferred and stored in a
 persistence system to become available for possible consumers like visualization applications,
 analytical processes or as a data source for applications from the context of Machine Learning
 for example.
@@ -324,7 +322,7 @@ constraints upon the systems behaviour.
     it arrives in the storage system is set as a criterion.
 
     \item \textbf{Extensibility:} The collector architecture should be easy to adapt for other source systems
-    like Apache Spark, independent of programming languages used for the collection and storage of data.
+    like Apache Spark, independent of programming languages used for the realization of data collection and storage.
 
     \item \textbf{Scalability:} Apache Flink and Apache Kafka systems are composed of several interacting components, they
     operate in clustered environments. The software must be scallable in a way, where it does not matter whether to collect
@@ -347,3 +345,10 @@ data sources available for Apache Flink and Apache Kafka, which led to the concl
 system tool to gather data related to cpu, disk, memory resources and so on. The Java Management Extensions (JMX) will be used,
 to access application data for both of the systems. In addition, Apache Flink provides a monitoring API, which will be
 queried to gain access to detailed information regarding cluster status and jobs.
+
+In addition, common criteria for defining the quality of data had been discussed with the result, that selected data sources
+fit the crietria in a sufficient way for the purpse of this thesis, a deeper examination regarding to the quality of collecetd data
+should be considered when potential consumers will be known.
+
+After the functional and non-functinal had been defined, the next \autoref{ch:architecture} introduces the system architecture
+of the solution suggested in this thesis.

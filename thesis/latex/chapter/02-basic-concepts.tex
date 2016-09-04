@@ -179,7 +179,7 @@ public static void main(String[] args) throws Exception {
 \end{lstlisting}
 
 On execution, Flink applications are mapped to streaming dataflows, consisting of streams
-and transformation operators (3) where each dataflow starts with one or more sources (1)
+and transformation operators (2) where each dataflow starts with one or more sources (1)
 the data is received from and the resulting stream will be written in one or more sinks (3).
 to.
 
@@ -299,14 +299,14 @@ Extensions, also called the JMX specification as \textit{"architecture, the desi
 the APIs, and the services for application and network management and monitoring in
 the Java programming language"} \cite{Sun13}, \textit{"an isolation and mediation layer between manageable
 resources and management systems."} \cite{Kreg03}. In other words, JMX provides an programming interface between ressources
-and management systems based on the Java Virtual Machine(JVM) and is part of the core Java plattform since
+and management systems based on the Java Virtual Machine(JVM) and is part of the core Java platform since
 version 5. The following section explains the basic terms in preparation to the software archictecture discussed
 in \autoref{ch:architecture}.
 
 The central point of a general JMX architecture is a \textbf{Manageable Resource}.
 A Manageable Resource can be any Java based application, service or device and
 applies both to the configuration and the monitoring of resources. In the Java world,
-Servlets, Enterprise JavaBeans (EJB) other JVMs are typical examples of Manageable Resources.
+Servlets, Enterprise JavaBeans (EJB) are typical examples of Manageable Resources.
 
 Java objects that implement a specific interface and conforms to certain design patterns according
 to the specification are called \textbf{MBean}s. The management interface of a resource is the
@@ -321,7 +321,7 @@ access a MBean server regardless of whether it is remote, namely, accessed throu
 directly as a Java object.
 
 The address of a connector is defined by the \textbf{JMXServiceURL} which clients can use to establish connections
-to the connector server. Taken \autoref{ch:implementation}, the url \verb|service:jmx:rmi:///jndi/rmi://localhost:9999/jmxrmi|
+to the connector server. Taken \autoref{ch:implementation}, the url \newline \verb|service:jmx:rmi:///jndi/rmi://localhost:9999/jmxrmi|
 enables the remote access to Apache Flink and Apache Kafka for collecting data according to the topic of this thesis.
 
 An \textbf{ObjectName} uniquely identifies an MBean within an MBean server. Applications use this object name to identify
@@ -337,7 +337,7 @@ data formats as well as the requirement of processing data near real-time, Apach
 frameworks for processing streaming data had been introduced. The combination of both of the systems in the context of Stream Processing
 has been explained, a typical streaming pipeline based on Apache Flink Apache Kafka was introduced as an example of systems
 providing the discussed benefits of Stream Processing namely the accessibility of data, the completeness given by the chance to stream
-historical data with live data and the high throughput that allows the processing of large data volumes with a minimum of latency..
+historical data with live data and the high throughput that allows the processing of large data volumes with a minimum of latency.
 
 Represential State Transfer (REST) as a reference model for machine-to-machine communication
 based on HTTP had been introduced and was described as an architectural style for building distributed systems based on common

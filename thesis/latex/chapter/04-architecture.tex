@@ -141,8 +141,7 @@ origin of the data can identified. Appendix A contains the full JSON results for
 
 The client follows the approach to operate in a process that is separated to the JVM process the source system is running in.
 To enable the \textit{CollectorClient}s to access to the management interfaces introduced in \autoref{tbl:jmxjvmdata} on the remote JVM
-of Apache Flink and Apache Kafka, the source system must to be configured to allow the connection from a remote JMX client. \autoref{ch:evaluation}
-explains the adjustments that had been made on the example of Apache Flink. This in turn brings the disadvantage of potential
+of Apache Flink and Apache Kafka, the source system must to be configured to allow the connection from a remote JMX client. This in turn brings the disadvantage of potential
 security risks that occur by allowing remote connections on a given port.
 
 An alternative would have been to use the capabilities of dynamic bytecode intrumentation provided by the core of Java. Because
@@ -210,7 +209,7 @@ for storing the received JSON data in the \textit{Elasticsearch Index}.
 Elasticsearch is distributed, scalable, and highly available full-text search engine based on the Apache Lucene search index.
 It provides an HTTP web interface for managing, storing and quering schema-free JSON documents and is a widely used storage system
 of Big Data Analytics Applications. The search engine, the Logstash-Indexer and the Kibana visualization tool in combination are
-often refered to as "ELK" and provides a an end-to-end stack for central data collection and analysis as well as a graphical
+often refered to as "ELK" and provides an end-to-end stack for central data collection and analysis as well as a graphical
 presentation of raw and analyzed data.
 
 Elasticsearch allows the storage of collected data in its raw JSON format, what was a decisive criterion in the process of choosing an
