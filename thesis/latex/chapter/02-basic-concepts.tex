@@ -1,7 +1,7 @@
 \chapter{Basic Concepts}
 \label{ch:basic-concepts}
 After a short introduction to the terminology of Big Data and Big Data Analytics
-Applications, the concept of stream processing and Apache Flink and Apache Kafka as
+Applications, the concept of Stream Processing and Apache Flink and Apache Kafka as
 streaming data frameworks will be explained. Representational State Transfer (REST) as
 an architecture paradigma for distributed software systems as well as the specification for
 managing and monitoring Java applications named Java Management Extensions (JMX)
@@ -16,7 +16,7 @@ network interactions, photos, servers continuously log messages, scientists crea
 measurements, permanently.
 
 Through advances in communications technology, people and things are becoming in-
-creasingly interconnected. Generally titled as machine-etcto-machine (M2M), interconnectivity is
+creasingly interconnected. Generally titled as machine-to-machine (M2M), interconnectivity is
 responsible for double-digit year over year data growth rates. Finally,
 because small integrated components are now affordable, it becomes possible to add
 intelligence to almost everything. As an example, a simple railway car has hundreds
@@ -332,8 +332,17 @@ as an example enables access to the management interface for the runtime system 
 \section{Summary}
 
 This chapter explained the main characteristics of Big Data and Big Data Analytics Applications.
-To match the challenges that emerge with the immense growth of the data volume, the multiplicity of data sources and
-formats as well as the requirement of processing data in realtime, Apache Flink and Apache Kafka as widely used
-frameworks for processing streaming data had been introduced, as well as REST as a reference model for machine-to-machine communication
-based on HTTP.  A short introduction to the JMX interface as a way to collect data from remote systems forms the end of the chapter.
+To match the challenges that emerge with the immense growth of the data volume, the multiplicity of data producers and
+data formats as well as the requirement of processing data near real-time, Apache Flink and Apache Kafka as widely used
+frameworks for processing streaming data had been introduced. The combination of both of the systems in the context of Stream Processing
+has been explained, a typical streaming pipeline based on Apache Flink Apache Kafka was introduced as an example of systems
+providing the discussed benefits of Stream Processing namely the accessibility of data, the completeness given by the chance to stream
+historical data with live data and the high throughput that allows the processing of large data volumes with a minimum of latency..
+
+Represential State Transfer (REST) as a reference model for machine-to-machine communication
+based on HTTP had been introduced and was described as an architectural style for building distributed systems based on common
+internet architecture that provides a way of machine-to-machine communication and data exchange.
+
+Another approach of data access of remote systems was covered with a short introduction of the JMX interface as a way to collect
+data from remote systems at the end of the chapter.
 
