@@ -12,49 +12,35 @@ the chosen approaches of frameworks and technologies.
 
 The main goal of the thesis is the design and implementation of a software system
 to ingest and store data that can be collected from Apache Flink and Apache Kafka and
-represents the potential data providing component for a the self-learning system, that will be developed within "Berlin Big Data Center",
-germans biggest Big Data research project .
+represents the potential data providing component for a the self-learning system, that will be developed
+within "Berlin Big Data Center", germans biggest Big Data research project.
 
+Apache Flink and Apache Kafka are both representatives of streaming frameworks, often used in combination to
+process huge amounts of data with high troughtput and minimal latency by processing data continuously,
+concurrently, in real time and in a record-by-record fashion. Both systems primarily addresses parallelization of the computational load
+and operate in cluster enviroments.
 
-%Zusammenfassung und Ausblick (5 Seiten)
-%●
-%●
-%●
-%Was lesen wir in diesem Kapitel?
-%Und warum muss ich das (als Gutachter oder Interessent lesen)?
-%Wie verknüpft sich dieser Inhalt mit dem vorhergehendem(n) Kapitel (n)?
-%Zusammenfassung
-%●
-%●
-%●
-%●
-%Was war die Zielstellung?
-%Wie war unsere Vorgehensweise?
-%Konnten wir das Problem/die Probleme lösen?
-%Wichtigste Erkenntnisgewinne?
-%Ausblick
-%●
-%●
-%●
-%Was würden Sie an dem Thema machen wenn Ihnen jetzt jemand die nächsten drei Jahre
-%finanziert?
-%Was würde Google / Oracle / IBM machen?
-%Sollten wir eigentlich solche Dinge, die Sie in Ihrer Arbeit machen, auch wirklich erforschen
-%oder bauen? Wer verliert dadurch, wer gewinnt?
+The distributed nature of Big Data Anaylitics Applications led to the requirement to provide a \textit{"Collector-Platform"}, a
+streaming platform itself consisting of the infrastructure components \textit{Consul Client-Registry}, \textit{Kafka Message-Broker},
+\textit{Logstash-Processor} and \textit{Elasticsearch}, all well known and widely used technologies in the context of Big Data.
 
+In addition, the platform depends on a \textit{Collector-Manager} component for managing registered data sources represented
+by the \textit{Collector-Clients}. This is the main component and the start of the data flow within the \textit{"Collector-Platform"}
+that gathers the desired data according to provided implementations of the \verb|Collector| interface.
 
-\section{Outlook}
+The process of data collection was implemented in Java, the client application was realized using Spring Boot. The framework
+enables a rapid prototyping of self-contained web services. Due to the limited capabilities of an asynchronous programming model in its current version is just supporting basic,
+reactive frameworks like Play or VertX would be a good alternative and should be considered.
 
-Unit-Test und Refactoring
+The same for Java as the programming language itself. More system-related languages like Go, C++ or C possibly provide a way to
+decrease the performance impact on the Apache Flink and Apache Kafka source systems.
 
-Maybe Spring alternatives, Lagom, VertX, Play?
+The \textit{Collector-Client} is based on the approach, that is has to be installed on source systems to collect system and application data using the Dstat system tool,
+JMX and REST, what required an additional configuration to open a port for the access via JMX. This could
+definitely result in security risks, that should be examined and inspected. As an alternative, the java agent based instrumentation capabilities
+could be used for integrating the collection process in the same JVM process Apache Flink or Apacke Kafka is running in. This would not
+require to open a port for JMX, since the data collection would be executed within the same process as the source systems.
 
-Maybe collector as agent, Instrumentation instead of separate service
-
-Alternatives REST, maybe (Web-)Sockets
-
-Possible secururity risk because remote JMX, firewalls and dstat process
-
-More performance with more "system" languages, go? c?
-
-dynamic sample collectors
+The suggested platform cannot be considered as a production ready system, it represents just an approach for prototypical purposes.
+But according to the main goals of this thesis, it could be shown how to collect, transport, process and store data in distributed
+Big Data Analytivs applications.
