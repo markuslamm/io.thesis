@@ -11,14 +11,14 @@ known to me as 'buzzwords' from technology-blogs and magazines.
 
 Because I was interested to learn a bit more about that "big-data-streaming-thing" and
 especially how to build software using Stream Processing frameworks, I decided my thesis
-to be in this Big Data context and created a working title "Design And Implementation Of
-A Data Processing Pipeline” To Transform Continous Monititoring Data Streams". The
-basic idea was to aggregate data from REST RabbitMQ endpoints, send this raw data
+to be in this Big Data context and created a working title \textit{"Design And Implementation Of
+A Data Processing Pipeline To Transform Continous Monititoring Data Streams"}. The
+basic idea was to aggregate data from REST RabbitMQ monitoring REST endpoints, send this raw data
 to a stream processor and create a model which fits the monitoring domain and store this
 data in a storage system which enables further data analytics.
 
 During the following email correspondence, Prof. Dr. Stefan Edlich he suggested me to
-fetch the data from the the streaming platforms components itself, instead of a RabbitMQ
+fetch the data from the streaming platform components itself, instead of a RabbitMQ
 queue as my idea suggested. So he presented one of his own topics which was quite
 similar to my own idea with the given title \textit{"Design and Implementation of a Tool to
 Collect Execution- and Service-Data of Big Data Analytics Applications"}, which I choosed to
@@ -51,7 +51,7 @@ for possible consumers like visualization applications, analytical processes or 
 source for applications from the context of Machine Learning for example.
 
 This thesis will not be a deep introduction into Big Data, Stream Processing or covers deeper
-details of the internals of Apache Flink and Apache Kafka. To understand the context this
+details of the internals of Apache Flink and Apache Kafka. To understand the context the
 frameworks are located in, the underlying concepts will be explained only briefly.
 
 \section{Structure of thesis}
@@ -63,8 +63,8 @@ distributed systems will be discussed.
 
 \autoref{ch:requirements} examines Apache Flink and Apache Kafka regarding to the provided data
 both of the systems. The different sources for the data collection will be described, as
-well what data should be collected and stored in a persistence system regarding to its
-relevance and data quality. According to the results of the data analysis, the functional
+well as what data should be collected and stored in a persistence system regarding to its data quality.
+According to the results of the data analysis, the functional
 and non-functional requirements of the system being developed will be introduced at the
 end of the chapter.
 
