@@ -294,9 +294,8 @@ that the indexes for registered \textit{Collector} implementations are created.
 
 The attentive reader will notice that there is no index created for the Dstat collector source implementation! This is caused, because
 it was not possible to read the output of the Dstat process if the process is started in a Docker container, the result was always empty
-and the problem couldn't be fixed in time! \autoref{app:dstat-result} contains the result of the \verb|DstatCollector| produced
+and the problem couldn't be fixed in time! The enclosed memory medium contains contains the result of the \verb|DstatCollector| produced
 on the local machine in a non-Docker environment.
-
 
 At this point, the architectural requirements of a central registry for \textit{CollectorClient} instances, the data collection on the
 Apache Flink source system, the transport of data to the \textit{Logstash-Processor} via \textit{Kafka Message-Broker} and creating required
